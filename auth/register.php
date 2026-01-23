@@ -12,10 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($password !== $confirm_password) {
         $error = "Passwords do not match.";
     } else {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $role);
+        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $password, $role);
 
         if (mysqli_stmt_execute($stmt)) {
             header("Location: login.php");

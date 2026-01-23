@@ -28,7 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
-                header("Location: ../pages/dashboard.php");
+                if ($_SESSION['role'] == 'admin') {
+                    header("Location: ../pages/admin/dashboard_admin.php");
+                } elseif ($_SESSION['role'] == 'ketua') {
+                    header("Location: ../pages/admin/dashboard_ketua.php");
+                } else {
+                    header("Location: ../home.php");
+                }
                 exit();
             } else {
                 $error = "Invalid password.";
