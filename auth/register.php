@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register - Lurago.id</title>
+    <title>Register - Amatgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #fef3c7; } /* Cream yellow background */
@@ -62,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label class="block text-gray-700">Role</label>
                 <select name="role" class="w-full px-3 py-2 border rounded" required>
                     <option value="user">User</option>
-                    <option value="ketua">Ketua</option>
                 </select>
             </div>
             <button type="submit" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">Register</button>
@@ -71,3 +70,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </body>
 </html>
+
