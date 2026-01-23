@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Register - Amatgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #fef3c7; } /* Cream yellow background */
+        body { background-color: #fef3c7; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -70,4 +70,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </body>
 </html>
+
 
