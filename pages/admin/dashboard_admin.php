@@ -13,14 +13,6 @@ if ($_SESSION['role'] == 'admin') {
     $totalKK = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM kk"))['total'];
     $totalRT = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM rt"))['total'];
     $totalRW = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM rw"))['total'];
-    $users = mysqli_query($conn, "SELECT * FROM users");
-
-    if (isset($_POST['delete_user'])) {
-        $user_id = $_POST['user_id'];
-        mysqli_query($conn, "DELETE FROM users WHERE id=$user_id");
-        header("Location: dashboard_admin.php");
-        exit();
-    }
 ?>
 
 <div class="ml-64 p-6">
@@ -45,41 +37,25 @@ if ($_SESSION['role'] == 'admin') {
         </div>
     </div>
 
-    <h2 class="text-xl font-bold mt-8 mb-4">Manage Users</h2>
-    <a href="../auth/register.php" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block">Add New User</a>
+    <h2 class="text-xl font-bold mt-8 mb-4">Fungsi Admin</h2>
+    <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white p-4 rounded shadow border-l-4 border-blue-500">
+            <h3 class="text-lg font-bold text-blue-600">Mengelola Akun Pengguna</h3>
+            <p class="text-gray-500">Tambah, edit, dan hapus akun pengguna</p>
+            <a href="manage_users.php" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2 inline-block">Kelola Pengguna</a>
+        </div>
+        <div class="bg-white p-4 rounded shadow border-l-4 border-green-500">
+            <h3 class="text-lg font-bold text-green-600">Mengelola Data Wilayah (RT/RW)</h3>
+            <p class="text-gray-500">Atur dan perbarui data RT/RW</p>
+            <a href="manage_rt_rw.php" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2 inline-block">Kelola RT/RW</a>
+        </div>
+        <div class="bg-white p-4 rounded shadow border-l-4 border-purple-500">
+            <h3 class="text-lg font-bold text-purple-600">Mengelola Data Master</h3>
+            <p class="text-gray-500">Kelola data master untuk sistem</p>
+            <a href="#" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 mt-2 inline-block">Kelola Data Master</a>
+        </div>
+    </div>
 
-    <table class="w-full bg-white rounded shadow">
-        <thead class="bg-yellow-100">
-            <tr>
-                <th class="px-4 py-2">ID</th>
-                <th class="px-4 py-2">Username</th>
-                <th class="px-4 py-2">Email</th>
-                <th class="px-4 py-2">Password</th>
-                <th class="px-4 py-2">Role</th>
-                <th class="px-4 py-2">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($user = mysqli_fetch_assoc($users)) { ?>
-            <tr class="border-t">
-                <td class="px-4 py-2"><?php echo $user['id']; ?></td>
-                <td class="px-4 py-2"><?php echo $user['username']; ?></td>
-                <td class="px-4 py-2"><?php echo $user['email']; ?></td>
-                <td class="px-4 py-2"><?php echo $user['password']; ?></td>
-                <td class="px-4 py-2"><?php echo $user['role']; ?></td>
-                <td class="px-4 py-2">
-                    <a href="edit_user.php?id=<?php echo $user['id']; ?>" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
-                    <form method="POST" class="inline ml-2">
-                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                        <button type="submit" name="delete_user" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
 </div>
 <?php
 }
-include '../../layouts/admin/footer.php';
-?>

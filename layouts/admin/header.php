@@ -10,7 +10,7 @@ body { background-color: #fef3c7; }
 </style>
 </head>
 <body class="bg-yellow-50 min-h-screen flex flex-col">
-<header class="bg-yellow-200 text-white py-4 px-6 shadow-md">
+<header class="bg-yellow-500 text-white py-4 px-6 shadow-md">
     <div class="flex justify-between items-center">
         <div class="flex items-center">
             <h1 class="text-xl font-bold">Lurahgo.id</h1>
