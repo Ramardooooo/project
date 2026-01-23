@@ -93,16 +93,6 @@ if ($_SESSION['role'] == 'admin') {
         </tbody>
     </table>
 </div>
-
 <?php
-} else {
-    // User dashboard
-?>
-<div class="ml-64 p-6 flex-grow">
-<h1 class="text-2xl font-bold mb-6">Dashboard User</h1>
-<p>Welcome to your dashboard!</p>
-</div>
-<?php
-}
 include '../layouts/footer.php';
 ?>
