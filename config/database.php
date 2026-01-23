@@ -1,5 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost","root","");
+$conn = mysqli_connect("localhost","root","", "lurahgo.id");
 if(!$conn){ die("DB Error"); }
 
 mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS rt_testing");
