@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     if (!empty($login_input)) {
-        // Check if input is email or username
         if (filter_var($login_input, FILTER_VALIDATE_EMAIL)) {
             $sql = "SELECT * FROM users WHERE email=?";
         } else {
@@ -70,3 +69,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 </body>
 </html>
+
