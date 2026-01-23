@@ -1,1 +1,1 @@
-Hanya manusia biasa bukan pria solo
+Sebenarnya saya hanya manusia biasa bukan pria solo.
