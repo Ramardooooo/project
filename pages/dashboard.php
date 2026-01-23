@@ -69,7 +69,7 @@ if ($_SESSION['role'] == 'admin') {
 <tbody>
 <?php while ($user = mysqli_fetch_assoc($users)) { ?>
 <tr class="border-t">
-<td class="px-4 py-2"><?php echo $user['id']; ?></td>
+  <td class="px-4 py-2"><?php echo $user['id']; ?></td>
 <td class="px-4 py-2"><?php echo $user['username']; ?></td>
 <td class="px-4 py-2"><?php echo $user['email']; ?></td>
 <td class="px-4 py-2"><?php echo $user['role']; ?></td>
@@ -98,10 +98,11 @@ if ($_SESSION['role'] == 'admin') {
 } else {
     // User dashboard
 ?>
-<div class="ml-64 p-6">
+<div class="ml-64 p-6 flex-grow">
 <h1 class="text-2xl font-bold mb-6">Dashboard User</h1>
 <p>Welcome to your dashboard!</p>
 </div>
 <?php
 }
+include '../layouts/footer.php';
 ?>
