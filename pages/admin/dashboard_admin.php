@@ -4,9 +4,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../auth/login.php");
     exit();
 }
-include '../config/database.php';
-include '../layouts/admin/header.php';
-include '../layouts/admin/sidebar.php';
+include '../../config/database.php';
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 
 if ($_SESSION['role'] == 'admin') {
     $totalWarga = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM warga"))['total'];
