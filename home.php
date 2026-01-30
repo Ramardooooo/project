@@ -182,6 +182,57 @@ include 'config/database.php';
     <div class="absolute inset-0 bg-[url('assets/img/map-dot.png')] opacity-10 pointer-events-none"></div>
 </section>
 
+<!-- FOOTER -->
+<footer class="bg-gray-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8">
+            <!-- NAVIGATION -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Navigasi</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-red-400">Home</a></li>
+                    <li><a href="#" class="hover:text-red-400">Profil</a></li>
+                    <li><a href="#" class="hover:text-red-400">Layanan</a></li>
+                    <li><a href="#" class="hover:text-red-400">Blog</a></li>
+                    <li><a href="#" class="hover:text-red-400">Kontak</a></li>
+                </ul>
+            </div>
+
+            <!-- CONTACT -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Kontak</h3>
+                <ul class="space-y-2">
+                    <li>Email: info@lurahgo.id</li>
+                    <li>Telepon: +62 123 456 789</li>
+                    <li>Alamat: Temanggung, Jawa Tengah</li>
+                </ul>
+            </div>
+
+            <!-- SOCIAL MEDIA -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Ikuti Kami</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-red-400 text-2xl">📘</a>
+                    <a href="#" class="hover:text-red-400 text-2xl">🐦</a>
+                    <a href="#" class="hover:text-red-400 text-2xl">📷</a>
+                    <a href="#" class="hover:text-red-400 text-2xl">💼</a>
+                </div>
+            </div>
+
+            <!-- BRAND -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Lurahgo<span class="text-red-400">.id</span></h3>
+                <p class="text-gray-400">Membantu RT/RW menuju era digital.</p>
+            </div>
+        </div>
+
+        <!-- COPYRIGHT -->
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+            <p>&copy; 2026 Lurahgo.Id. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
 
 </body>
 </html>
