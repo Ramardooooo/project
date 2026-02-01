@@ -1,8 +1,14 @@
 <div class="flex-grow"></div>
-<footer class="bg-yellow-600 text-white py-2 mt-8">
-    <div class="container mx-auto px-4 text-center">
-        <p class="text-sm">&copy; 2025 Lurahgo.id - Sistem Informasi RT/RW</p>
-        <p class="text-sm">Contact Admin: admin@lurahgo.id</p>
+<footer class="bg-white border-t border-gray-200 mt-8">
+    <div class="px-6 py-4">
+        <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-500">
+                © 2025 Lurahgo.id. All rights reserved.
+            </div>
+            <div class="text-sm text-gray-500">
+            Dashboard Admin Lurahgo.id
+            </div>
+        </div>
     </div>
 </footer>
 </body></html>

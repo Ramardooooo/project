@@ -1,5 +1,4 @@
 <?php
-session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth/login.php");
     exit();
@@ -13,8 +12,6 @@ include 'config/database.php';
     <meta charset="UTF-8">
     <title>Lurahgo Digital</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -23,20 +20,19 @@ include 'config/database.php';
         }
     </style>
 </head>
-<body class="bg-red-600 text-white">
+<body class="bg-blue-600 text-white">
 
-<!-- NAVBAR -->
 <nav class="bg-white text-gray-800">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div class="text-xl font-bold text-red-600">
+        <div class="text-xl font-bold text-blue-600">
             Lurahgo<span class="text-black">.id</span>
         </div>
         <ul class="hidden md:flex space-x-6">
-            <li><a href="#" class="hover:text-red-600">Home</a></li>
-            <li><a href="#" class="hover:text-red-600">Profil</a></li>
-            <li><a href="#" class="hover:text-red-600">Layanan</a></li>
-            <li><a href="#" class="hover:text-red-600">Blog</a></li>
-            <li><a href="#" class="hover:text-red-600">Kontak</a></li>
+            <li><a href="#" class="hover:text-blue-600">Home</a></li>
+            <li><a href="#" class="hover:text-blue-600">Profil</a></li>
+            <li><a href="#" class="hover:text-blue-600">Layanan</a></li>
+            <li><a href="#" class="hover:text-blue-600">Blog</a></li>
+            <li><a href="#" class="hover:text-blue-600">Kontak</a></li>
         </ul>
         <a href="#" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
             Buat Website
@@ -44,11 +40,9 @@ include 'config/database.php';
     </div>
 </nav>
 
-<!-- HERO SECTION -->
 <section class="relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center">
 
-        <!-- TEXT -->
         <div>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
                 Inilah Cara Membuat Website RT/RW<br>
@@ -73,7 +67,6 @@ include 'config/database.php';
             </div>
         </div>
 
-        <!-- IMAGE -->
         <div class="flex justify-center">
             <img src="assets/img/pak-desa.png"
                  alt="Website RT/RW"
@@ -81,10 +74,9 @@ include 'config/database.php';
         </div>
     </div>
 
-    <!-- BACKGROUND SHAPE -->
-    <div class="absolute inset-0 bg-gradient-to-r from-red-700 to-red-500 opacity-30 -z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-400 opacity-30 -z-10"></div>
 </section>
-<!-- ===== LAYANAN DESAGO ===== -->
+
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-6">
 
@@ -94,7 +86,6 @@ include 'config/database.php';
 
         <div class="grid md:grid-cols-3 gap-10">
 
-            <!-- CARD 1 -->
             <div class="bg-white rounded-xl shadow-lg p-8 text-center">
                 <img src="assets/img/layanan-1.png" class="mx-auto mb-6" alt="">
                 <h3 class="text-2xl font-serif mb-4">Website RT/RW</h3>
@@ -111,7 +102,6 @@ include 'config/database.php';
                 </div>
             </div>
 
-            <!-- CARD 2 -->
             <div class="bg-white rounded-xl shadow-lg p-8 text-center">
                 <img src="assets/img/layanan-2.png" class="mx-auto mb-6" alt="">
                 <h3 class="text-2xl font-serif mb-4">E-Learning</h3>
@@ -127,7 +117,6 @@ include 'config/database.php';
                 </div>
             </div>
 
-            <!-- CARD 3 -->
             <div class="bg-white rounded-xl shadow-lg p-8 text-center">
                 <img src="assets/img/layanan-3.png" class="mx-auto mb-6" alt="">
                 <h3 class="text-2xl font-serif mb-4">Loker RT/RW</h3>
@@ -147,16 +136,13 @@ include 'config/database.php';
     </div>
 </section>
 
-<!-- ===== MEMPERKENALKAN ===== -->
 <section class="py-20 bg-gray-100 relative">
     <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
 
-        <!-- LOGO -->
         <div class="flex justify-center md:justify-start">
             <img src="assets/img/logo-desago.png" alt="Lurahgo Digital" class="max-w-xs">
         </div>
 
-        <!-- TEXT -->
         <div>
             <h2 class="text-4xl font-serif mb-6">Memperkenalkan</h2>
             <p class="text-gray-700 mb-4 leading-relaxed">
@@ -178,27 +164,23 @@ include 'config/database.php';
         </div>
     </div>
 
-    <!-- background map effect -->
     <div class="absolute inset-0 bg-[url('assets/img/map-dot.png')] opacity-10 pointer-events-none"></div>
 </section>
 
-<!-- FOOTER -->
 <footer class="bg-gray-800 text-white py-12">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid md:grid-cols-4 gap-8">
-            <!-- NAVIGATION -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Navigasi</h3>
                 <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-red-400">Home</a></li>
-                    <li><a href="#" class="hover:text-red-400">Profil</a></li>
-                    <li><a href="#" class="hover:text-red-400">Layanan</a></li>
-                    <li><a href="#" class="hover:text-red-400">Blog</a></li>
-                    <li><a href="#" class="hover:text-red-400">Kontak</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Home</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Profil</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Layanan</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Blog</a></li>
+                    <li><a href="#" class="hover:text-blue-400">Kontak</a></li>
                 </ul>
             </div>
 
-            <!-- CONTACT -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Kontak</h3>
                 <ul class="space-y-2">
@@ -208,25 +190,22 @@ include 'config/database.php';
                 </ul>
             </div>
 
-            <!-- SOCIAL MEDIA -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Ikuti Kami</h3>
                 <div class="flex space-x-4">
-                    <a href="#" class="hover:text-red-400 text-2xl">📘</a>
-                    <a href="#" class="hover:text-red-400 text-2xl">🐦</a>
-                    <a href="#" class="hover:text-red-400 text-2xl">📷</a>
-                    <a href="#" class="hover:text-red-400 text-2xl">💼</a>
+                    <a href="#" class="hover:text-blue-400 text-2xl">📘</a>
+                    <a href="#" class="hover:text-blue-400 text-2xl">🐦</a>
+                    <a href="#" class="hover:text-blue-400 text-2xl">📷</a>
+                    <a href="#" class="hover:text-blue-400 text-2xl">💼</a>
                 </div>
             </div>
 
-            <!-- BRAND -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Lurahgo<span class="text-red-400">.id</span></h3>
                 <p class="text-gray-400">Membantu RT/RW menuju era digital.</p>
             </div>
         </div>
 
-        <!-- COPYRIGHT -->
         <div class="border-t border-gray-700 mt-8 pt-8 text-center">
             <p>&copy; 2026 Lurahgo.Id. All rights reserved.</p>
         </div>
@@ -236,4 +215,3 @@ include 'config/database.php';
 
 </body>
 </html>
-

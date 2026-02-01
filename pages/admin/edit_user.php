@@ -1,10 +1,9 @@
 <?php
-session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
     header("Location: ../auth/login.php");
     exit();
 }
-include '../config/database.php';
+include 'config/database.php';
 
 $user_id = $_GET['id'];
 $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE id=$user_id"));
