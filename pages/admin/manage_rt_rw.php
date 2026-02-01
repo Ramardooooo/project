@@ -28,10 +28,10 @@ if ($_SESSION['role'] == 'admin') {
 <h1 class="text-2xl font-bold mb-6">Kelola Data Wilayah RT</h1>
 
     <h2 class="text-xl font-bold mt-8 mb-4">Data RT</h2>
-    <a href="tambah_rt" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4 inline-block">Tambah RT</a>
+    <a href="tambah_rt" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block">Tambah RT</a>
 
     <table class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-        <thead class="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+        <thead class="bg-gradient-to-r from-green-500 to-green-600 text-white">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Nama RT</th>
@@ -46,10 +46,10 @@ if ($_SESSION['role'] == 'admin') {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $r['nama_rt']; ?></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $r['ketua_rt']; ?></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition duration-200">Edit</a>
+                    <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition duration-200">Edit</a>
                     <form method="POST" class="inline ml-2">
                         <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
-                        <button type="submit" name="delete_rt" class="bg-purple-500 text-white px-3 py-1 rounded-md hover:bg-purple-600 transition duration-200" onclick="return confirm('Apakah Anda yakin?')">Hapus</button>
+                        <button type="submit" name="delete_rt" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-purple-600 transition duration-200" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Hapus</button>
                     </form>
                 </td>
             </tr>
@@ -65,7 +65,7 @@ if ($_SESSION['role'] == 'admin') {
                 <?php endif; ?>
 
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="/PROJECT/manage_rt_rw?p=<?= $i ?>" class="px-3 py-2 <?= $i == $page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' ?> rounded hover:bg-gray-300"><?= $i ?></a>
+                    <a href="/PROJECT/manage_rt_rw?p=<?= $i ?>" class="px-3 py-2 <?= $i == $page ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700' ?> rounded hover:bg-gray-300"><?= $i ?></a>
                 <?php endfor; ?>
 
                 <?php if ($page < $total_pages): ?>

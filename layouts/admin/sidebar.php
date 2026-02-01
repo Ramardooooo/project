@@ -1,5 +1,5 @@
-<div class="w-64 bg-gradient-to-b from-blue-500 to-blue-600 text-blue-100 min-h-screen fixed shadow-2xl">
-    <div class="p-6 border-b border-blue-800">
+<div class="w-64 bg-gradient-to-b from-green-600 to-green-600 text-blue-100 min-h-screen fixed shadow-2xl">
+    <div class="p-6 border-b border-green-800">
         <div class="text-lg font-semibold flex items-center gap-2">
             <i class="fas fa-home"></i>
             Lurahgo.id
@@ -9,14 +9,14 @@
 
     <ul class="mt-4 space-y-1 px-3">
         <li>
-        <a href="/PROJECT/home" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800">
+        <a href="/PROJECT/home" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-700">
                 <i class="fas fa-home text-sm"></i>
                 <span>Beranda</span>
             </a>
         </li>
 
         <li>
-            <a href="/PROJECT/dashboard_admin" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-700">
+            <a href="/PROJECT/dashboard_admin" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-700">
                 <i class="fas fa-tachometer-alt text-sm"></i>
                 <span>Dashboard</span>
             </a>
@@ -26,7 +26,7 @@
 
         <li>
             <button onclick="toggleMaster()"
-                class="w-full flex items-center justify-between px-4 py-2 rounded-lg hover:bg-blue-800 transition">
+                class="w-full flex items-center justify-between px-4 py-2 rounded-lg hover:bg-green-700 transition">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-database text-sm"></i>
                     <span>Data Master</span>
@@ -37,13 +37,13 @@
             <ul id="masterMenu" class="hidden ml-6 mt-1 space-y-1">
                 <li>
                     <a href="/PROJECT/manage_users"
-                       class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-slate-600">
+                       class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-600">
                         Manage Users
                     </a>
                 </li>
                 <li>
                     <a href="/PROJECT/manage_rt_rw"
-                       class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-slate-600">
+                       class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-600">
                         Manage RT/RW
                     </a>
                 </li>
@@ -53,7 +53,7 @@
         <?php } ?>
 
         <li class="mt-6">
-            <a href="rama.php" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800">
+            <a href="rama.php" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-700">
                 <i class="fas fa-user text-sm"></i>
                 <span>Ramadhani Fadillah</span>
             </a>
