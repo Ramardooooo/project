@@ -1,4 +1,5 @@
 <?php
 session_start();
-include 'route.php';
+header("Location: auth/login.php");
+exit;
 ?>
