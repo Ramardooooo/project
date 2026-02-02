@@ -17,3 +17,5 @@ RewriteRule ^home$ home.php [L]
 RewriteRule ^login$ auth/login.php [L]
 RewriteRule ^register$ auth/register.php [L]
 RewriteRule ^logout$ auth/logout.php [L]
+
+Dah itu aja
