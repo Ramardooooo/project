@@ -1,41 +1,40 @@
 <?php
 include '../../config/database.php';
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 
-if (isset($_POST['add_rt'])) {
+if (isset($_GET['id'])) {
+    $rt_id = $_GET['id'];
+    $rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM rt WHERE id = $rt_id"));
+    if (!$rt) {
+        header("Location: manage_rt_rw.php");
+        exit();
+    }
+}
+
+if (isset($_POST['update_rt'])) {
     $nama_rt = $_POST['nama_rt'];
     $ketua_rt = $_POST['ketua_rt'];
 
-    $stmt = mysqli_prepare($conn, "INSERT INTO rt (nama_rt, ketua_rt) VALUES (?, ?)");
-    mysqli_stmt_bind_param($stmt, "ss", $nama_rt, $ketua_rt);
+    $stmt = mysqli_prepare($conn, "UPDATE rt SET nama_rt=?, ketua_rt=? WHERE id=?");
+    mysqli_stmt_bind_param($stmt, "ssi", $nama_rt, $ketua_rt, $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    header("Location: manage_rt_rw");
+    header("Location: manage_rt_rw.php");
     exit();
 }
 
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Data RT</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background:#eafaf1; }
-    </style>
-</head>
-
-<body class="min-h-screen">
 
 <div class="ml-64 min-h-screen flex items-center justify-center p-8">
 
     <div class="max-w-xl w-full bg-white rounded-md shadow p-7">
 
         <h1 class="text-xl font-semibold text-gray-800 mb-5">
-            Tambah Data RT
+            Edit Data RT
         </h1>
 
         <form method="POST" class="space-y-4">
@@ -47,6 +46,7 @@ if (isset($_POST['add_rt'])) {
                 <input
                     type="text"
                     name="nama_rt"
+                    value="<?php echo $rt['nama_rt']; ?>"
                     placeholder="Contoh: RT 01"
                     required
                     class="w-full border rounded px-3 py-2
@@ -61,6 +61,7 @@ if (isset($_POST['add_rt'])) {
                 <input
                     type="text"
                     name="ketua_rt"
+                    value="<?php echo $rt['ketua_rt']; ?>"
                     placeholder="Nama Ketua RT"
                     required
                     class="w-full border rounded px-3 py-2
@@ -71,10 +72,10 @@ if (isset($_POST['add_rt'])) {
             <div class="flex gap-3 pt-3">
                 <button
                     type="submit"
-                    name="add_rt"
+                    name="update_rt"
                     class="flex-1 bg-green-600 hover:bg-green-700
                            text-white py-2 rounded">
-                    Simpan
+                    Update
                 </button>
 
                 <a
@@ -90,5 +91,6 @@ if (isset($_POST['add_rt'])) {
     </div>
 </div>
 
-</body>
-</html>
+<?php
+include '../../layouts/admin/footer.php';
+?>

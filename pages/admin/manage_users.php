@@ -1,5 +1,5 @@
 <?php
-include 'config/database.php';
+include '../../config/database.php';
 
 if (isset($_POST['delete_user'])) {
     $user_id = $_POST['user_id'];
@@ -11,8 +11,8 @@ if (isset($_POST['delete_user'])) {
     exit();
 }
 
-include 'layouts/admin/header.php';
-include 'layouts/admin/sidebar.php';
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 
 if ($_SESSION['role'] == 'admin') {
     $limit = 10;
@@ -83,5 +83,5 @@ if ($_SESSION['role'] == 'admin') {
 <?php
 }
 
-include 'layouts/admin/footer.php';
+include '../../layouts/admin/footer.php';
 ?>

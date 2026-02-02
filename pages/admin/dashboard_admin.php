@@ -1,7 +1,7 @@
 <?php
-include 'config/database.php';
-include 'layouts/admin/header.php';
-include 'layouts/admin/sidebar.php';
+include '../../config/database.php';
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 
 if ($_SESSION['role'] === 'admin') {
 
@@ -178,5 +178,5 @@ new Chart(document.getElementById('trafficChart'), {
 
 <?php
 }
-include 'layouts/admin/footer.php';
+include '../../layouts/admin/footer.php';
 ?>

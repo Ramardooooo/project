@@ -1,3 +1,30 @@
+<?php
+include '../../config/database.php';
+
+if (isset($_POST['tambah_user'])) {
+    echo "Post Berhasil!";
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $role = $_POST['role'];
+
+    if ($password !== $confirm_password) {
+        $error = "Password dan konfirmasi password tidak cocok.";
+    } else {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = mysqli_prepare($conn, "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $role);
+        if (mysqli_stmt_execute($stmt)) {
+            $success = "User berhasil ditambahkan.";
+        } else {
+            $error = "Gagal menambahkan user: " . mysqli_error($conn);
+        }
+        mysqli_stmt_close($stmt);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,14 +35,19 @@
         body { background:#eafaf1; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="bg-white p-7 rounded-md shadow w-96">
+<body class="min-h-screen">
+<div class="ml-64 min-h-screen flex items-center justify-center p-8">
+    <div class="max-w-xl w-full bg-white rounded-md shadow p-7">
         <h2 class="text-xl font-semibold mb-5 text-center text-green-700">
             Tambah User
         </h2>
 
-        <p class="text-green-600 mb-3"></p>
-        <p class="text-red-500 mb-3"></p>
+        <?php if (isset($success)): ?>
+            <p class="text-green-600 mb-3"><?php echo $success; ?></p>
+        <?php endif; ?>
+        <?php if (isset($error)): ?>
+            <p class="text-red-500 mb-3"><?php echo $error; ?></p>
+        <?php endif; ?>
 
         <form method="POST">
             <div class="mb-3">
@@ -57,13 +89,13 @@
                 </select>
             </div>
 
-            <button type="submit"
+            <button type="submit" name="tambah_user"
                 class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
                 Tambah User
             </button>
         </form>
 
-        <a href="manage_users.php"
+        <a href="manage_users"
             class="block text-center mt-4 text-sm text-green-600 hover:underline">
             Kembali ke Manage Users
         </a>

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } elseif ($user['role'] == 'ketua') {
                     header("Location: /PROJECT/dashboard_ketua");
                 } else {
-                    header("Location: /PROJECT/dashboard_user");
+                    header("Location: ../../PROJECT/home");
                 }
                 exit();
             } else {
