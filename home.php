@@ -5,6 +5,7 @@
     <title>Lurahgo Digital</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         body {
@@ -32,8 +33,13 @@
     </div>
 </nav>
 
-<section class="relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center">
+<section
+  class="relative overflow-hidden bg-cover bg-center"
+  style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');"
+>
+    
+
+    <div class="relative max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center text-white">
 
         <div>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
@@ -59,11 +65,8 @@
             </div>
         </div>
 
-        <div class="flex justify-center">
-            <img src="assets/img/pak-desa.png"
-                 alt="Website RT/RW"
-                 class="max-w-sm drop-shadow-xl">
-        </div>
+    </div>
+</section>
     </div>
 
     <div class="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-400 opacity-30 -z-10"></div>
@@ -177,20 +180,31 @@
                 <h3 class="text-xl font-bold mb-4">Kontak</h3>
                 <ul class="space-y-2">
                     <li>Email: info@lurahgo.id</li>
-                    <li>Telepon: +62 123 456 789</li>
-                    <li>Alamat: Temanggung, Jawa Tengah</li>
+                    <li>Telepon: +62 882 4501 2642</li>
+                    <li>Alamat: Kalimantan Selatan, Banjarmasin.</li>
                 </ul>
             </div>
 
-            <div>
-                <h3 class="text-xl font-bold mb-4">Ikuti Kami</h3>
-                <div class="flex space-x-4">
-                    <a href="#" class="hover:text-blue-400 text-2xl">📘</a>
-                    <a href="#" class="hover:text-blue-400 text-2xl">🐦</a>
-                    <a href="#" class="hover:text-blue-400 text-2xl">📷</a>
-                    <a href="#" class="hover:text-blue-400 text-2xl">💼</a>
-                </div>
-            </div>
+                <div>
+    <h3 class="text-xl font-bold mb-4">Ikuti Kami</h3>
+    <div class="flex space-x-5">
+        <a href="#" class="text-2xl hover:text-pink-400 transition">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+
+        <a href="#" class="text-2xl hover:text-red-500 transition">
+            <i class="fa-brands fa-youtube"></i>
+        </a>
+
+        <a href="#" class="text-2xl hover:text-sky-400 transition">
+            <i class="fa-brands fa-twitter"></i>
+        </a>
+
+        <a href="#" class="text-2xl hover:text-gray-300 transition">
+            <i class="fa-brands fa-tiktok"></i>
+        </a>
+    </div>
+</div>
 
             <div>
                 <h3 class="text-xl font-bold mb-4">Lurahgo<span class="text-red-400">.id</span></h3>
