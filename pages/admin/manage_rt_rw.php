@@ -1,5 +1,16 @@
 <?php
 include '../../config/database.php';
+
+if (isset($_POST['delete_rt'])) {
+    $rt_id = $_POST['rt_id'];
+    $stmt = mysqli_prepare($conn, "DELETE FROM rt WHERE id=?");
+    mysqli_stmt_bind_param($stmt, "i", $rt_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    header("Location: manage_rt_rw");
+    exit();
+}
+
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
@@ -7,49 +18,47 @@ if ($_SESSION['role'] == 'admin') {
     $limit = 10;
     $page = isset($_GET['p']) ? (int)$_GET['p'] : 1;
     $offset = ($page - 1) * $limit;
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-    $total_rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM rt"))['total'];
+    $where_clause = $search ? "WHERE nama_rt LIKE '%$search%' OR ketua_rt LIKE '%$search%'" : '';
+    $total_rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM rt $where_clause"))['total'];
     $total_pages = max(1, ceil($total_rt / $limit));
 
-    $rt = mysqli_query($conn, "SELECT * FROM rt LIMIT $limit OFFSET $offset");
-
-    if (isset($_POST['delete_rt'])) {
-        $rt_id = $_POST['rt_id'];
-        $stmt = mysqli_prepare($conn, "DELETE FROM rt WHERE id=?");
-        mysqli_stmt_bind_param($stmt, "i", $rt_id);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-        header("Location: manage_rt_rw.php");
-        exit();
-    }
+    $rt = mysqli_query($conn, "SELECT * FROM rt $where_clause LIMIT $limit OFFSET $offset");
 ?>
 
-<div class="ml-64 p-6">
-<h1 class="text-2xl font-bold mb-6">Kelola Data Wilayah RT</h1>
+<div class="ml-64 flex-grow p-6" style="background-image: url('https://images.unsplash.com/photo-1565102127622-df163cfbdaa4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
+<div class="backdrop-blur-sm">
+<h1 class="text-2xl font-bold mb-6 text-white drop-shadow-lg">Kelola Data RT</h1>
 
-    <h2 class="text-xl font-bold mt-8 mb-4">Data RT</h2>
-    <a href="tambah_rt" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block">Tambah RT</a>
+    <h2 class="text-xl font-bold mt-8 mb-4 text-white drop-shadow-lg">Berirkut Data RT:</h2>
+    <a href="tambah_rt" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block drop-shadow-sm">Tambah RT</a>
 
-    <table class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-        <thead class="bg-gradient-to-r from-green-500 to-green-600 text-white">
+    <form method="GET" class="mb-4">
+        <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari RT atau Ketua RT..." class="px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 drop-shadow-sm">
+        <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 drop-shadow-sm">Cari</button>
+    </form>
+
+    <table class="w-full bg-white/20 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-white/30">
+        <thead class="bg-white/30 text-white">
             <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Nama RT</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Ketua RT</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Aksi</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">Nama RT</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">Ketua RT</th>
+                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">Aksi</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-white/20">
             <?php while ($r = mysqli_fetch_assoc($rt)) { ?>
-            <tr class="hover:bg-gray-50 transition duration-200">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $r['id']; ?></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $r['nama_rt']; ?></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $r['ketua_rt']; ?></td>
+            <tr class="hover:bg-white/10 transition duration-200">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white drop-shadow-sm"><?php echo $r['id']; ?></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white/80 drop-shadow-sm"><?php echo $r['nama_rt']; ?></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-white/80 drop-shadow-sm"><?php echo $r['ketua_rt']; ?></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition duration-200">Edit</a>
+                    <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition duration-200 drop-shadow-sm">Edit</a>
                     <form method="POST" class="inline ml-2">
                         <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
-                        <button type="submit" name="delete_rt" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-purple-600 transition duration-200" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Hapus</button>
+                        <button type="submit" name="delete_rt" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Hapus</button>
                     </form>
                 </td>
             </tr>
@@ -77,5 +86,4 @@ if ($_SESSION['role'] == 'admin') {
 </div>
 <?php
 }
-include '../../layouts/admin/footer.php';
 ?>

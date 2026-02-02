@@ -1,13 +1,11 @@
 <?php
 include '../../config/database.php';
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
 
 if (isset($_GET['id'])) {
     $rt_id = $_GET['id'];
     $rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM rt WHERE id = $rt_id"));
     if (!$rt) {
-        header("Location: manage_rt_rw.php");
+        header("Location: manage_rt_rw");
         exit();
     }
 }
@@ -21,15 +19,21 @@ if (isset($_POST['update_rt'])) {
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    header("Location: manage_rt_rw.php");
+    header("Location: manage_rt_rw");
     exit();
 }
 
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
 ?>
-
-<div class="ml-64 min-h-screen flex items-center justify-center p-8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Edit RT: Lurahgo.id</title>
+</head>
+<body>
+    <div class="ml-64 min-h-screen flex items-center justify-center p-8">
 
     <div class="max-w-xl w-full bg-white rounded-md shadow p-7">
 
@@ -91,6 +95,5 @@ include '../../layouts/admin/sidebar.php';
     </div>
 </div>
 
-<?php
-include '../../layouts/admin/footer.php';
-?>
+</body>
+</html>

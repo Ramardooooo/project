@@ -150,5 +150,4 @@ if ($_SESSION['role'] == 'admin') {
 </div>
 <?php
 }
-include 'layouts/admin/footer.php';
 ?>

@@ -25,19 +25,17 @@ if (isset($_POST['tambah_user'])) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Tambah User - Lurahgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background:#eafaf1; }
-    </style>
 </head>
-<body class="min-h-screen">
-<div class="ml-64 min-h-screen flex items-center justify-center p-8">
-    <div class="max-w-xl w-full bg-white rounded-md shadow p-7">
+<body class="min-h-screen" style="background-image: url('https://images.unsplash.com/photo-1565102127622-df163cfbdaa4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
+<div class="ml-64 min-h-screen flex items-center justify-center p-8 backdrop-blur-sm">
+    <div class="max-w-xl w-full bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/30">
         <h2 class="text-xl font-semibold mb-5 text-center text-green-700">
             Tambah User
         </h2>

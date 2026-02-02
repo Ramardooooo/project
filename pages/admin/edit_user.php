@@ -1,10 +1,11 @@
 <?php
+include '../../config/database.php';
 
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
     $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE id = $user_id"));
     if (!$user) {
-        header("Location: manage_users.php");
+        header("Location: manage_users");
         exit();
     }
 }
@@ -38,9 +39,7 @@ if (isset($_POST['update_user'])) {
     <meta charset="UTF-8">
     <title>Edit User - Lurahgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background:#eafaf1; }
-    </style>
+
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="bg-white p-7 rounded-md shadow w-96">

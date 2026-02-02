@@ -7,11 +7,12 @@ if (isset($_POST['add_rt'])) {
 
     $stmt = mysqli_prepare($conn, "INSERT INTO rt (nama_rt, ketua_rt) VALUES (?, ?)");
     mysqli_stmt_bind_param($stmt, "ss", $nama_rt, $ketua_rt);
-    mysqli_stmt_execute($stmt);
+    if (mysqli_stmt_execute($stmt)) {
+        $success = "Data RT berhasil ditambahkan.";
+    } else {
+        $error = "Gagal menambahkan data RT: " . mysqli_error($conn);
+    }
     mysqli_stmt_close($stmt);
-
-    header("Location: manage_rt_rw");
-    exit();
 }
 
 ?>
@@ -20,23 +21,27 @@ if (isset($_POST['add_rt'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Tambah Data RT</title>
+    <title>Tambah RT - Lurahgo.id</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background:#eafaf1; }
-    </style>
 </head>
 
-<body class="min-h-screen">
+<body class="min-h-screen" style="background-image: url('https://images.unsplash.com/photo-1565102127622-df163cfbdaa4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
 
-<div class="ml-64 min-h-screen flex items-center justify-center p-8">
+<div class="ml-64 min-h-screen flex items-center justify-center p-8 backdrop-blur-sm">
 
-    <div class="max-w-xl w-full bg-white rounded-md shadow p-7">
+    <div class="max-w-xl w-full bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/30">
 
-        <h1 class="text-xl font-semibold text-gray-800 mb-5">
-            Tambah Data RT
-        </h1>
+        <h2 class="text-xl font-semibold mb-5 text-center text-green-700">
+            Tambah RT
+        </h2>
+
+        <?php if (isset($success)): ?>
+            <p class="text-green-600 mb-3"><?php echo $success; ?></p>
+        <?php endif; ?>
+        <?php if (isset($error)): ?>
+            <p class="text-red-500 mb-3"><?php echo $error; ?></p>
+        <?php endif; ?>
 
         <form method="POST" class="space-y-4">
 
