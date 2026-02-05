@@ -11,6 +11,18 @@ if (isset($_POST['delete_rt'])) {
     exit();
 }
 
+if (isset($_POST['toggle_status'])) {
+    $rt_id = $_POST['rt_id'];
+    $current_status = mysqli_fetch_assoc(mysqli_query($conn, "SELECT status FROM rt WHERE id = $rt_id"))['status'];
+    $new_status = ($current_status == 'aktif') ? 'tidak aktif' : 'aktif';
+    $stmt = mysqli_prepare($conn, "UPDATE rt SET status=? WHERE id=?");
+    mysqli_stmt_bind_param($stmt, "si", $new_status, $rt_id);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    header("Location: manage_rt_rw");
+    exit();
+}
+
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
@@ -27,58 +39,70 @@ if ($_SESSION['role'] == 'admin') {
     $rt = mysqli_query($conn, "SELECT * FROM rt $where_clause LIMIT $limit OFFSET $offset");
 ?>
 
-<div class="ml-64 flex-grow p-6" style="background-image: url('https://images.unsplash.com/photo-1565102127622-df163cfbdaa4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
-<div class="backdrop-blur-sm">
+<div id="mainContent" class="ml-64 min-h-screen bg-blue-900 transition-all duration-300">
+<div class="p-8">
 <h1 class="text-2xl font-bold mb-6 text-white drop-shadow-lg">Kelola Data RT</h1>
 
     <h2 class="text-xl font-bold mt-8 mb-4 text-white drop-shadow-lg">Berirkut Data RT:</h2>
     <a href="tambah_rt" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block drop-shadow-sm">Tambah RT</a>
 
     <form method="GET" class="mb-4">
-        <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari RT atau Ketua RT..." class="px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 drop-shadow-sm">
+        <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari RT atau Ketua RT..." class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 drop-shadow-sm">
         <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 drop-shadow-sm">Cari</button>
     </form>
 
-    <table class="w-full bg-white/20 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-white/30">
-        <thead class="bg-white/30 text-white">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">Nama RT</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">Ketua RT</th>
-                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider drop-shadow-sm">Aksi</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-white/20">
-            <?php while ($r = mysqli_fetch_assoc($rt)) { ?>
-            <tr class="hover:bg-white/10 transition duration-200">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white drop-shadow-sm"><?php echo $r['id']; ?></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-white/80 drop-shadow-sm"><?php echo $r['nama_rt']; ?></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-white/80 drop-shadow-sm"><?php echo $r['ketua_rt']; ?></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition duration-200 drop-shadow-sm">Edit</a>
-                    <form method="POST" class="inline ml-2">
-                        <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
-                        <button type="submit" name="delete_rt" class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <?php while ($r = mysqli_fetch_assoc($rt)) { ?>
+        <div class="bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-white/30 hover:shadow-2xl hover:bg-white/30 transition-all duration-300">
+            <div class="flex items-center mb-4">
+                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
+                    <?php echo strtoupper(substr($r['nama_rt'], 0, 1)); ?>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-white drop-shadow-sm"><?php echo $r['nama_rt']; ?></h3>
+                    <p class="text-sm text-white/70 drop-shadow-sm">Ketua RT: <?php echo $r['ketua_rt']; ?></p>
+                </div>
+            </div>
+            <div class="mb-4">
+                <p class="text-sm text-white/80 drop-shadow-sm"><strong>ID:</strong> <?php echo $r['id']; ?></p>
+                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Status:</strong>
+                    <span class="px-2 py-1 rounded-full text-xs font-medium <?php echo ($r['status'] == 'aktif') ? 'bg-green-500 text-white' : 'bg-red-500 text-white'; ?>">
+                        <?php echo ucfirst($r['status']); ?>
+                    </span>
+                </p>
+            </div>
+            <div class="flex gap-2">
+                <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition duration-200 drop-shadow-sm text-center">Edit</a>
+                <form method="POST" class="inline">
+                    <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
+                    <button type="submit" name="toggle_status" class="bg-yellow-500 text-white py-2 px-3 rounded-lg hover:bg-yellow-600 transition duration-200 drop-shadow-sm" title="Toggle Status">
+                        <?php echo ($r['status'] == 'aktif') ? 'Nonaktifkan' : 'Aktifkan'; ?>
+                    </button>
+                </form>
+                <form method="POST" class="inline">
+                    <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
+                    <button type="submit" name="delete_rt" class="bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-purple-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Delete</button>
+                </form>
+            </div>
+        </div>
+        <?php } ?>
+    </div>
 
     <div class="mt-4 flex justify-center">
         <?php if ($total_pages > 0): ?>
             <div class="flex space-x-2">
                 <?php if ($page > 1): ?>
-                    <a href="/PROJECT/manage_rt_rw?p=<?= $page - 1 ?>" class="px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Previous</a>
+                    <a href="/PROJECT/manage_rt_rw?p=<?= $page - 1 ?>" class="px-3 py-2 bg-white text-gray-800 rounded hover:bg-gray-100 drop-shadow-sm">Previous</a>
                 <?php endif; ?>
 
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="/PROJECT/manage_rt_rw?p=<?= $i ?>" class="px-3 py-2 <?= $i == $page ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700' ?> rounded hover:bg-gray-300"><?= $i ?></a>
+                    <a href="/PROJECT/manage_rt_rw?p=<?= $i ?>" class="px-3 py-2 <?= $i == $page ? 'bg-green-500 text-white' : 'bg-white text-gray-800' ?> rounded hover:bg-gray-100 drop-shadow-sm"><?= $i ?></a>
                 <?php endfor; ?>
 
                 <?php if ($page < $total_pages): ?>
-                    <a href="/PROJECT/manage_rt_rw?p=<?= $page + 1 ?>" class="px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Next</a>
+                    <a href="/PROJECT/manage_rt_rw?p=<?= $page + 1 ?>" class="px-3 py-2 bg-white text-gray-800 rounded hover:bg-gray-100 drop-shadow-sm">Next</a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

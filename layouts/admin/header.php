@@ -8,10 +8,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body { background-color: #dbeafe; }
+body { background-color: #1e3a8a; }
 </style>
 </head>
-<body class="bg-green-50 min-h-screen flex flex-col">
+<body class="bg-blue-900 min-h-screen flex flex-col">
 <header class="bg-gradient-to-r from-slate-900/70 to-slate-800/70 backdrop-blur-md shadow-lg border-b border-slate-600/30 relative">
     <div class="flex justify-between items-center px-8 py-5">
 
@@ -19,7 +19,7 @@ body { background-color: #dbeafe; }
             <button class="text-white/80 hover:text-white mr-6 lg:hidden transition-colors duration-200">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
-            <h1 class="text-2xl font-bold text-white tracking-wide">Dashboard Admin</h1>
+            <h1 class="text-2xl font-bold text-white tracking-wide"></h1>
         </div>
 
 

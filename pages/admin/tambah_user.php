@@ -1,5 +1,7 @@
 <?php
 include '../../config/database.php';
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 
 if (isset($_POST['tambah_user'])) {
     echo "Post Berhasil!";
@@ -9,22 +11,39 @@ if (isset($_POST['tambah_user'])) {
     $confirm_password = $_POST['confirm_password'];
     $role = $_POST['role'];
 
-    if ($password !== $confirm_password) {
-        $error = "Password dan konfirmasi password tidak cocok.";
+    $check_username = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
+    mysqli_stmt_bind_param($check_username, "s", $username);
+    mysqli_stmt_execute($check_username);
+    mysqli_stmt_store_result($check_username);
+    if (mysqli_stmt_num_rows($check_username) > 0) {
+        $error = "Username sudah ada.";
     } else {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = mysqli_prepare($conn, "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $role);
-        if (mysqli_stmt_execute($stmt)) {
-            $success = "User berhasil ditambahkan.";
+        $check_email = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
+        mysqli_stmt_bind_param($check_email, "s", $email);
+        mysqli_stmt_execute($check_email);
+        mysqli_stmt_store_result($check_email);
+        if (mysqli_stmt_num_rows($check_email) > 0) {
+            $error = "Email sudah ada.";
         } else {
-            $error = "Gagal menambahkan user: " . mysqli_error($conn);
+            if ($password !== $confirm_password) {
+                $error = "Password dan konfirmasi password tidak cocok.";
+            } else {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $role);
+                if (mysqli_stmt_execute($stmt)) {
+                    $success = "User berhasil ditambahkan.";
+                } else {
+                    $error = "Gagal menambahkan user: " . mysqli_error($conn);
+                }
+                mysqli_stmt_close($stmt);
+            }
         }
-        mysqli_stmt_close($stmt);
+        mysqli_stmt_close($check_email);
     }
+    mysqli_stmt_close($check_username);
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="id">
@@ -33,9 +52,9 @@ if (isset($_POST['tambah_user'])) {
     <title>Tambah User - Lurahgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen" style="background-image: url('https://images.unsplash.com/photo-1565102127622-df163cfbdaa4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
-<div class="ml-64 min-h-screen flex items-center justify-center p-8 backdrop-blur-sm">
-    <div class="max-w-xl w-full bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/30">
+<body class="min-h-screen bg-blue-900">
+<div class="ml-64 min-h-screen flex items-center justify-center p-8">
+    <div class="max-w-xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/20 hover:shadow-2xl hover:bg-white/95 transition-all duration-300">
         <h2 class="text-xl font-semibold mb-5 text-center text-green-700">
             Tambah User
         </h2>
@@ -88,7 +107,7 @@ if (isset($_POST['tambah_user'])) {
             </div>
 
             <button type="submit" name="tambah_user"
-                class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+                class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200">
                 Tambah User
             </button>
         </form>

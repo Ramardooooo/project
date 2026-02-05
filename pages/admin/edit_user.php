@@ -27,10 +27,12 @@ if (isset($_POST['update_user'])) {
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    header("Location: manage_users.php");
+    header("Location: manage_users");
     exit();
 }
 
+include '../../layouts/admin/header.php';
+include '../../layouts/admin/sidebar.php';
 ?>
 
 <!DOCTYPE html>
@@ -41,11 +43,16 @@ if (isset($_POST['update_user'])) {
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="bg-white p-7 rounded-md shadow w-96">
+<body class="min-h-screen bg-blue-900">
+<div class="ml-64 min-h-screen flex items-center justify-center p-8">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/20 hover:shadow-2xl hover:bg-white/95 transition-all duration-300 w-96">
         <h2 class="text-xl font-semibold mb-5 text-center text-gray-800">
             Edit User
         </h2>
+
+        <?php if (isset($error)): ?>
+            <p class="text-red-500 mb-3"><?php echo $error; ?></p>
+        <?php endif; ?>
 
         <form method="POST">
             <div class="mb-3">
@@ -86,13 +93,13 @@ if (isset($_POST['update_user'])) {
             </div>
 
             <button type="submit" name="update_user"
-                class="w-full bg-green-600 hover:bg-green-700
+                class="w-full bg-blue-600 hover:bg-blue-700
                        text-white py-2 rounded">
                 Update User
             </button>
         </form>
 
-        <a href="dashboard_admin.php"
+        <a href="dashboard_admin"
             class="block text-center mt-4 text-sm text-green-600 hover:underline">
             Kembali ke Dashboard
         </a>

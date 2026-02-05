@@ -39,20 +39,20 @@ if ($_SESSION['role'] === 'admin') {
         $traffic[] = $count;
     }
 ?>
-<div class="ml-64 min-h-screen" style="background-image: url('https://images.unsplash.com/photo-1565102127622-df163cfbdaa4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center; background-attachment: fixed;">
-<div class="p-8 backdrop-blur-sm">
+<div id="mainContent" class="ml-64 min-h-screen bg-blue-900">
+<div class="p-8">
 
 <h1 class="text-4xl font-extrabold mb-8 text-white drop-shadow-lg">Dashboard Admin</h1>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 <?php foreach ($stats as $s): ?>
-<div class="bg-white/20 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/30 hover:bg-white/30">
+<div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 hover:bg-gray-50">
     <div class="flex items-center">
         <div class="p-4 rounded-full bg-<?= $s[3] ?>-600 text-white shadow-md">
             <i class="fas fa-<?= $s[2] ?> text-2xl"></i>
         </div>
         <div class="ml-4">
-            <p class="text-sm font-medium text-white/90 uppercase tracking-wide"><?= $s[0] ?></p>
-            <p class="text-3xl font-bold text-white drop-shadow-sm"><?= $s[1] ?></p>
+            <p class="text-sm font-medium text-gray-800 uppercase tracking-wide drop-shadow-sm"><?= $s[0] ?></p>
+            <p class="text-3xl font-bold text-black drop-shadow-lg"><?= $s[1] ?></p>
         </div>
     </div>
 </div>
@@ -60,82 +60,82 @@ if ($_SESSION['role'] === 'admin') {
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-    <div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-white/20">
-        <h3 class="text-xl font-bold mb-6 text-white">Aktivitas Terbaru</h3>
+    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+        <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Aktivitas Terbaru</h3>
         <div class="space-y-4">
             <?php
             $recent_users = mysqli_query($conn, "SELECT username, created_at FROM users ORDER BY created_at DESC LIMIT 5");
             while ($user = mysqli_fetch_assoc($recent_users)) {
-                echo "<div class='flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors'>";
-                echo "<span class='font-medium text-white/90'>User baru: {$user['username']}</span>";
-                echo "<span class='text-sm text-white/70'>" . date('d/m/Y H:i', strtotime($user['created_at'])) . "</span>";
+                echo "<div class='flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors shadow-sm'>";
+                echo "<span class='font-medium text-gray-700'>User baru: {$user['username']}</span>";
+                echo "<span class='text-sm text-gray-500'>" . date('d/m/Y H:i', strtotime($user['created_at'])) . "</span>";
                 echo "</div>";
             }
             ?>
         </div>
     </div>
 
-    <div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-white/20">
-        <h3 class="text-xl font-bold mb-6 text-white">Notifikasi</h3>
+    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+        <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Notifikasi</h3>
         <div class="space-y-4">
-            <div class="p-4 bg-yellow-700/50 border-l-4 border-yellow-400 text-yellow-100 rounded-r-lg">
+            <div class="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg shadow-sm">
                 <p class="font-medium">Periksa data RT yang belum lengkap.</p>
             </div>
-            <div class="p-4 bg-green-700/50 border-l-4 border-green-400 text-green-100 rounded-r-lg">
+            <div class="p-4 bg-green-50 border-l-4 border-green-400 text-green-800 rounded-r-lg shadow-sm">
                 <p class="font-medium">Sistem backup otomatis telah dilakukan.</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 mb-10 border border-white/20">
-    <h4 class="text-xl font-bold mb-4 text-white">Ringkasan Data</h4>
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
+    <h4 class="text-xl font-bold mb-4 text-black drop-shadow-lg">Ringkasan Data</h4>
     <ul class="space-y-3">
-        <li class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
-            <span class="font-medium text-white/90">Total Warga Aktif:</span>
-            <span class="font-bold text-white"><?php echo $data['warga']; ?></span>
+        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
+            <span class="font-medium text-gray-700">Total Warga Aktif:</span>
+            <span class="font-bold text-gray-800"><?php echo $data['warga']; ?></span>
         </li>
-        <li class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
-            <span class="font-medium text-white/90">Total KK Terdaftar:</span>
-            <span class="font-bold text-white"><?php echo $data['kk']; ?></span>
+        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
+            <span class="font-medium text-gray-700">Total KK Terdaftar:</span>
+            <span class="font-bold text-gray-800"><?php echo $data['kk']; ?></span>
         </li>
-        <li class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
-            <span class="font-medium text-white/90">Total RT:</span>
-            <span class="font-bold text-white"><?php echo $data['rt']; ?></span>
+        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
+            <span class="font-medium text-gray-700">Total RT:</span>
+            <span class="font-bold text-gray-800"><?php echo $data['rt']; ?></span>
         </li>
-        <li class="flex justify-between items-center p-2 bg-white/10 rounded-lg">
-            <span class="font-medium text-white/90">Total RW:</span>
-            <span class="font-bold text-white"><?php echo $data['rw']; ?></span>
+        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
+            <span class="font-medium text-gray-700">Total RW:</span>
+            <span class="font-bold text-gray-800"><?php echo $data['rw']; ?></span>
         </li>
     </ul>
 </div>
 
-<div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 mb-10 border border-white/20">
-    <h3 class="text-xl font-bold mb-6 text-white">Kelola Data</h3>
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
+    <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Kelola Data</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="/PROJECT/manage_users" class="group p-6 bg-white/10 backdrop-blur-md rounded-xl hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-lg">
-            <i class="fas fa-users text-white/80 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-white mb-2">Kelola User</h4>
-            <p class="text-sm text-white/70">Tambah, edit, hapus user</p>
+        <a href="/PROJECT/manage_users" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
+            <i class="fas fa-users text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola User</h4>
+            <p class="text-sm text-gray-600">Tambah, edit, hapus user</p>
         </a>
-        <a href="/PROJECT/manage_rt_rw" class="group p-6 bg-white/10 backdrop-blur-md rounded-xl hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-lg">
-            <i class="fas fa-map-marker-alt text-white/80 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-white mb-2">Kelola RT/RW</h4>
-            <p class="text-sm text-white/70">Atur struktur RT dan RW</p>
+        <a href="/PROJECT/manage_rt_rw" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
+            <i class="fas fa-map-marker-alt text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola RT/RW</h4>
+            <p class="text-sm text-gray-600">Atur struktur RT dan RW</p>
         </a>
-        <a href="manage_master_data.php" class="group p-6 bg-white/10 backdrop-blur-md rounded-xl hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/30 hover:shadow-lg">
-            <i class="fas fa-database text-white/80 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-white mb-2">Data Master</h4>
-            <p class="text-sm text-white/70">Kelola data utama sistem</p>
+        <a href="manage_master_data.php" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
+            <i class="fas fa-database text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Data Master</h4>
+            <p class="text-sm text-gray-600">Kelola data utama sistem</p>
         </a>
     </div>
 </div>
 
-<div class="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 mb-8">
-    <div class="flex justify-between items-center p-6 cursor-pointer hover:bg-white/20 transition-colors"
+<div class="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8">
+    <div class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 transition-colors"
          onclick="toggleTraffic()">
-        <h3 class="text-xl font-bold text-white">Traffic Pengunjung</h3>
-        <i id="trafficIcon" class="fas fa-minus text-white/80"></i>
+        <h3 class="text-xl font-bold text-gray-800">Traffic Pengunjung</h3>
+        <i id="trafficIcon" class="fas fa-minus text-gray-600"></i>
     </div>
     <div id="trafficBody" class="p-6 pt-0">
         <canvas id="trafficChart" height="120"></canvas>
