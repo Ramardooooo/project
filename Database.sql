@@ -16,12 +16,10 @@
 
 
 -- Dumping database structure for rt_testing
-DROP DATABASE IF EXISTS `rt_testing`;
 CREATE DATABASE IF NOT EXISTS `rt_testing` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `rt_testing`;
 
 -- Dumping structure for table rt_testing.activities
-DROP TABLE IF EXISTS `activities`;
 CREATE TABLE IF NOT EXISTS `activities` (
   `id` int NOT NULL AUTO_INCREMENT,
   `action` varchar(50) NOT NULL,
@@ -35,8 +33,23 @@ CREATE TABLE IF NOT EXISTS `activities` (
 
 -- Data exporting was unselected.
 
+-- Dumping structure for table rt_testing.audit_log
+CREATE TABLE IF NOT EXISTS `audit_log` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `action` varchar(255) NOT NULL,
+  `table_name` varchar(255) NOT NULL,
+  `record_id` int NOT NULL,
+  `old_value` text,
+  `new_value` text,
+  `user_id` int DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
 -- Dumping structure for table rt_testing.kk
-DROP TABLE IF EXISTS `kk`;
 CREATE TABLE IF NOT EXISTS `kk` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -46,18 +59,17 @@ CREATE TABLE IF NOT EXISTS `kk` (
 -- Data exporting was unselected.
 
 -- Dumping structure for table rt_testing.rt
-DROP TABLE IF EXISTS `rt`;
 CREATE TABLE IF NOT EXISTS `rt` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nama_rt` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `ketua_rt` varchar(100) NOT NULL,
+  `status` enum('aktif','tidak aktif') DEFAULT 'aktif',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table rt_testing.rw
-DROP TABLE IF EXISTS `rw`;
 CREATE TABLE IF NOT EXISTS `rw` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -67,23 +79,22 @@ CREATE TABLE IF NOT EXISTS `rw` (
 -- Data exporting was unselected.
 
 -- Dumping structure for table rt_testing.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','ketua','user') DEFAULT 'user',
+  `status` enum('aktif','tidak aktif') DEFAULT 'aktif',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table rt_testing.warga
-DROP TABLE IF EXISTS `warga`;
 CREATE TABLE IF NOT EXISTS `warga` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nik` varchar(20) DEFAULT NULL,
