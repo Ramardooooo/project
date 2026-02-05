@@ -61,15 +61,21 @@ if ($_SESSION['role'] === 'admin') {
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
     <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
-        <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Aktivitas Terbaru</h3>
-        <div class="space-y-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-black drop-shadow-lg">Audit Log</h3>
+            <a href="audit_log" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">Export .txt</a>
+        </div>
+        <div class="max-h-64 overflow-y-auto space-y-2">
             <?php
-            $recent_users = mysqli_query($conn, "SELECT username, created_at FROM users ORDER BY created_at DESC LIMIT 5");
-            while ($user = mysqli_fetch_assoc($recent_users)) {
-                echo "<div class='flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors shadow-sm'>";
-                echo "<span class='font-medium text-gray-700'>User baru: {$user['username']}</span>";
-                echo "<span class='text-sm text-gray-500'>" . date('d/m/Y H:i', strtotime($user['created_at'])) . "</span>";
+            $audit_logs = mysqli_query($conn, "SELECT action, table_name, username, created_at FROM audit_log ORDER BY created_at DESC LIMIT 10");
+            while ($log = mysqli_fetch_assoc($audit_logs)) {
+                echo "<div class='flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors shadow-sm text-sm'>";
+                echo "<span class='font-medium text-gray-700'>{$log['action']} ({$log['table_name']}) oleh {$log['username']}</span>";
+                echo "<span class='text-xs text-gray-500'>" . date('d/m/Y H:i', strtotime($log['created_at'])) . "</span>";
                 echo "</div>";
+            }
+            if (mysqli_num_rows($audit_logs) == 0) {
+                echo "<div class='p-2 bg-gray-50 rounded-lg text-gray-500 text-sm'>Belum ada aktivitas audit.</div>";
             }
             ?>
         </div>

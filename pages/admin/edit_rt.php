@@ -13,11 +13,28 @@ if (isset($_GET['id'])) {
 if (isset($_POST['update_rt'])) {
     $nama_rt = $_POST['nama_rt'];
     $ketua_rt = $_POST['ketua_rt'];
+    $status = $_POST['status'];
 
-    $stmt = mysqli_prepare($conn, "UPDATE rt SET nama_rt=?, ketua_rt=? WHERE id=?");
-    mysqli_stmt_bind_param($stmt, "ssi", $nama_rt, $ketua_rt, $rt_id);
+    // Get old data for audit log
+    $old_rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT nama_rt, ketua_rt, status FROM rt WHERE id = $rt_id"));
+
+    $stmt = mysqli_prepare($conn, "UPDATE rt SET nama_rt=?, ketua_rt=?, status=? WHERE id=?");
+    mysqli_stmt_bind_param($stmt, "sssi", $nama_rt, $ketua_rt, $status, $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+
+    // Audit log
+    $action = "Update RT";
+    $table_name = "rt";
+    $record_id = $rt_id;
+    $old_value = json_encode($old_rt);
+    $new_value = json_encode(['nama_rt' => $nama_rt, 'ketua_rt' => $ketua_rt, 'status' => $status]);
+    $user_id = $_SESSION['user_id'] ?? null;
+    $username = $_SESSION['username'] ?? 'Unknown';
+    $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id, $username);
+    mysqli_stmt_execute($audit_stmt);
+    mysqli_stmt_close($audit_stmt);
 
     header("Location: manage_rt_rw");
     exit();

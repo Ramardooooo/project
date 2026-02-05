@@ -3,10 +3,26 @@ include '../../config/database.php';
 
 if (isset($_POST['delete_rt'])) {
     $rt_id = $_POST['rt_id'];
+    // Get data before delete for audit log
+    $rt_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM rt WHERE id = $rt_id"));
     $stmt = mysqli_prepare($conn, "DELETE FROM rt WHERE id=?");
     mysqli_stmt_bind_param($stmt, "i", $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+
+    // Audit log
+    $action = "RT dihapus oleh " . $username;
+    $table_name = "rt";
+    $record_id = $rt_id;
+    $old_value = json_encode($rt_data);
+    $new_value = null;
+    $user_id = $_SESSION['user_id'] ?? null;
+    $username = $_SESSION['username'] ?? 'Unknown';
+    $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id, $username);
+    mysqli_stmt_execute($audit_stmt);
+    mysqli_stmt_close($audit_stmt);
+
     header("Location: manage_rt_rw");
     exit();
 }
@@ -19,6 +35,20 @@ if (isset($_POST['toggle_status'])) {
     mysqli_stmt_bind_param($stmt, "si", $new_status, $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+
+    // Audit log
+    $action = "Status RT diubah oleh " . $username;
+    $table_name = "rt";
+    $record_id = $rt_id;
+    $old_value = json_encode(['status' => $current_status]);
+    $new_value = json_encode(['status' => $new_status]);
+    $user_id = $_SESSION['user_id'] ?? null;
+    $username = $_SESSION['username'] ?? 'Unknown';
+    $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id, $username);
+    mysqli_stmt_execute($audit_stmt);
+    mysqli_stmt_close($audit_stmt);
+
     header("Location: manage_rt_rw");
     exit();
 }

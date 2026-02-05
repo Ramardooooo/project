@@ -32,7 +32,19 @@ if (isset($_POST['tambah_user'])) {
                 $stmt = mysqli_prepare($conn, "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
                 mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $hashed_password, $role);
                 if (mysqli_stmt_execute($stmt)) {
+                    $user_id = mysqli_insert_id($conn);
                     $success = "User berhasil ditambahkan.";
+                    $user_id_session = $_SESSION['user_id'] ?? null;
+                    $username_session = $_SESSION['username'] ?? 'Unknown';
+                    $action = "User baru ditambahkan oleh " . $username_session;
+                    $table_name = "users";
+                    $record_id = $user_id;
+                    $old_value = null;
+                    $new_value = json_encode(['username' => $username, 'email' => $email, 'role' => $role]);
+                    $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id_session, $username_session);
+                    mysqli_stmt_execute($audit_stmt);
+                    mysqli_stmt_close($audit_stmt);
                 } else {
                     $error = "Gagal menambahkan user: " . mysqli_error($conn);
                 }

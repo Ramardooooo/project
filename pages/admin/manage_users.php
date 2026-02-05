@@ -3,10 +3,24 @@ include '../../config/database.php';
 
 if (isset($_POST['delete_user'])) {
     $user_id = $_POST['user_id'];
+    $user_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT username, email, role FROM users WHERE id = $user_id"));
     $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id=?");
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+
+    $action = "Delete User";
+    $table_name = "users";
+    $record_id = $user_id;
+    $old_value = json_encode($user_data);
+    $new_value = null;
+    $user_id_session = $_SESSION['user_id'] ?? null;
+    $username_session = $_SESSION['username'] ?? 'Unknown';
+    $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id_session, $username_session);
+    mysqli_stmt_execute($audit_stmt);
+    mysqli_stmt_close($audit_stmt);
+
     header("Location: manage_users");
     exit();
 }

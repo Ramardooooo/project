@@ -26,6 +26,18 @@ if (isset($_POST['update_user'])) {
     }
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+    
+    $action = "User diedit oleh " . ($_SESSION['username'] ?? 'Unknown');
+    $table_name = "users";
+    $record_id = $user_id;
+    $old_value = json_encode($user);
+    $new_value = json_encode(['username' => $username, 'email' => $email, 'role' => $role]);
+    $user_id_session = $_SESSION['user_id'] ?? null;
+    $username_session = $_SESSION['username'] ?? 'Unknown';
+    $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id_session, $username_session);
+    mysqli_stmt_execute($audit_stmt);
+    mysqli_stmt_close($audit_stmt);
 
     header("Location: manage_users");
     exit();
