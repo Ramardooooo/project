@@ -107,7 +107,7 @@ if (isset($_POST['tambah_user'])) {
             </div>
 
             <button type="submit" name="tambah_user"
-                class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200">
+                class="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300">
                 Tambah User
             </button>
         </form>

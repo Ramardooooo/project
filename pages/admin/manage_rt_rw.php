@@ -72,12 +72,13 @@ if ($_SESSION['role'] == 'admin') {
                         <?php echo ucfirst($r['status']); ?>
                     </span>
                 </p>
+                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Dibuat:</strong> <?php echo isset($r['created_at']) ? date('d M Y', strtotime($r['created_at'])) : 'N/A'; ?></p>
             </div>
             <div class="flex gap-2">
-                <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-blue-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition duration-200 drop-shadow-sm text-center">Edit</a>
+                <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="py-2 px-3 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:scale-105 transition-all duration-300 drop-shadow-sm text-center">Edit</a>
                 <form method="POST" class="inline">
                     <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
-                    <button type="submit" name="toggle_status" class="bg-yellow-500 text-white py-2 px-3 rounded-lg hover:bg-yellow-600 transition duration-200 drop-shadow-sm" title="Toggle Status">
+                    <button type="submit" name="toggle_status" class="py-2 px-3 rounded-lg font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:scale-105 transition-all duration-300 drop-shadow-sm" title="Toggle Status">
                         <?php echo ($r['status'] == 'aktif') ? 'Nonaktifkan' : 'Aktifkan'; ?>
                     </button>
                 </form>

@@ -101,8 +101,7 @@ if (isset($_POST['add_rt'])) {
                 <button
                     type="submit"
                     name="add_rt"
-                    class="flex-1 bg-green-600 hover:bg-green-700
-                           text-white py-2 rounded">
+                    class="flex-1 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300">
                     Simpan
                 </button>
 

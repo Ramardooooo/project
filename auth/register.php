@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <option value="user">User</option>
                 </select>
             </div>
-            <button type="submit" class="w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600">Register</button>
+            <button type="submit" class="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300">Register</button>
         </form>
         <p class="mt-4 text-center">Already have an account? <a href="login.php" class="text-yellow-500">Login</a></p>
     </div>

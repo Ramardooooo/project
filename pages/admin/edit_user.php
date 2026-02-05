@@ -93,8 +93,7 @@ include '../../layouts/admin/sidebar.php';
             </div>
 
             <button type="submit" name="update_user"
-                class="w-full bg-blue-600 hover:bg-blue-700
-                       text-white py-2 rounded">
+                class="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300">
                 Update User
             </button>
         </form>

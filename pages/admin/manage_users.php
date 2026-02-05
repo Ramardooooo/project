@@ -47,18 +47,19 @@ if ($_SESSION['role'] == 'admin') {
                 </div>
                 <div class="ml-4">
                     <h3 class="text-lg font-semibold text-white drop-shadow-sm"><?php echo $user['username']; ?></h3>
-                    <p class="text-sm text-white/70 drop-shadow-sm"><?php echo $user['role']; ?></p>
+                    <p class="text-sm text-white/70 drop-shadow-sm"><strong>Jabatannya: </strong><?php echo $user['role']; ?></p>
                 </div>
             </div>
             <div class="mb-4">
                 <p class="text-sm text-white/80 drop-shadow-sm"><strong>Email:</strong> <?php echo $user['email']; ?></p>
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>ID:</strong> <?php echo $user['id']; ?></p>
+                <p class="text-sm text-white/80 drop-shadow-sm"><strong>ID Database:</strong> <?php echo $user['id']; ?></p>
+                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Dibuat:</strong> <?php echo isset($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : 'N/A'; ?></p>
             </div>
             <div class="flex gap-2">
-                <a href="/PROJECT/edit_user?id=<?php echo $user['id']; ?>" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-200 drop-shadow-sm text-center">Edit</a>
+                <a href="/PROJECT/edit_user?id=<?php echo $user['id']; ?>" class="flex-1 py-2 px-3 rounded-lg font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300 drop-shadow-sm text-center">Edit</a>
                 <form method="POST" class="flex-1">
                     <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                    <button type="submit" name="delete_user" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-purple-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah anda yakin untuk menghapus?')">Delete</button>
+                    <button type="submit" name="delete_user" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah anda yakin untuk menghapus?')">Delete</button>
                 </form>
             </div>
         </div>
