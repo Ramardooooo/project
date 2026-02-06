@@ -3,8 +3,8 @@ include '../../config/database.php';
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
-if ($_SESSION['role'] !== 'admin') {
-    header("Location: ../../auth/login.php");
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
     exit();
 }
 

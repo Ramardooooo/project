@@ -2,6 +2,12 @@
 include '../../config/database.php';
 
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
+
+
 $audit_logs = mysqli_query($conn, "SELECT * FROM audit_log ORDER BY created_at DESC");
 
 header('Content-Type: text/plain');

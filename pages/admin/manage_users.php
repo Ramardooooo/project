@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: auth/login.php");
+    exit();
+}
 include '../../config/database.php';
 
 if (isset($_POST['delete_user'])) {
@@ -27,6 +32,11 @@ if (isset($_POST['delete_user'])) {
 
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
 
 if ($_SESSION['role'] == 'admin') {
     $limit = 9;

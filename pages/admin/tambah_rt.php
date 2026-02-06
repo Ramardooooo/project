@@ -3,6 +3,12 @@ include '../../config/database.php';
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
+
 if (isset($_POST['add_rt'])) {
     $nama_rt = $_POST['nama_rt'];
     $ketua_rt = $_POST['ketua_rt'];
@@ -27,8 +33,13 @@ if (isset($_POST['add_rt'])) {
     mysqli_stmt_close($check_nama_rt);
 }
 
-?>
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: auth/login.php");
+    exit();
+}
 
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>

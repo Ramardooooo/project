@@ -18,6 +18,11 @@ if (isset($_POST['delete_kk'])) {
 include 'layouts/admin/header.php';
 include 'layouts/admin/sidebar.php';
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
+
 if ($_SESSION['role'] == 'admin') {
     $limit = 10;
     $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';

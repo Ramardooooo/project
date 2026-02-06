@@ -53,6 +53,11 @@ if (isset($_POST['toggle_status'])) {
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
+
 if ($_SESSION['role'] == 'admin') {
     $limit = 9;
     $page = isset($_GET['p']) ? (int)$_GET['p'] : 1;

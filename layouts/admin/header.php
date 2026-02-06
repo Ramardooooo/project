@@ -51,7 +51,7 @@ body { background-color: #1e3a8a; }
                 </span>
             </div>
 
-            <a href="../auth/logout.php" class="text-white/80 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/20">
+            <a href="logout" class="text-white/80 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/20">
                 <i class="fas fa-sign-out-alt text-xl"></i>
             </a>
         </div>

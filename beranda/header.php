@@ -34,7 +34,6 @@ if ($user_id) {
             </div>
         </a>
 
-        <!-- Desktop Navigation -->
         <nav class="hidden lg:flex space-x-8">
             <a href="#hero" class="relative text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium group">
                 <span class="relative z-10">Home</span>
@@ -117,7 +116,6 @@ if ($user_id) {
                 </div>
             </div>
 
-            <!-- User Menu -->
             <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="relative">
                     <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">
@@ -152,8 +150,7 @@ if ($user_id) {
                 </a>
             <?php endif; ?>
         </div>
-
-        <!-- Mobile Menu Button -->
+        
         <div class="lg:hidden">
             <button id="mobile-menu-button" class="text-gray-700 focus:outline-none p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300">
                 <i class="fas fa-bars text-lg"></i>
@@ -161,7 +158,6 @@ if ($user_id) {
         </div>
     </div>
 
-    <!-- Mobile Menu -->
     <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-200 shadow-lg">
         <div class="px-4 py-3 space-y-1">
             <a href="#hero" class="block py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg px-3 transition-all duration-300">

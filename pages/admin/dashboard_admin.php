@@ -1,8 +1,17 @@
 <?php
-session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
+
 include '../../config/database.php';
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
 
 if ($_SESSION['role'] === 'admin') {
 

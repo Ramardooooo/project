@@ -40,6 +40,11 @@ if (isset($_POST['update_rt'])) {
 
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
