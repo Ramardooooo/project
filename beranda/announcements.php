@@ -27,9 +27,9 @@
                         <i class="fas fa-code text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Update Sistem v2.1</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Update Sistem v19.1</h3>
                         <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-1"></i>15 Desember 2024
+                            <i class="fas fa-calendar-alt mr-1"></i>15 Desember 2025
                         </p>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <div>
                         <h3 class="text-xl font-bold text-gray-800 mb-1">Pelatihan Digital</h3>
                         <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-1"></i>20 Desember 2024
+                            <i class="fas fa-calendar-alt mr-1"></i>20 Desember 2025
                         </p>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                     <div>
                         <h3 class="text-xl font-bold text-gray-800 mb-1">Dashboard Analytics</h3>
                         <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-1"></i>1 Januari 2025
+                            <i class="fas fa-calendar-alt mr-1"></i>1 Januari 2026
                         </p>
                     </div>
                 </div>

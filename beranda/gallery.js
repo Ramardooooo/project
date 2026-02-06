@@ -1,93 +1,133 @@
-// Simple Gallery Modal
+// Optimized Gallery Image Preview Modal with Like functionality
 document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('.gallery-image');
+    const galleryImages = document.querySelectorAll('.gallery-image');
     const modal = document.getElementById('gallery-modal');
-    const modalImg = document.getElementById('modal-image');
+    const modalImage = document.getElementById('modal-image');
     const modalTitle = document.getElementById('modal-title');
-    const modalDesc = document.getElementById('modal-description');
+    const modalDescription = document.getElementById('modal-description');
     const modalDate = document.getElementById('modal-date');
-    const closeBtn = document.querySelector('.close-modal');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
+    const closeModal = document.querySelector('.close-modal');
 
-    let currentIndex = 0;
-    let galleryItems = [];
+    // Gallery data
+    const galleryData = Array.from(galleryImages).map((img, index) => ({
+        src: img.src,
+        title: img.dataset.title,
+        description: img.dataset.description,
+        date: img.dataset.date,
+        index: index
+    }));
 
-    // Collect gallery data
-    images.forEach((img, index) => {
-        galleryItems.push({
-            src: img.src,
-            title: img.dataset.title,
-            description: img.dataset.description,
-            date: img.dataset.date
-        });
-
-        img.addEventListener('click', () => {
-            currentIndex = index;
-            showImage(currentIndex);
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+    // Open modal
+    galleryImages.forEach((image, index) => {
+        image.addEventListener('click', function() {
+            openModal(index);
         });
     });
-
-    function showImage(index) {
-        const item = galleryItems[index];
-        modalImg.src = item.src;
-        modalTitle.textContent = item.title;
-        modalDesc.textContent = item.description;
-        modalDate.textContent = item.date;
-
-        // Update counter
-        document.getElementById('current-image').textContent = index + 1;
-        document.getElementById('total-images').textContent = galleryItems.length;
-
-        // Update buttons
-        prevBtn.style.opacity = index > 0 ? '1' : '0.3';
-        nextBtn.style.opacity = index < galleryItems.length - 1 ? '1' : '0.3';
-    }
 
     // Close modal
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
+    closeModal.addEventListener('click', function() {
+        closeModalFunction();
     });
 
-    function closeModal() {
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModalFunction();
+        }
+    });
+
+    // Keyboard navigation (Escape only)
+    document.addEventListener('keydown', function(e) {
+        if (modal.classList.contains('hidden')) return;
+
+        if (e.key === 'Escape') {
+            closeModalFunction();
+        }
+    });
+
+    // Like functionality - optimized
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.like-btn')) {
+            e.preventDefault();
+            const button = e.target.closest('.like-btn');
+            const galleryId = button.dataset.galleryId;
+            toggleLike(galleryId, button);
+        }
+    });
+
+    function openModal(index) {
+        const data = galleryData[index];
+        modalImage.src = data.src;
+        modalTitle.textContent = data.title;
+        modalDescription.textContent = data.description;
+        modalDate.textContent = data.date;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalFunction() {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
         document.body.style.overflow = 'auto';
     }
 
-    // Navigation
-    prevBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (currentIndex > 0) {
-            currentIndex--;
-            showImage(currentIndex);
-        }
-    });
+    // Optimized Like functionality with better error handling
+    async function toggleLike(galleryId, button) {
+        // Disable button to prevent double clicks
+        button.disabled = true;
+        button.style.opacity = '0.6';
 
-    nextBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (currentIndex < galleryItems.length - 1) {
-            currentIndex++;
-            showImage(currentIndex);
-        }
-    });
+        try {
+            const response = await fetch('api/toggle_like.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ gallery_id: parseInt(galleryId) })
+            });
 
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (!modal.classList.contains('hidden')) {
-            if (e.key === 'Escape') closeModal();
-            else if (e.key === 'ArrowLeft' && currentIndex > 0) {
-                currentIndex--;
-                showImage(currentIndex);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            else if (e.key === 'ArrowRight' && currentIndex < galleryItems.length - 1) {
-                currentIndex++;
-                showImage(currentIndex);
+
+            const result = await response.json();
+
+            if (result.success) {
+                const icon = button.querySelector('i');
+                const countSpan = button.querySelector('.like-count');
+
+                if (result.liked) {
+                    button.classList.remove('text-gray-400');
+                    button.classList.add('text-red-500');
+                    icon.classList.add('fas');
+                    icon.classList.remove('far');
+                } else {
+                    button.classList.remove('text-red-500');
+                    button.classList.add('text-gray-400');
+                    icon.classList.add('far');
+                    icon.classList.remove('fas');
+                }
+
+                // Animate count change
+                countSpan.style.transform = 'scale(1.2)';
+                countSpan.textContent = result.like_count;
+                setTimeout(() => {
+                    countSpan.style.transform = 'scale(1)';
+                }, 200);
+
+                console.log('Like toggled successfully:', result.liked ? 'liked' : 'unliked', 'Count:', result.like_count);
+            } else {
+                console.error('Like toggle failed:', result.message);
+                alert('Gagal mengubah like: ' + result.message);
             }
+        } catch (error) {
+            console.error('Error toggling like:', error);
+            alert('Terjadi kesalahan saat mengubah like. Silakan coba lagi.');
+        } finally {
+            // Re-enable button
+            button.disabled = false;
+            button.style.opacity = '1';
         }
-    });
+    }
 });
