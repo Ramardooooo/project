@@ -1,65 +1,102 @@
-<section class="py-20 bg-blue-50">
-    <div class="max-w-7xl mx-auto px-6">
+<section id="announcements" class="py-20 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-10 left-20 w-40 h-40 bg-indigo-500 rounded-full"></div>
+        <div class="absolute bottom-10 right-20 w-32 h-32 bg-cyan-500 rounded-full"></div>
+    </div>
 
-        <h2 class="text-4xl font-serif text-center mb-16 text-blue-600">
-            Pengumuman & Update Terbaru
-        </h2>
+    <div class="relative max-w-7xl mx-auto px-6">
+
+        <div class="text-center mb-16">
+            <span class="inline-block px-4 py-2 bg-gradient-to-r from-indigo-100 to-cyan-100 text-indigo-800 rounded-full text-sm font-medium mb-4">
+                <i class="fas fa-bell mr-2 text-indigo-600"></i>Update Terbaru
+            </span>
+            <h2 class="text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                Pengumuman & Berita
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Informasi terbaru tentang sistem dan kegiatan RT/RW
+            </p>
+        </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                        <i class="fas fa-bullhorn"></i>
+            <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-code text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800">Update Sistem v18.1</h3>
-                        <p class="text-sm text-gray-500">2 Febuary 2026</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Update Sistem v2.1</h3>
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-calendar-alt mr-1"></i>15 Desember 2024
+                        </p>
                     </div>
                 </div>
-                <p class="text-gray-600">
-                    Penting Ada Update
+                <p class="text-gray-600 leading-relaxed">
+                    Peningkatan performa sistem, perbaikan bug, dan fitur-fitur baru
+                    untuk pengalaman pengguna yang lebih baik.
                 </p>
+                <div class="mt-4 flex items-center text-blue-600 font-medium">
+                    <span class="text-sm">Baca selengkapnya</span>
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                        <i class="fas fa-users"></i>
+            <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-graduation-cap text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800">Pelatihan Admin RT/RW</h3>
-                        <p class="text-sm text-gray-500">2 Febuary 2026</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Pelatihan Digital</h3>
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-calendar-alt mr-1"></i>20 Desember 2024
+                        </p>
                     </div>
                 </div>
-                <p class="text-gray-600">
-                    Jadwal pelatihan penggunaan sistem management untuk admin
-                    RT/RW di seluruh Indonesia telah tersedia.
+                <p class="text-gray-600 leading-relaxed">
+                    Program pelatihan penggunaan sistem management RT/RW secara
+                    online untuk meningkatkan kompetensi digital.
                 </p>
+                <div class="mt-4 flex items-center text-green-600 font-medium">
+                    <span class="text-sm">Daftar sekarang</span>
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center mb-4">
-                    <div class="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                        <i class="fas fa-chart-line"></i>
+            <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50 md:col-span-2 lg:col-span-1">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-chart-bar text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800">Laporan Bulanan</h3>
-                        <p class="text-sm text-gray-500">2 Febuary 2026</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Dashboard Analytics</h3>
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-calendar-alt mr-1"></i>1 Januari 2025
+                        </p>
                     </div>
                 </div>
-                <p class="text-gray-600">
-                    Fitur laporan bulanan kini tersedia untuk memantau aktivitas
-                    dan statistik RT/RW secara real-time.
+                <p class="text-gray-600 leading-relaxed">
+                    Fitur analitik baru untuk monitoring kegiatan RT/RW dengan
+                    visualisasi data yang informatif dan real-time.
                 </p>
+                <div class="mt-4 flex items-center text-purple-600 font-medium">
+                    <span class="text-sm">Pelajari fitur</span>
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                </div>
             </div>
 
         </div>
 
-        <div class="text-center mt-12">
-            <a href="#" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                Lihat Semua Pengumuman
-            </a>
+        <div class="text-center mt-16">
+            <div class="inline-block">
+                <a href="#" class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105">
+                    <i class="fas fa-newspaper mr-2 group-hover:animate-pulse"></i>
+                    Lihat Semua Pengumuman
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                </a>
+            </div>
         </div>
     </div>
 </section>

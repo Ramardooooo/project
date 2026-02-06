@@ -1,8 +1,22 @@
+<?php if (!session_id()) session_start(); ?>
+<?php include __DIR__ . '/../config/database.php'; ?>
+<?php
+$user_id = $_SESSION['user_id'] ?? null;
+$user = null;
+if ($user_id) {
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_assoc($result);
+}
+?>
 <header class="bg-gradient-to-r from-white via-blue-50 to-purple-50 shadow-lg backdrop-blur-sm border-b border-white/20 sticky top-0 z-50">
     <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-center py-2 text-sm">
         <div class="flex items-center justify-center space-x-4">
             <i class="fas fa-bullhorn animate-pulse"></i>
-            <span>🚀 lAWAK</span>
+            <span>Tetap Lurahgo.id Dan Sehat Selalu</span>
             <button onclick="this.parentElement.style.display='none'" class="text-white/70 hover:text-white ml-4">
                 <i class="fas fa-times"></i>
             </button>
@@ -16,7 +30,7 @@
             </div>
             <div>
                 <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Lurahgo.id</h1>
-                <p class="text-xs text-gray-500 hidden sm:block">Platform Digital RT/RW</p>
+                <p class="text-xs text-gray-500 hidden sm:block">Website Digital RT/RW</p>
             </div>
         </a>
 
@@ -52,9 +66,7 @@
             </a>
         </nav>
 
-        <!-- User Actions -->
         <div class="flex items-center space-x-4">
-            <!-- Notification Bell -->
             <div class="relative hidden md:block">
                 <button id="notification-btn" class="relative p-2 text-gray-600 hover:text-blue-600 transition-colors duration-300 hover:bg-blue-50 rounded-full">
                     <i class="fas fa-bell text-lg"></i>
@@ -109,7 +121,11 @@
             <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="relative">
                     <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">
-                        <img src="https://via.placeholder.com/32x32/3B82F6/FFFFFF?text=<?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
+                        <?php if ($user && $user['profile_photo']): ?>
+                            <img src="/PROJECT/<?php echo $user['profile_photo']; ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
+                        <?php else: ?>
+                            <img src="https://via.placeholder.com/32x32/3B82F6/FFFFFF?text=<?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
+                        <?php endif; ?>
                         <span class="hidden md:block font-medium"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
@@ -118,17 +134,14 @@
                             <p class="text-sm font-medium text-gray-800"><?php echo htmlspecialchars($_SESSION['username']); ?></p>
                             <p class="text-xs text-gray-500"><?php echo htmlspecialchars($_SESSION['role'] ?? 'User'); ?></p>
                         </div>
-                        <a href="pages/<?php echo $_SESSION['role']; ?>/dashboard_<?php echo $_SESSION['role']; ?>.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                        <a href="dashboard_<?php echo $_SESSION['role']; ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                             <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
                         </a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                            <i class="fas fa-user mr-2"></i>Profile
-                        </a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                        <a href="settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                             <i class="fas fa-cog mr-2"></i>Settings
                         </a>
                         <div class="border-t border-gray-200"></div>
-                        <a href="auth/logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <a href="logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                             <i class="fas fa-sign-out-alt mr-2"></i>Logout
                         </a>
                     </div>
@@ -185,4 +198,38 @@
     document.getElementById('mobile-menu-button').addEventListener('click', function() {
         document.getElementById('mobile-menu').classList.toggle('hidden');
     });
+
+    // User dropdown toggle
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    const userDropdown = document.getElementById('user-dropdown');
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    // Notification dropdown toggle
+    const notificationBtn = document.getElementById('notification-btn');
+    const notificationDropdown = document.getElementById('notification-dropdown');
+    if (notificationBtn && notificationDropdown) {
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+    }
 </script>

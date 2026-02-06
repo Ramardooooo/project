@@ -134,6 +134,11 @@ if ($_SESSION['role'] === 'admin') {
             <h4 class="font-bold text-black mb-2 drop-shadow-sm">Data Master</h4>
             <p class="text-sm text-gray-600">Kelola data utama sistem</p>
         </a>
+        <a href="gallery.php" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
+            <i class="fas fa-images text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
+            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola Galeri</h4>
+            <p class="text-sm text-gray-600">Tambah dan kelola galeri</p>
+        </a>
     </div>
 </div>
 

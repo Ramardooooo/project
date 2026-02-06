@@ -1,16 +1,9 @@
 <section class="relative py-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
-    <div class="absolute inset-0">
-        <div class="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
-        <div class="absolute top-32 right-20 w-16 h-16 bg-blue-300/20 rounded-full animate-bounce" style="animation-delay: 1s;"></div>
-        <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-purple-300/20 rounded-full animate-pulse" style="animation-delay: 2s;"></div>
-        <div class="absolute top-1/2 right-10 w-8 h-8 bg-indigo-300/20 rounded-full animate-bounce" style="animation-delay: 0.5s;"></div>
-        <div class="absolute bottom-32 right-1/3 w-24 h-24 bg-white/5 rounded-full animate-pulse" style="animation-delay: 3s;"></div>
-    </div>
 
     <div class="relative max-w-7xl mx-auto px-6 text-center">
         <div class="mb-8">
             <span class="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium mb-6 border border-white/20">
-                <i class="fas fa-crown mr-2 text-yellow-400"></i>Platform Terdepan untuk RT/RW Indonesia
+                <i class="fas fa-crown mr-2 text-yellow-400"></i>Lurahgo Semakin Di Depan!
             </span>
         </div>
 
@@ -68,75 +61,5 @@
             </button>
         </div>
     </div>
-
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div class="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
-        </div>
-    </div>
 </section>
 
-<script>
-// Floating notification system
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('floating-notification');
-    const icon = notification.querySelector('i');
-    const title = notification.querySelector('h4');
-    const text = notification.querySelector('p');
-
-    // Update content based on type
-    if (type === 'success') {
-        notification.className = notification.className.replace('bg-green-500', 'bg-green-500');
-        icon.className = 'fas fa-check-circle mr-3 text-xl';
-        title.textContent = 'Berhasil!';
-    } else if (type === 'error') {
-        notification.className = notification.className.replace('bg-green-500', 'bg-red-500');
-        icon.className = 'fas fa-exclamation-circle mr-3 text-xl';
-        title.textContent = 'Error!';
-    }
-
-    text.textContent = message;
-
-    // Show notification
-    notification.classList.remove('translate-x-full');
-    notification.classList.add('translate-x-0');
-
-    // Auto hide after 5 seconds
-    setTimeout(() => {
-        closeNotification();
-    }, 5000);
-}
-
-function closeNotification() {
-    const notification = document.getElementById('floating-notification');
-    notification.classList.remove('translate-x-0');
-    notification.classList.add('translate-x-full');
-}
-
-// Simulate random notifications (for demo)
-setInterval(() => {
-    const messages = [
-        'Data RT berhasil diperbarui',
-        'Pengumuman baru ditambahkan',
-        'Laporan bulanan tersedia',
-        'Status warga diperbarui'
-    ];
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    showNotification(randomMessage);
-}, 15000); // Show every 15 seconds
-
-// Add loading animation to buttons
-document.querySelectorAll('a[href="#services"], a[href="#about"]').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
-        setTimeout(() => {
-            window.location.hash = this.getAttribute('href');
-            this.innerHTML = this.getAttribute('href') === '#services' ?
-                '<i class="fas fa-rocket mr-2"></i>Mulai Sekarang' :
-                '<i class="fas fa-play-circle mr-2"></i>Lihat Demo';
-        }, 1000);
-    });
-});
-</script>
