@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
 
-    // Handle profile photo upload
     $profile_photo = null;
     if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] == 0) {
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
@@ -39,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Update user data
     if (empty($message)) {
         $sql = "UPDATE users SET username=?, email=?";
         $params = [$username, $email];
@@ -67,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Get current user data
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -75,7 +72,6 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($result);
 
-// Get user statistics
 $stats = [
     'account_age' => isset($user['created_at']) ? floor((time() - strtotime($user['created_at'])) / (60*60*24)) : 0,
     'role_display' => ucfirst($user['role']),

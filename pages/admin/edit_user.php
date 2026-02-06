@@ -16,7 +16,6 @@ if (isset($_POST['update_user'])) {
     $role = $_POST['role'];
     $password = $_POST['password'];
 
-    // Check if username is already taken by another user
     $check_username = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? AND id != ?");
     mysqli_stmt_bind_param($check_username, "si", $username, $user_id);
     mysqli_stmt_execute($check_username);

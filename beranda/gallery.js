@@ -1,4 +1,3 @@
-// Optimized Gallery Image Preview Modal with Like functionality
 document.addEventListener('DOMContentLoaded', function() {
     const galleryImages = document.querySelectorAll('.gallery-image');
     const modal = document.getElementById('gallery-modal');
@@ -8,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalDate = document.getElementById('modal-date');
     const closeModal = document.querySelector('.close-modal');
 
-    // Gallery data
     const galleryData = Array.from(galleryImages).map((img, index) => ({
         src: img.src,
         title: img.dataset.title,
@@ -17,14 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
         index: index
     }));
 
-    // Open modal
     galleryImages.forEach((image, index) => {
         image.addEventListener('click', function() {
             openModal(index);
         });
     });
 
-    // Close modal
     closeModal.addEventListener('click', function() {
         closeModalFunction();
     });
@@ -35,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Keyboard navigation (Escape only)
     document.addEventListener('keydown', function(e) {
         if (modal.classList.contains('hidden')) return;
 
@@ -44,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Like functionality - optimized
     document.addEventListener('click', function(e) {
         if (e.target.closest('.like-btn')) {
             e.preventDefault();
@@ -72,9 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'auto';
     }
 
-    // Optimized Like functionality with better error handling
     async function toggleLike(galleryId, button) {
-        // Disable button to prevent double clicks
         button.disabled = true;
         button.style.opacity = '0.6';
 
@@ -108,8 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     icon.classList.add('far');
                     icon.classList.remove('fas');
                 }
-
-                // Animate count change
                 countSpan.style.transform = 'scale(1.2)';
                 countSpan.textContent = result.like_count;
                 setTimeout(() => {
@@ -125,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error toggling like:', error);
             alert('Terjadi kesalahan saat mengubah like. Silakan coba lagi.');
         } finally {
-            // Re-enable button
             button.disabled = false;
             button.style.opacity = '1';
         }

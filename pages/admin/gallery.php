@@ -8,13 +8,11 @@ if ($_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_gallery'])) {
         $title = mysqli_real_escape_string($conn, $_POST['title']);
         $description = mysqli_real_escape_string($conn, $_POST['description']);
 
-        // Handle file upload
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = '../../beranda/gallery/';
             if (!is_dir($upload_dir)) {
@@ -44,18 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $query = "SELECT image_path FROM gallery WHERE id = $id";
         $result = mysqli_query($conn, $query);
         if ($row = mysqli_fetch_assoc($result)) {
-            // Delete file
             if (file_exists('../../' . $row['image_path'])) {
                 unlink('../../' . $row['image_path']);
             }
-            // Delete from database
             mysqli_query($conn, "DELETE FROM gallery WHERE id = $id");
             $success = "Gallery item deleted successfully!";
         }
     }
 }
 
-// Fetch gallery items
+
 $query = "SELECT * FROM gallery ORDER BY created_at DESC";
 $result = mysqli_query($conn, $query);
 $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);

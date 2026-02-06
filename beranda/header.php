@@ -199,8 +199,8 @@ if ($user_id) {
         document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 
-    // User dropdown toggle
     const userMenuBtn = document.getElementById('user-menu-btn');
+
     const userDropdown = document.getElementById('user-dropdown');
     if (userMenuBtn && userDropdown) {
         userMenuBtn.addEventListener('click', function(e) {
@@ -208,15 +208,14 @@ if ($user_id) {
             userDropdown.classList.toggle('hidden');
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
+
             if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
                 userDropdown.classList.add('hidden');
             }
         });
     }
 
-    // Notification dropdown toggle
     const notificationBtn = document.getElementById('notification-btn');
     const notificationDropdown = document.getElementById('notification-dropdown');
     if (notificationBtn && notificationDropdown) {
@@ -225,8 +224,8 @@ if ($user_id) {
             notificationDropdown.classList.toggle('hidden');
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
+
             if (!notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
                 notificationDropdown.classList.add('hidden');
             }

@@ -18,23 +18,18 @@ if (!$gallery_id) {
     exit;
 }
 
-// Check if user already liked this gallery item
 $check_query = "SELECT id FROM gallery_likes WHERE gallery_id = $gallery_id AND user_id = $user_id";
 $check_result = mysqli_query($conn, $check_query);
 
 if (mysqli_num_rows($check_result) > 0) {
-    // User already liked, so unlike
     $delete_query = "DELETE FROM gallery_likes WHERE gallery_id = $gallery_id AND user_id = $user_id";
     mysqli_query($conn, $delete_query);
     $liked = false;
 } else {
-    // User hasn't liked, so like
     $insert_query = "INSERT INTO gallery_likes (gallery_id, user_id) VALUES ($gallery_id, $user_id)";
     mysqli_query($conn, $insert_query);
     $liked = true;
 }
-
-// Get updated like count
 $count_query = "SELECT COUNT(*) as count FROM gallery_likes WHERE gallery_id = $gallery_id";
 $count_result = mysqli_query($conn, $count_query);
 $count = mysqli_fetch_assoc($count_result)['count'];
