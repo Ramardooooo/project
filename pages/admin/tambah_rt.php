@@ -93,7 +93,7 @@ if (isset($_POST['add_rt'])) {
                            focus:outline-none focus:border-green-500"
                 >
                     <option value="aktif">Aktif</option>
-                    <option value="tidak aktif">Tidak Aktif</option>
+                    <option value="tidak_aktif">Tidak Aktif</option>
                 </select>
             </div>
 

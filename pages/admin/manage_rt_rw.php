@@ -3,14 +3,12 @@ include '../../config/database.php';
 
 if (isset($_POST['delete_rt'])) {
     $rt_id = $_POST['rt_id'];
-    // Get data before delete for audit log
     $rt_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM rt WHERE id = $rt_id"));
     $stmt = mysqli_prepare($conn, "DELETE FROM rt WHERE id=?");
     mysqli_stmt_bind_param($stmt, "i", $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    // Audit log
     $action = "RT dihapus oleh " . $username;
     $table_name = "rt";
     $record_id = $rt_id;
@@ -30,13 +28,12 @@ if (isset($_POST['delete_rt'])) {
 if (isset($_POST['toggle_status'])) {
     $rt_id = $_POST['rt_id'];
     $current_status = mysqli_fetch_assoc(mysqli_query($conn, "SELECT status FROM rt WHERE id = $rt_id"))['status'];
-    $new_status = ($current_status == 'aktif') ? 'tidak aktif' : 'aktif';
+    $new_status = ($current_status == 'aktif') ? 'tidak_aktif' : 'aktif';
     $stmt = mysqli_prepare($conn, "UPDATE rt SET status=? WHERE id=?");
     mysqli_stmt_bind_param($stmt, "si", $new_status, $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    // Audit log
     $action = "Status RT diubah oleh " . $username;
     $table_name = "rt";
     $record_id = $rt_id;
@@ -71,9 +68,6 @@ if ($_SESSION['role'] == 'admin') {
 
 <div id="mainContent" class="ml-64 min-h-screen bg-blue-900 transition-all duration-300">
 <div class="p-8">
-<h1 class="text-2xl font-bold mb-6 text-white drop-shadow-lg">Kelola Data RT</h1>
-
-    <h2 class="text-xl font-bold mt-8 mb-4 text-white drop-shadow-lg">Berirkut Data RT:</h2>
     <a href="tambah_rt" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block drop-shadow-sm">Tambah RT</a>
 
     <form method="GET" class="mb-4">
@@ -99,7 +93,7 @@ if ($_SESSION['role'] == 'admin') {
                 <p class="text-sm text-white/80 drop-shadow-sm"><strong>ID:</strong> <?php echo $r['id']; ?></p>
                 <p class="text-sm text-white/80 drop-shadow-sm"><strong>Status:</strong>
                     <span class="px-2 py-1 rounded-full text-xs font-medium <?php echo ($r['status'] == 'aktif') ? 'bg-green-500 text-white' : 'bg-red-500 text-white'; ?>">
-                        <?php echo ucfirst($r['status']); ?>
+                        <?php echo ucfirst(str_replace('_', ' ', $r['status'])); ?>
                     </span>
                 </p>
                 <p class="text-sm text-white/80 drop-shadow-sm"><strong>Dibuat:</strong> <?php echo isset($r['created_at']) ? date('d M Y', strtotime($r['created_at'])) : 'N/A'; ?></p>

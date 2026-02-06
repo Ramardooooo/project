@@ -15,7 +15,6 @@ if (isset($_POST['update_rt'])) {
     $ketua_rt = $_POST['ketua_rt'];
     $status = $_POST['status'];
 
-    // Get old data for audit log
     $old_rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT nama_rt, ketua_rt, status FROM rt WHERE id = $rt_id"));
 
     $stmt = mysqli_prepare($conn, "UPDATE rt SET nama_rt=?, ketua_rt=?, status=? WHERE id=?");
@@ -23,7 +22,6 @@ if (isset($_POST['update_rt'])) {
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    // Audit log
     $action = "Update RT";
     $table_name = "rt";
     $record_id = $rt_id;
@@ -106,7 +104,7 @@ include '../../layouts/admin/sidebar.php';
                            focus:outline-none focus:border-green-500"
                 >
                     <option value="aktif" <?php echo ($rt['status'] == 'aktif') ? 'selected' : ''; ?>>Aktif</option>
-                    <option value="tidak aktif" <?php echo ($rt['status'] == 'tidak aktif') ? 'selected' : ''; ?>>Tidak Aktif</option>
+                    <option value="tidak_aktif" <?php echo ($rt['status'] == 'tidak_aktif') ? 'selected' : ''; ?>>Tidak Aktif</option>
                 </select>
             </div>
 
