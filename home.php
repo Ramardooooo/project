@@ -9,17 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    
+    <?php include 'beranda/header.php'; ?>
+    <?php include 'beranda/news_ticker.php'; ?>
+    <?php include 'beranda/hero.php'; ?>
+    <?php include 'beranda/live_clock.php'; ?>
+    <?php include 'beranda/services.php'; ?>
+    <?php include 'beranda/quick_search.php'; ?>
+    <?php include 'beranda/announcements.php'; ?>
+    <?php include 'beranda/about.php'; ?>
+    <?php include 'beranda/testimonials.php'; ?>
+    <?php include 'beranda/statistics.php'; ?>
+    <?php include 'beranda/gallery.php'; ?>
+    <?php include 'beranda/faq.php'; ?>
+    <?php include 'beranda/footer.php'; ?>
 </body>
 </html>
-
-<?php include 'beranda/header.php'; ?>
-<?php include 'beranda/hero.php'; ?>
-<?php include 'beranda/services.php'; ?>
-<?php include 'beranda/announcements.php'; ?>
-<?php include 'beranda/about.php'; ?>
-<?php include 'beranda/testimonials.php'; ?>
-<?php include 'beranda/statistics.php'; ?>
-<?php include 'beranda/gallery.php'; ?>
-<?php include 'beranda/faq.php'; ?>
-<?php include 'beranda/footer.php'; ?>
