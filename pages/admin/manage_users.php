@@ -56,9 +56,13 @@ if ($_SESSION['role'] == 'admin') {
         <?php while ($user = mysqli_fetch_assoc($users)) { ?>
         <div class="bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-white/30 hover:shadow-2xl hover:bg-white/30 transition-all duration-300">
             <div class="flex items-center mb-4">
-                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
-                    <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
-                </div>
+                <?php if ($user['profile_photo']): ?>
+                    <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-12 h-12 rounded-full object-cover border-2 border-white/30">
+                <?php else: ?>
+                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
+                        <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
+                    </div>
+                <?php endif; ?>
                 <div class="ml-4">
                     <h3 class="text-lg font-semibold text-white drop-shadow-sm"><?php echo $user['username']; ?></h3>
                     <p class="text-sm text-white/70 drop-shadow-sm"><strong>Jabatannya: </strong><?php echo $user['role']; ?></p>

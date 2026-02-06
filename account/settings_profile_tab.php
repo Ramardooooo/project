@@ -1,11 +1,11 @@
-<!-- Profile Tab -->
+ <!-- Profile Tab -->
                 <div id="profile-content" class="tab-content">
                     <div class="grid md:grid-cols-3 gap-8">
                         <!-- Profile Overview -->
                         <div class="md:col-span-1">
                             <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 text-center">
                                 <div class="relative inline-block mb-4">
-                                    <img src="<?php echo $user['profile_photo'] ? '../' . $user['profile_photo'] : 'https://via.placeholder.com/120/3B82F6/FFFFFF?text=' . strtoupper(substr($user['username'], 0, 1)); ?>"
+                                    <img src="<?php echo $user['profile_photo'] ? $user['profile_photo'] : 'https://via.placeholder.com/120/3B82F6/FFFFFF?text=' . strtoupper(substr($user['username'], 0, 1)); ?>"
                                          alt="Profile Photo"
                                          class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
                                 </div>
@@ -31,7 +31,7 @@
                                 <!-- Profile Photo Section -->
                                 <div class="flex items-center space-x-6">
                                     <div class="relative group">
-                                        <img src="<?php echo $user['profile_photo'] ? '../' . $user['profile_photo'] : 'https://via.placeholder.com/80/3B82F6/FFFFFF?text=' . strtoupper(substr($user['username'], 0, 1)); ?>"
+                                        <img src="<?php echo $user['profile_photo'] ? $user['profile_photo'] : 'https://via.placeholder.com/80/3B82F6/FFFFFF?text=' . strtoupper(substr($user['username'], 0, 1)); ?>"
                                              alt="Foto Profil"
                                              class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg group-hover:scale-105 transition-transform duration-300">
                                         <label for="profile_photo" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">

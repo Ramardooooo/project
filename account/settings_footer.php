@@ -1,9 +1,6 @@
-</div>
-        </div>
-
         <!-- Back to Home -->
         <div class="text-center mt-8">
-            <a href="home.php" class="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm text-gray-700 font-semibold rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-gray-300">
+            <a href="home" class="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm text-gray-700 font-semibold rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-gray-300">
                 <i class="fas fa-arrow-left mr-3"></i>
                 Kembali ke Beranda
             </a>

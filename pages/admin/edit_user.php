@@ -16,16 +16,41 @@ if (isset($_POST['update_user'])) {
     $role = $_POST['role'];
     $password = $_POST['password'];
 
-    if (!empty($password)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = mysqli_prepare($conn, "UPDATE users SET username=?, email=?, password=?, role=? WHERE id=?");
-        mysqli_stmt_bind_param($stmt, "ssssi", $username, $email, $hashed_password, $role, $user_id);
+    // Check if username is already taken by another user
+    $check_username = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? AND id != ?");
+    mysqli_stmt_bind_param($check_username, "si", $username, $user_id);
+    mysqli_stmt_execute($check_username);
+    mysqli_stmt_store_result($check_username);
+    if (mysqli_stmt_num_rows($check_username) > 0) {
+        $error = "Username sudah digunakan oleh user lain.";
     } else {
-        $stmt = mysqli_prepare($conn, "UPDATE users SET username=?, email=?, role=? WHERE id=?");
-        mysqli_stmt_bind_param($stmt, "sssi", $username, $email, $role, $user_id);
+        if (!empty($password)) {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = mysqli_prepare($conn, "UPDATE users SET username=?, email=?, password=?, role=? WHERE id=?");
+            mysqli_stmt_bind_param($stmt, "ssssi", $username, $email, $hashed_password, $role, $user_id);
+        } else {
+            $stmt = mysqli_prepare($conn, "UPDATE users SET username=?, email=?, role=? WHERE id=?");
+            mysqli_stmt_bind_param($stmt, "sssi", $username, $email, $role, $user_id);
+        }
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        $action = "User diedit oleh " . ($_SESSION['username'] ?? 'Unknown');
+        $table_name = "users";
+        $record_id = $user_id;
+        $old_value = json_encode($user);
+        $new_value = json_encode(['username' => $username, 'email' => $email, 'role' => $role]);
+        $user_id_session = $_SESSION['user_id'] ?? null;
+        $username_session = $_SESSION['username'] ?? 'Unknown';
+        $audit_stmt = mysqli_prepare($conn, "INSERT INTO audit_log (action, table_name, record_id, old_value, new_value, user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id_session, $username_session);
+        mysqli_stmt_execute($audit_stmt);
+        mysqli_stmt_close($audit_stmt);
+
+        header("Location: manage_users");
+        exit();
     }
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
+    mysqli_stmt_close($check_username);
     
     $action = "User diedit oleh " . ($_SESSION['username'] ?? 'Unknown');
     $table_name = "users";

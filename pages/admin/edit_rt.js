@@ -17,7 +17,7 @@ document.getElementById('editRtForm').addEventListener('submit', function(e) {
         if (data.success) {
             showNotification('Data RT berhasil diperbarui!', 'success');
             setTimeout(() => {
-                window.location.href = 'manage_rt_rw.php';
+                window.location.href = 'manage_rt_rw';
             }, 2000);
         } else {
             showNotification(data.message || 'Terjadi kesalahan saat menyimpan data.', 'error');

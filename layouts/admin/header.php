@@ -40,7 +40,7 @@ body { background-color: #1e3a8a; }
 
             <div class="flex items-center space-x-3 bg-white/10 rounded-full px-4 py-2 backdrop-blur-md border border-white/20">
                 <?php if ($user && $user['profile_photo']): ?>
-                    <img src="/PROJECT/<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white/30">
+                    <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white/30">
                 <?php else: ?>
                     <div class="w-10 h-10 rounded-full border-2 border-white/30 bg-white/20 flex items-center justify-center text-white font-bold text-lg">
                         <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 1)); ?>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../../config/database.php';
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
@@ -38,6 +39,10 @@ if ($_SESSION['role'] === 'admin') {
         $count = mysqli_fetch_assoc($result)['count'];
         $traffic[] = $count;
     }
+} else {
+    header("Location: home");
+    exit();
+}
 ?>
 <div id="mainContent" class="ml-64 min-h-screen bg-blue-900">
 <div class="p-8">
@@ -119,12 +124,12 @@ if ($_SESSION['role'] === 'admin') {
 <div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
     <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Kelola Data</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="/PROJECT/manage_users" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
+        <a href="manage_users" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
             <i class="fas fa-users text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
             <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola User</h4>
             <p class="text-sm text-gray-600">Tambah, edit, hapus user</p>
         </a>
-        <a href="/PROJECT/manage_rt_rw" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
+        <a href="manage_rt_rw" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
             <i class="fas fa-map-marker-alt text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
             <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola RT/RW</h4>
             <p class="text-sm text-gray-600">Atur struktur RT dan RW</p>
@@ -186,7 +191,4 @@ new Chart(document.getElementById('trafficChart'), {
     }
 });
 </script>
-<?php
-}
-?>
 

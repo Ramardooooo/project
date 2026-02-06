@@ -28,7 +28,7 @@ if (isset($_POST['delete_rt'])) {
 if (isset($_POST['toggle_status'])) {
     $rt_id = $_POST['rt_id'];
     $current_status = mysqli_fetch_assoc(mysqli_query($conn, "SELECT status FROM rt WHERE id = $rt_id"))['status'];
-    $new_status = ($current_status == 'aktif') ? 'tidak_aktif' : 'aktif';
+    $new_status = ($current_status == 'aktif') ? 'tidak aktif' : 'aktif';
     $stmt = mysqli_prepare($conn, "UPDATE rt SET status=? WHERE id=?");
     mysqli_stmt_bind_param($stmt, "si", $new_status, $rt_id);
     mysqli_stmt_execute($stmt);

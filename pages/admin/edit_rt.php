@@ -118,7 +118,7 @@ include '../../layouts/admin/sidebar.php';
                 </button>
 
                 <a
-                    href="manage_rt_rw.php"
+                    href="manage_rt_rw"
                     class="flex-1 text-center bg-gray-200 hover:bg-gray-300
                            text-gray-700 py-2 rounded">
                     Kembali

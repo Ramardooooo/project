@@ -112,7 +112,7 @@ if ($user_id) {
                         </div>
                     </div>
                     <div class="p-3 border-t border-gray-200 text-center">
-                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Lihat Semua Notifikasi</a>
+                        <a href="#waatawtnawtnawnt2u525825925jadawnta" class="text-sm text-blue-600 hover:text-blue-800">Lihat Semua Notifikasi</a>
                     </div>
                 </div>
             </div>
@@ -122,7 +122,7 @@ if ($user_id) {
                 <div class="relative">
                     <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">
                         <?php if ($user && $user['profile_photo']): ?>
-                            <img src="/PROJECT/<?php echo $user['profile_photo']; ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
+                            <img src="../<?php echo $user['profile_photo']; ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
                         <?php else: ?>
                             <img src="https://via.placeholder.com/32x32/3B82F6/FFFFFF?text=<?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
                         <?php endif; ?>
@@ -147,7 +147,7 @@ if ($user_id) {
                     </div>
                 </div>
             <?php else: ?>
-                <a href="auth/login.php" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <a href="login" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <i class="fas fa-sign-in-alt mr-2"></i>Dashboard
                 </a>
             <?php endif; ?>
