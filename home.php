@@ -21,6 +21,8 @@ if (!isset($_SESSION['user_id'])) {
     <?php include 'beranda/hero.php'; ?>
     <?php include 'beranda/services.php'; ?>
     <?php include 'beranda/about.php'; ?>
+    <?php include 'beranda/gallery.php'; ?>
+    <?php include 'beranda/testimonials.php'; ?>
     <?php include 'beranda/announcements.php'; ?>
     <?php include 'beranda/footer.php'; ?>
 </body>

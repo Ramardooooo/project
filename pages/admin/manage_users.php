@@ -29,7 +29,7 @@ include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
 if ($_SESSION['role'] == 'admin') {
-    $limit = 10;
+    $limit = 9;
     $page = isset($_GET['p']) ? (int)$_GET['p'] : 1;
     $offset = ($page - 1) * $limit;
     $search = isset($_GET['search']) ? $_GET['search'] : '';

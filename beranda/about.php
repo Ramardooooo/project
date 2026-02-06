@@ -1,5 +1,4 @@
 <section id="about" class="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
-    <!-- Animated Background Elements -->
     <div class="absolute inset-0">
         <div class="absolute top-20 left-10 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
         <div class="absolute bottom-20 right-10 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse" style="animation-delay: 2s;"></div>
@@ -22,7 +21,6 @@
 
         <div class="grid lg:grid-cols-2 gap-16 items-center">
 
-            <!-- Left Side - Logo and Stats -->
             <div class="space-y-8">
                 <div class="flex justify-center lg:justify-start">
                     <div class="relative">
@@ -35,28 +33,26 @@
                     </div>
                 </div>
 
-                <!-- Stats Grid -->
                 <div class="grid grid-cols-2 gap-6">
                     <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
                         <div class="text-3xl font-bold text-blue-600 mb-2">500+</div>
                         <div class="text-sm text-gray-600">RT/RW Aktif</div>
                     </div>
                     <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div class="text-3xl font-bold text-purple-600 mb-2">10K+</div>
-                        <div class="text-sm text-gray-600">Data Warga</div>
+                        <div class="text-3xl font-bold text-purple-600 mb-2">10,000+</div>
+                        <div class="text-sm text-gray-600">Kepala Keluarga</div>
                     </div>
                     <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div class="text-3xl font-bold text-green-600 mb-2">99.9%</div>
-                        <div class="text-sm text-gray-600">Uptime</div>
+                        <div class="text-3xl font-bold text-green-600 mb-2">Data Warga</div>
+                        <div class="text-sm text-gray-600">9,999,999+</div>
                     </div>
                     <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div class="text-3xl font-bold text-pink-600 mb-2">24/7</div>
+                        <div class="text-3xl font-bold text-pink-600 mb-2">12/5</div>
                         <div class="text-sm text-gray-600">Support</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Side - Content -->
             <div class="space-y-6">
                 <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
                     <div class="flex items-center mb-4">
@@ -103,13 +99,12 @@
             </div>
         </div>
 
-        <!-- Call to Action -->
         <div class="text-center mt-16">
             <div class="inline-block p-8 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl text-white shadow-2xl">
-                <h3 class="text-2xl font-bold mb-4">Siap Bergabung?</h3>
-                <p class="mb-6 opacity-90">Jadilah bagian dari revolusi digital RT/RW Indonesia</p>
+                <h3 class="text-2xl font-bold mb-4">Mau Bergabung?</h3>
+                <p class="mb-6 opacity-90">Bayar 100 Juta Ke</p>
                 <a href="#services" class="inline-block px-8 py-4 bg-white text-blue-600 font-semibold rounded-full hover:bg-gray-100 transition-colors duration-300 shadow-lg">
-                    <i class="fas fa-rocket mr-2"></i>Mulai Transformasi Digital
+                    <i class="fas fa-rocket mr-2"></i>088245012642
                 </a>
             </div>
         </div>

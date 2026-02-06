@@ -10,7 +10,7 @@
         <h1 class="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Kelola RT/RW dengan
             <span class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent animate-pulse">
-                Teknologi Modern
+                Website Raja Canggih
             </span>
         </h1>
 
@@ -28,7 +28,6 @@
             </a>
         </div>
 
-        <!-- Trust Indicators -->
         <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
                 <div class="text-3xl text-green-400 mb-3"><i class="fas fa-shield-alt"></i></div>
@@ -48,7 +47,6 @@
         </div>
     </div>
 
-    <!-- Floating Notification -->
     <div id="floating-notification" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-500 z-50 max-w-sm">
         <div class="flex items-center">
             <i class="fas fa-check-circle mr-3 text-xl"></i>

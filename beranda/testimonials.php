@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-6">
 
         <h2 class="text-4xl font-serif text-center mb-16 text-gray-800">
-            Testimoni Pengguna
+            Rating & Testimoni Pengguna
         </h2>
 
         <div class="grid md:grid-cols-3 gap-8">
@@ -26,6 +26,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
+                <p class="text-sm text-gray-500 mt-2">Rating: 5/5</p>
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-6">
@@ -47,6 +48,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
+                <p class="text-sm text-gray-500 mt-2">Rating: 5/5</p>
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-6">
@@ -67,6 +69,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
+                <p class="text-sm text-gray-500 mt-2">Rating: 5/5</p>
             </div>
 
         </div>
