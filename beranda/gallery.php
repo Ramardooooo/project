@@ -4,7 +4,6 @@ include 'config/database.php';
 
 <section class="py-20 bg-gradient-to-br from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-6">
-
         <div class="text-center mb-16">
             <h2 class="text-5xl font-bold text-gray-800 mb-4">
                 Galeri Kegiatan
@@ -48,9 +47,7 @@ include 'config/database.php';
                          data-description="<?php echo $item['description']; ?>"
                          data-date="<?php echo date('d M Y', strtotime($item['created_at'])); ?>">
 
-                    <!-- Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        <!-- Info -->
                         <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                             <h3 class="text-white font-bold text-lg mb-2"><?php echo $item['title']; ?></h3>
                             <p class="text-gray-200 text-sm line-clamp-2"><?php echo $item['description']; ?></p>
@@ -71,7 +68,7 @@ include 'config/database.php';
                                 <i class="fas fa-heart"></i>
                                 <span class="like-count"><?php echo $item['like_count']; ?></span>
                             </button>
-                            <span class="text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-300">
+                            <span onclick="openModal('<?php echo $item['image_path']; ?>', '<?php echo $item['title']; ?>', '<?php echo $item['description']; ?>', '<?php echo date('d M Y', strtotime($item['created_at'])); ?>')" class="text-gray-500 cursor-pointer hover:text-blue-500 transition-colors duration-300">
                                 <i class="fas fa-eye"></i>
                             </span>
                         </div>
@@ -84,17 +81,15 @@ include 'config/database.php';
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
-
     </div>
 </section>
 
-<!-- Gallery Modal -->
 <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative">
         <div class="p-6 border-b border-gray-200">
             <div class="flex justify-between items-center">
                 <h3 id="modal-title" class="text-2xl font-bold text-gray-800"></h3>
-                <button class="close-modal text-gray-400 hover:text-gray-600 transition-colors duration-300">
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors duration-300">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
             </div>
@@ -112,3 +107,4 @@ include 'config/database.php';
 </div>
 
 <script src="beranda/gallery.js"></script>
+<script src="beranda/like.js"></script>
