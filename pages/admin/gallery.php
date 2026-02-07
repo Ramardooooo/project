@@ -52,7 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-$query = "SELECT * FROM gallery ORDER BY created_at DESC";
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+$where_clause = '';
+if (!empty($search)) {
+    $where_clause = "WHERE title LIKE '%$search%' OR description LIKE '%$search%'";
+}
+
+$query = "SELECT * FROM gallery $where_clause ORDER BY created_at DESC";
 $result = mysqli_query($conn, $query);
 $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
@@ -74,44 +80,62 @@ $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
 </div>
 <?php endif; ?>
 
-<div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-200">
-    <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Tambah Item Galeri</h3>
+<div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-7 mb-8 border border-white/20 hover:shadow-2xl hover:bg-white/95 transition-all duration-300">
+    <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center gap-2">
+        <i class="fas fa-plus-circle text-green-600"></i>Tambah Item Galeri
+    </h3>
     <form method="POST" enctype="multipart/form-data" class="space-y-4">
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Judul</label>
-            <input type="text" name="title" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <i class="fas fa-heading text-gray-500"></i>Judul
+            </label>
+            <input type="text" name="title" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
-            <textarea name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <i class="fas fa-align-left text-gray-500"></i>Deskripsi
+            </label>
+            <textarea name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Gambar</label>
-            <input type="file" name="image" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <i class="fas fa-image text-gray-500"></i>Gambar
+            </label>
+            <input type="file" name="image" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
         </div>
-        <button type="submit" name="add_gallery" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
-            Tambah Galeri
+        <button type="submit" name="add_gallery" class="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+            <i class="fas fa-save"></i>Tambah Galeri
         </button>
     </form>
 </div>
 
-<div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
-    <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Daftar Galeri</h3>
+<div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/20 hover:shadow-2xl hover:bg-white/95 transition-all duration-300">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-black drop-shadow-lg flex items-center gap-2">
+            <i class="fas fa-images text-blue-600"></i>Daftar Galeri
+        </h3>
+        <form method="GET" class="flex gap-2">
+            <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari galeri..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+                <i class="fas fa-search"></i>Cari
+            </button>
+        </form>
+    </div>
     <?php if (empty($gallery_items)): ?>
     <p class="text-gray-500">Belum ada item galeri.</p>
     <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($gallery_items as $item): ?>
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <img src="beranda/gallery/<?php echo str_replace(['uploads/gallery/', 'beranda/gallery/'], '', $item['image_path']); ?>" alt="<?php echo $item['title']; ?>" class="w-full h-48 object-cover rounded-md mb-4">
-            <h4 class="font-semibold text-gray-800 mb-2"><?php echo $item['title']; ?></h4>
-            <p class="text-sm text-gray-600 mb-4"><?php echo $item['description']; ?></p>
-            <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
-                <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
-                <button type="submit" name="delete_gallery" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
-                    Hapus
-                </button>
-            </form>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <img src="beranda/gallery/<?php echo str_replace(['uploads/gallery/', 'beranda/gallery/'], '', $item['image_path']); ?>" alt="<?php echo $item['title']; ?>" class="w-full h-64 object-cover">
+            <div class="p-4">
+                <h4 class="font-bold text-lg mb-2"><?php echo $item['title']; ?></h4>
+                <p class="text-gray-600 mb-4"><?php echo $item['description']; ?></p>
+                <form method="POST" onsubmit="return confirm('Hapus item ini?')" class="text-right">
+                    <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
+                    <button type="submit" name="delete_gallery" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">Hapus</button>
+                </form>
+            </div>
         </div>
         <?php endforeach; ?>
     </div>
@@ -121,4 +145,3 @@ $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
 </div>
 </div>
 
-<?php include '../../layouts/admin/footer.php'; ?>
