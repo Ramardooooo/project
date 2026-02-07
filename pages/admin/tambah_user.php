@@ -68,6 +68,7 @@ if (isset($_POST['tambah_user'])) {
     <meta charset="UTF-8">
     <title>Tambah User - Lurahgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="min-h-screen bg-blue-900">
 <div class="ml-64 min-h-screen flex items-center justify-center p-8">
@@ -125,13 +126,13 @@ if (isset($_POST['tambah_user'])) {
 
             <button type="submit" name="tambah_user"
                 class="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300">
-                Tambah User
+                <i class="fas fa-save mr-2"></i>Tambah User
             </button>
         </form>
 
         <a href="manage_users"
-            class="block text-center mt-4 text-sm text-green-600 hover:underline">
-            Kembali ke Manage Users
+            class="block text-center mt-4 py-3 rounded-xl font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 hover:scale-105 transition-all duration-300">
+            <i class="fas fa-arrow-left mr-2"></i>Kembali ke Manage Users
         </a>
     </div>
 </body>

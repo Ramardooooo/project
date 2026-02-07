@@ -117,8 +117,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                 <button
                     type="submit"
                     name="update_rt"
-                    class="flex-1 bg-blue-600 hover:bg-blue-700
-                           text-white py-2 rounded">
+                    class="flex-1 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-400 to-blue-600 hover:scale-105 transition-all duration-300">
                     Update
                 </button>
 

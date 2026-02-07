@@ -3,7 +3,6 @@ include '../../config/database.php';
 include '../../layouts/admin/header.php';
 include '../../layouts/admin/sidebar.php';
 
-
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: home");
     exit();
@@ -31,12 +30,6 @@ if (isset($_POST['add_rt'])) {
         mysqli_stmt_close($stmt);
     }
     mysqli_stmt_close($check_nama_rt);
-}
-
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: auth/login.php");
-    exit();
 }
 
 ?>
@@ -113,14 +106,13 @@ if (!isset($_SESSION['user_id'])) {
                     type="submit"
                     name="add_rt"
                     class="flex-1 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300">
-                    Simpan
+                    <i class="fas fa-save mr-2"></i>Simpan
                 </button>
 
                 <a
                     href="manage_rt_rw"
-                    class="flex-1 text-center bg-gray-200 hover:bg-gray-300
-                           text-gray-700 py-2 rounded">
-                    Kembali
+                    class="flex-1 text-center py-3 rounded-xl font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
                 </a>
             </div>
 

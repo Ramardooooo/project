@@ -25,7 +25,7 @@ body { background-color: #1e3a8a; }
 </style>
 </head>
 <body class="bg-blue-900 min-h-screen flex flex-col">
-<header class="bg-gradient-to-r from-slate-900/70 to-slate-800/70 backdrop-blur-md shadow-lg border-b border-slate-600/30 relative">
+<header class="bg-gradient-to-r from-slate-900/70 to-slate-800/70 backdrop-blur-md shadow-lg border-b border-slate-600/30 relative ml-64">
     <div class="flex justify-between items-center px-8 py-5">
 
         <div class="flex items-center">
