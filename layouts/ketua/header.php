@@ -1,5 +1,4 @@
 <?php if (!session_id()) session_start(); ?>
-<?php include __DIR__ . '/../../config/database.php'; ?>
 <?php
 $user_id = $_SESSION['user_id'] ?? null;
 $user = null;

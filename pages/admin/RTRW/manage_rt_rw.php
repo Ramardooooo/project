@@ -1,5 +1,5 @@
 <?php
-include '../../config/database.php';
+include '../../../config/database.php';
 
 if (isset($_POST['delete_rt'])) {
     $rt_id = $_POST['rt_id'];
@@ -50,8 +50,8 @@ if (isset($_POST['toggle_status'])) {
     exit();
 }
 
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
+include '../../../layouts/admin/header.php';
+include '../../../layouts/admin/sidebar.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: home");

@@ -23,49 +23,36 @@
     </div>
 
     <!-- Mutasi History -->
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Riwayat Mutasi</h3>
+    <div class="bg-white border">
+        <div class="px-4 py-2 bg-gray-50">
+            <h3 class="text-lg font-medium">Riwayat Mutasi</h3>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Tanggal</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nama</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">NIK</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Jenis Mutasi</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">RT/RW</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Keterangan</th>
+                        <th class="px-4 py-2 text-left text-sm">Tanggal</th>
+                        <th class="px-4 py-2 text-left text-sm">Nama</th>
+                        <th class="px-4 py-2 text-left text-sm">NIK</th>
+                        <th class="px-4 py-2 text-left text-sm">Jenis</th>
+                        <th class="px-4 py-2 text-left text-sm">RT/RW</th>
+                        <th class="px-4 py-2 text-left text-sm">Keterangan</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody>
                     <?php while ($mutasi = mysqli_fetch_assoc($mutasi_result)): ?>
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-6 py-4 text-sm text-gray-900"><?php echo date('d/m/Y', strtotime($mutasi['tanggal_mutasi'])); ?></td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($mutasi['nama']); ?></td>
-                        <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($mutasi['nik']); ?></td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                <?php
-                                switch($mutasi['jenis_mutasi']) {
-                                    case 'datang': echo 'bg-green-100 text-green-800'; break;
-                                    case 'pindah': echo 'bg-yellow-100 text-yellow-800'; break;
-                                    case 'meninggal': echo 'bg-red-100 text-red-800'; break;
-                                }
-                                ?>">
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2 text-sm"><?php echo date('d/m/Y', strtotime($mutasi['tanggal_mutasi'])); ?></td>
+                        <td class="px-4 py-2 text-sm font-medium"><?php echo htmlspecialchars($mutasi['nama']); ?></td>
+                        <td class="px-4 py-2 text-sm"><?php echo htmlspecialchars($mutasi['nik']); ?></td>
+                        <td class="px-4 py-2">
+                            <span class="px-2 py-1 text-xs rounded <?php switch($mutasi['jenis_mutasi']) { case 'datang': echo 'bg-green-100 text-green-800'; break; case 'pindah': echo 'bg-yellow-100 text-yellow-800'; break; case 'meninggal': echo 'bg-red-100 text-red-800'; break; } ?>">
                                 <?php echo ucfirst($mutasi['jenis_mutasi']); ?>
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600"><?php echo htmlspecialchars($mutasi['nama_rt'] . '/' . $mutasi['nama_rw']); ?></td>
-                        <td class="px-6 py-4 text-sm text-gray-600">
-                            <?php
-                            $keterangan = $mutasi['keterangan'];
-                            if ($mutasi['jenis_mutasi'] == 'pindah' && $mutasi['alamat_tujuan']) {
-                                $keterangan .= ' - Tujuan: ' . $mutasi['alamat_tujuan'];
-                            }
-                            echo htmlspecialchars($keterangan);
-                            ?>
+                        <td class="px-4 py-2 text-sm"><?php echo htmlspecialchars($mutasi['nama_rt'] . '/' . $mutasi['nama_rw']); ?></td>
+                        <td class="px-4 py-2 text-sm">
+                            <?php $k = $mutasi['keterangan']; if ($mutasi['jenis_mutasi'] == 'pindah' && $mutasi['alamat_tujuan']) $k .= ' - ' . $mutasi['alamat_tujuan']; echo htmlspecialchars($k); ?>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -163,6 +150,5 @@ document.getElementById('mutasiForm').addEventListener('submit', function(e) {
     hiddenInput.name = 'mutasi_' + jenis;
     hiddenInput.value = '1';
     this.appendChild(hiddenInput);
-
 });
 </script>

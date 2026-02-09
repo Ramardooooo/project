@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: auth/login.php");
     exit();
 }
-include '../../config/database.php';
+include '../../../config/database.php';
 
 if (isset($_POST['delete_user'])) {
     $user_id = $_POST['user_id'];
@@ -30,8 +30,8 @@ if (isset($_POST['delete_user'])) {
     exit();
 }
 
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
+include '../../../layouts/admin/header.php';
+include '../../../layouts/admin/sidebar.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: home");

@@ -80,20 +80,20 @@ $mutasi_meninggal = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+            <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
                     <i class="fas fa-venus-mars text-blue-500 mr-3"></i>
                     Statistik Jenis Kelamin
                 </h3>
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-mars text-blue-600 mr-3"></i>
                             <span class="text-gray-700">Laki-laki</span>
                         </div>
                         <span class="font-bold text-blue-600 text-lg"><?php echo $laki_laki; ?></span>
                     </div>
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-venus text-pink-600 mr-3"></i>
                             <span class="text-gray-700">Perempuan</span>
@@ -103,27 +103,27 @@ $mutasi_meninggal = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 </div>
             </div>
 
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+            <div class="bg-white rounded-lg shadow-md p-6">
                 <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
                     <i class="fas fa-exchange-alt text-green-500 mr-3"></i>
                     Mutasi Warga (30 Hari Terakhir)
                 </h3>
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-plus-circle text-green-600 mr-3"></i>
                             <span class="text-gray-700">Datang</span>
                         </div>
                         <span class="font-bold text-green-600 text-lg"><?php echo $mutasi_datang; ?></span>
                     </div>
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-minus-circle text-red-600 mr-3"></i>
                             <span class="text-gray-700">Pindah</span>
                         </div>
                         <span class="font-bold text-red-600 text-lg"><?php echo $mutasi_pindah; ?></span>
                     </div>
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
                         <div class="flex items-center">
                             <i class="fas fa-times-circle text-gray-600 mr-3"></i>
                             <span class="text-gray-700">Meninggal</span>

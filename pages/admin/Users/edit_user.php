@@ -1,7 +1,8 @@
 <?php
-include '../../config/database.php';
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
+session_start();
+include '../../../config/database.php';
+include '../../../layouts/admin/header.php';
+include '../../../layouts/admin/sidebar.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: home");
@@ -59,6 +60,8 @@ if (isset($_POST['update_user'])) {
         mysqli_stmt_close($audit_stmt);
 
         $success = "User berhasil diupdate.";
+        header("Location: /PROJECT/manage_users");
+        exit();
     }
     mysqli_stmt_close($check_username);
 }

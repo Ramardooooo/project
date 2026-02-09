@@ -1,15 +1,13 @@
 <?php
-include '../../config/database.php';
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
+session_start();
+include '../../../config/database.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: home");
+    header("Location: /PROJECT/home");
     exit();
 }
 
 if (isset($_POST['tambah_user'])) {
-    echo "Post Berhasil!";
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -50,6 +48,8 @@ if (isset($_POST['tambah_user'])) {
                     mysqli_stmt_bind_param($audit_stmt, "ssissis", $action, $table_name, $record_id, $old_value, $new_value, $user_id_session, $username_session);
                     mysqli_stmt_execute($audit_stmt);
                     mysqli_stmt_close($audit_stmt);
+                    header("Location: /PROJECT/manage_users");
+                    exit();
                 } else {
                     $error = "Gagal menambahkan user: " . mysqli_error($conn);
                 }
@@ -60,6 +60,9 @@ if (isset($_POST['tambah_user'])) {
     }
     mysqli_stmt_close($check_username);
 }
+
+include '../../../layouts/admin/header.php';
+include '../../../layouts/admin/sidebar.php';
 ?>
 
 <!DOCTYPE html>

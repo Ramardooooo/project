@@ -1,12 +1,20 @@
 <?php
-include '../../config/database.php';
+session_start();
+include '../../../config/database.php';
+include '../../../layouts/admin/header.php';
+include '../../../layouts/admin/sidebar.php';
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: home");
+    exit();
+}
 
 if (isset($_GET['id'])) {
-    $rt_id = $_GET['id'];
+    $rt_id = (int)$_GET['id'];
     $rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM rt WHERE id = $rt_id"));
     if (!$rt) {
-        header("Location: manage_rt_rw");
-        exit();
+    header("Location: /PROJECT/manage_rt_rw");
+    exit();
     }
 }
 
@@ -35,14 +43,6 @@ if (isset($_POST['update_rt'])) {
     mysqli_stmt_close($audit_stmt);
 
     header("Location: manage_rt_rw");
-    exit();
-}
-
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
-
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: home");
     exit();
 }
 ?>

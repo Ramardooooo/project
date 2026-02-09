@@ -42,7 +42,7 @@ style="width:256px;">
         </li>
 
         <li>
-            <a href="/PROJECT/dashboard_admin"
+            <a href="dashboard_admin"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/20 transition">
                 <i class="fas fa-tachometer-alt text-sm"></i>
                 <span>Dashboard</span>
@@ -63,13 +63,13 @@ style="width:256px;">
             <ul id="masterMenu"
             class="ml-6 mt-1 space-y-1 hidden">
                 <li>
-                    <a href="/PROJECT/manage_users"
+                    <a href="manage_users"
                     class="block px-4 py-2 text-sm rounded-lg hover:bg-white/20 transition">
                         Manage Users
                     </a>
                 </li>
                 <li>
-                    <a href="/PROJECT/manage_rt_rw"
+                    <a href="manage_rt_rw"
                     class="block px-4 py-2 text-sm rounded-lg hover:bg-white/20 transition">
                         Manage RT/RW
                     </a>

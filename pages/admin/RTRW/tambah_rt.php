@@ -1,10 +1,11 @@
 <?php
-include '../../config/database.php';
-include '../../layouts/admin/header.php';
-include '../../layouts/admin/sidebar.php';
+session_start();
+include '../../../config/database.php';
+include '../../../layouts/admin/header.php';
+include '../../../layouts/admin/sidebar.php';
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: home");
+    header("Location: ../../home");
     exit();
 }
 
@@ -24,6 +25,8 @@ if (isset($_POST['add_rt'])) {
         mysqli_stmt_bind_param($stmt, "sss", $nama_rt, $ketua_rt, $status);
         if (mysqli_stmt_execute($stmt)) {
             $success = "Data RT berhasil ditambahkan.";
+            header("Location: /PROJECT/manage_rt_rw");
+            exit();
         } else {
             $error = "Gagal menambahkan data RT: " . mysqli_error($conn);
         }

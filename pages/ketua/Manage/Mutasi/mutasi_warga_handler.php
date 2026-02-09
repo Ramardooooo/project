@@ -64,7 +64,7 @@ $warga_query = "SELECT w.*, rt.nama_rt, rw.name as nama_rw FROM warga w
                 ORDER BY w.nama";
 $warga_result = mysqli_query($conn, $warga_query);
 
-$mutasi_query = "SELECT m.*, w.nama, w.nik, rt.nama_rt, rw.name as nama_rw
+$mutasi_query = "SELECT m.*, w.nama, w.nik, w.alamat, w.tanggal_lahir, w.jenis_kelamin, rt.nama_rt, rw.name as nama_rw
                  FROM mutasi_warga m
                  LEFT JOIN warga w ON m.warga_id = w.id
                  LEFT JOIN rt ON w.rt = rt.id

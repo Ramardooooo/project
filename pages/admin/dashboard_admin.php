@@ -52,7 +52,28 @@ if ($_SESSION['role'] === 'admin') {
 <div id="mainContent" class="ml-64 min-h-screen bg-blue-900">
 <div class="p-8">
 
-<h1 class="text-4xl font-extrabold mb-8 text-white drop-shadow-lg">Dashboard Admin</h1>
+<!-- Welcome Section -->
+<div class="bg-white rounded-3xl p-8 mb-8 border border-blue-200 shadow-2xl">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-4xl font-extrabold text-blue-900 mb-2">Selamat Datang, Admin!</h1>
+            <p class="text-blue-700 text-lg">Kelola sistem Lurahgo.id dengan mudah dan efisien</p>
+            <div class="flex items-center mt-4 space-x-4">
+                <div class="bg-blue-100 px-3 py-1 rounded-full text-blue-800 text-sm font-medium">
+                    <i class="fas fa-calendar-alt mr-1"></i><?php echo date('l, d F Y'); ?>
+                </div>
+                <div class="bg-green-100 px-3 py-1 rounded-full text-green-800 text-sm font-medium">
+                    <i class="fas fa-clock mr-1"></i><?php echo date('H:i'); ?> WIB
+                </div>
+            </div>
+        </div>
+        <div class="hidden md:block">
+            <i class="fas fa-crown text-yellow-400 text-6xl animate-pulse"></i>
+        </div>
+    </div>
+</div>
+
+<h1 class="text-3xl font-bold mb-8 text-white drop-shadow-lg">Dashboard Overview</h1>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 <?php foreach ($stats as $s): ?>
 <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 hover:bg-gray-50">
@@ -70,10 +91,14 @@ if ($_SESSION['role'] === 'admin') {
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+<div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold text-black drop-shadow-lg">Audit Log</h3>
-            <a href="audit_log" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">Export .txt</a>
+            <h3 class="text-xl font-bold text-black drop-shadow-lg flex items-center">
+                <i class="fas fa-history text-blue-600 mr-3"></i>Audit Log
+            </h3>
+            <a href="audit_log" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-download mr-2"></i>Export .txt
+            </a>
         </div>
         <div class="max-h-64 overflow-y-auto space-y-2">
             <?php
@@ -92,38 +117,74 @@ if ($_SESSION['role'] === 'admin') {
     </div>
 
     <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
-        <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Notifikasi</h3>
+        <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center">
+            <i class="fas fa-bell text-orange-600 mr-3"></i>Notifikasi Sistem
+        </h3>
         <div class="space-y-4">
-            <div class="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg shadow-sm">
-                <p class="font-medium">Periksa data RT yang belum lengkap.</p>
+            <div class="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+                    <p class="font-medium">Periksa data RT yang belum lengkap.</p>
+                </div>
             </div>
-            <div class="p-4 bg-green-50 border-l-4 border-green-400 text-green-800 rounded-r-lg shadow-sm">
-                <p class="font-medium">Sistem backup otomatis telah dilakukan.</p>
+            <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-400 text-green-800 rounded-r-lg shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                    <p class="font-medium">Sistem backup otomatis telah dilakukan.</p>
+                </div>
+            </div>
+            <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-400 text-blue-800 rounded-r-lg shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-blue-600 mr-3"></i>
+                    <p class="font-medium">Update sistem tersedia. Klik untuk info lebih lanjut.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
-    <h4 class="text-xl font-bold mb-4 text-black drop-shadow-lg">Ringkasan Data</h4>
-    <ul class="space-y-3">
-        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
-            <span class="font-medium text-gray-700">Total Warga Aktif:</span>
-            <span class="font-bold text-gray-800"><?php echo $data['warga']; ?></span>
-        </li>
-        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
-            <span class="font-medium text-gray-700">Total KK Terdaftar:</span>
-            <span class="font-bold text-gray-800"><?php echo $data['kk']; ?></span>
-        </li>
-        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
-            <span class="font-medium text-gray-700">Total RT:</span>
-            <span class="font-bold text-gray-800"><?php echo $data['rt']; ?></span>
-        </li>
-        <li class="flex justify-between items-center p-2 bg-gray-50 rounded-lg shadow-sm">
-            <span class="font-medium text-gray-700">Total RW:</span>
-            <span class="font-bold text-gray-800"><?php echo $data['rw']; ?></span>
-        </li>
-    </ul>
+    <h4 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center">
+        <i class="fas fa-chart-pie text-purple-600 mr-3"></i>Ringkasan Data Sistem
+    </h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-800 text-sm font-medium">Total Warga Aktif</p>
+                    <p class="text-2xl font-bold text-blue-900"><?php echo $data['warga']; ?></p>
+                </div>
+                <i class="fas fa-users text-blue-600 text-3xl"></i>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-800 text-sm font-medium">Total KK Terdaftar</p>
+                    <p class="text-2xl font-bold text-green-900"><?php echo $data['kk']; ?></p>
+                </div>
+                <i class="fas fa-home text-green-600 text-3xl"></i>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-purple-800 text-sm font-medium">Total RT</p>
+                    <p class="text-2xl font-bold text-purple-900"><?php echo $data['rt']; ?></p>
+                </div>
+                <i class="fas fa-map-marker-alt text-purple-600 text-3xl"></i>
+            </div>
+        </div>
+        <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-xl border border-yellow-200 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-yellow-800 text-sm font-medium">Total RW</p>
+                    <p class="text-2xl font-bold text-yellow-900"><?php echo $data['rw']; ?></p>
+                </div>
+                <i class="fas fa-building text-yellow-600 text-3xl"></i>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
@@ -155,10 +216,22 @@ if ($_SESSION['role'] === 'admin') {
 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8">
     <div class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 transition-colors"
          onclick="toggleTraffic()">
-        <h3 class="text-xl font-bold text-gray-800">Traffic Pengunjung</h3>
+        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+            <i class="fas fa-chart-line text-blue-600 mr-3"></i>Traffic Pengunjung
+        </h3>
         <i id="trafficIcon" class="fas fa-minus text-gray-600"></i>
     </div>
     <div id="trafficBody" class="p-6 pt-0">
+        <div class="mb-4 flex items-center justify-center space-x-6">
+            <div class="flex items-center">
+                <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
+                <span class="text-sm text-gray-600">Pengunjung Harian</span>
+            </div>
+            <div class="text-center">
+                <p class="text-2xl font-bold text-blue-600"><?php echo array_sum($traffic); ?></p>
+                <p class="text-xs text-gray-500">Total 7 hari</p>
+            </div>
+        </div>
         <canvas id="trafficChart" height="120"></canvas>
     </div>
 </div>
@@ -185,14 +258,46 @@ new Chart(document.getElementById('trafficChart'), {
     data: {
         labels: <?= json_encode($days) ?>,
         datasets: [{
+            label: 'Pengunjung',
             data: <?= json_encode($traffic) ?>,
-            borderWidth: 2,
-            fill: true
+            borderColor: '#3B82F6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#3B82F6',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
         }]
     },
     options: {
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#FFFFFF',
+                bodyColor: '#FFFFFF',
+                cornerRadius: 8
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                ticks: { color: '#6B7280' }
+            },
+            x: {
+                grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                ticks: { color: '#6B7280' }
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        }
     }
 });
 </script>

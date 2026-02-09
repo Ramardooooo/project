@@ -249,60 +249,27 @@ if (isset($_GET['export']) && $_GET['export'] == 'pdf') {
     </div>
 
     <!-- Laporan Mutasi -->
-    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-8 border border-white/20">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
         <h3 class="text-xl font-semibold mb-4 text-gray-800">Laporan Mutasi Warga (12 Bulan Terakhir)</h3>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-100/50">
-                <thead class="bg-gradient-to-r from-gray-50 to-gray-100/50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bulan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Datang</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pindah</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meninggal</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-100/50">
-                    <?php
-                    $current_month = '';
-                    $datang = 0;
-                    $pindah = 0;
-                    $meninggal = 0;
-
-                    while ($mutasi = mysqli_fetch_assoc($mutasi_bulanan)) {
-                        if ($current_month != $mutasi['bulan']) {
-                            if ($current_month != '') {
-                                echo "<tr class='hover:bg-gray-50/50 transition-colors duration-200'>
-                                        <td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . date('M Y', strtotime($current_month . '-01')) . "</td>
-                                        <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>$datang</td>
-                                        <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>$pindah</td>
-                                        <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>$meninggal</td>
-                                      </tr>";
-                            }
-                            $current_month = $mutasi['bulan'];
-                            $datang = 0;
-                            $pindah = 0;
-                            $meninggal = 0;
-                        }
-
-                        switch($mutasi['jenis_mutasi']) {
-                            case 'datang': $datang = $mutasi['jumlah']; break;
-                            case 'pindah': $pindah = $mutasi['jumlah']; break;
-                            case 'meninggal': $meninggal = $mutasi['jumlah']; break;
-                        }
-                    }
-
-                     Output the last month
-                    if ($current_month != '') {
-                        echo "<tr class='hover:bg-gray-50/50 transition-colors duration-200'>
-                                <td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . date('M Y', strtotime($current_month . '-01')) . "</td>
-                                <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>$datang</td>
-                                <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>$pindah</td>
-                                <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>$meninggal</td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <?php
+            $mutasi_data = [];
+            while ($mutasi = mysqli_fetch_assoc($mutasi_bulanan)) {
+                $bulan = $mutasi['bulan'];
+                if (!isset($mutasi_data[$bulan])) $mutasi_data[$bulan] = ['datang' => 0, 'pindah' => 0, 'meninggal' => 0];
+                $mutasi_data[$bulan][$mutasi['jenis_mutasi']] = $mutasi['jumlah'];
+            }
+            foreach ($mutasi_data as $bulan => $data) {
+                echo "<div class='bg-gray-50 rounded-lg p-4'>
+                        <h4 class='font-medium text-gray-900'>" . date('M Y', strtotime($bulan . '-01')) . "</h4>
+                        <div class='mt-2 space-y-1'>
+                            <div class='flex justify-between'><span class='text-green-600'>Datang:</span><span>{$data['datang']}</span></div>
+                            <div class='flex justify-between'><span class='text-red-600'>Pindah:</span><span>{$data['pindah']}</span></div>
+                            <div class='flex justify-between'><span class='text-gray-600'>Meninggal:</span><span>{$data['meninggal']}</span></div>
+                        </div>
+                      </div>";
+            }
+            ?>
         </div>
     </div>
 </div>
