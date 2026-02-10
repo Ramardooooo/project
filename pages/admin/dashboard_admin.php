@@ -16,12 +16,16 @@ if ($_SESSION['role'] === 'admin') {
         'kk'    => "SELECT COUNT(*) total FROM kk",
         'rt'    => "SELECT COUNT(*) total FROM rt",
         'rw'    => "SELECT COUNT(*) total FROM rt",
-        'users' => "SELECT COUNT(*) total FROM users"
+        'users' => "SELECT COUNT(*) total FROM users",
+        'rt_aktif' => "SELECT COUNT(*) total FROM rt WHERE status = 'aktif'",
+        'rt_tidak_aktif' => "SELECT COUNT(*) total FROM rt WHERE status = 'tidak_aktif'"
     ];
 
     foreach ($queries as $k => $q) {
         $data[$k] = mysqli_fetch_assoc(mysqli_query($conn, $q))['total'];
     }
+
+    $recent_users = mysqli_query($conn, "SELECT username, role, created_at FROM users ORDER BY created_at DESC LIMIT 5");
 
     $stats = [
         ['Total Warga', $data['warga'], 'users', 'blue'],
@@ -49,190 +53,268 @@ if ($_SESSION['role'] === 'admin') {
     exit();
 }
 ?>
-<div id="mainContent" class="ml-64 min-h-screen bg-blue-900">
-<div class="p-8">
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+.animate-slide-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+}
+.animate-slide-right {
+    animation: slideInRight 0.8s ease-out forwards;
+}
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+    margin: 2rem 0;
+}
+</style>
+<div id="mainContent" class="ml-64 min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+<div class="p-6 lg:p-8">
 
-<!-- Welcome Section -->
-<div class="bg-white rounded-3xl p-8 mb-8 border border-blue-200 shadow-2xl">
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-4xl font-extrabold text-blue-900 mb-2">Selamat Datang, Admin!</h1>
-            <p class="text-blue-700 text-lg">Kelola sistem Lurahgo.id dengan mudah dan efisien</p>
-            <div class="flex items-center mt-4 space-x-4">
-                <div class="bg-blue-100 px-3 py-1 rounded-full text-blue-800 text-sm font-medium">
-                    <i class="fas fa-calendar-alt mr-1"></i><?php echo date('l, d F Y'); ?>
-                </div>
-                <div class="bg-green-100 px-3 py-1 rounded-full text-green-800 text-sm font-medium">
-                    <i class="fas fa-clock mr-1"></i><?php echo date('H:i'); ?> WIB
-                </div>
+<!-- Page Header -->
+<div class="mb-10 text-center lg:text-left">
+    <h1 class="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">Dashboard Overview</h1>
+    <p class="text-lg text-gray-600 max-w-2xl">Pantau dan kelola sistem Lurahgo.id dengan mudah dan efisien</p>
+</div>
+
+<!-- Statistics Overview -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6 mb-12 animate-fade-in" style="animation-delay: 0.2s;">
+    <?php foreach ($stats as $index => $s): ?>
+    <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 border border-gray-100 hover:border-<?= $s[3] ?>-200 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group" style="animation-delay: <?= 0.1 * ($index + 1) ?>s;">
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1 group-hover:text-<?= $s[3] ?>-600 transition-colors"><?= $s[0] ?></p>
+                <p class="text-2xl lg:text-3xl font-bold text-gray-800 group-hover:text-<?= $s[3] ?>-600 transition-colors"><?= number_format($s[1]) ?></p>
+            </div>
+            <div class="p-3 rounded-xl bg-gradient-to-br from-<?= $s[3] ?>-500 to-<?= $s[3] ?>-600 text-white shadow-lg group-hover:shadow-xl transition-shadow">
+                <i class="fas fa-<?= $s[2] ?> text-xl"></i>
             </div>
         </div>
-        <div class="hidden md:block">
-            <i class="fas fa-crown text-yellow-400 text-6xl animate-pulse"></i>
+        <div class="mt-3">
+            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                <div class="bg-gradient-to-r from-<?= $s[3] ?>-500 to-<?= $s[3] ?>-600 h-1.5 rounded-full transition-all duration-500" style="width: <?= rand(60, 95) ?>%"></div>
+            </div>
         </div>
     </div>
+    <?php endforeach; ?>
 </div>
 
-<h1 class="text-3xl font-bold mb-8 text-white drop-shadow-lg">Dashboard Overview</h1>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
-<?php foreach ($stats as $s): ?>
-<div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 hover:bg-gray-50">
-    <div class="flex items-center">
-        <div class="p-4 rounded-full bg-<?= $s[3] ?>-600 text-white shadow-md">
-            <i class="fas fa-<?= $s[2] ?> text-2xl"></i>
-        </div>
-        <div class="ml-4">
-            <p class="text-sm font-medium text-gray-800 uppercase tracking-wide drop-shadow-sm"><?= $s[0] ?></p>
-            <p class="text-3xl font-bold text-black drop-shadow-lg"><?= $s[1] ?></p>
-        </div>
-    </div>
-</div>
-<?php endforeach; ?>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-<div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+<!-- Audit Log and Recent Users -->
+<div class="flex gap-6 mb-6">
+    <!-- Audit Log -->
+    <div class="bg-white rounded-lg shadow p-4 border border-gray-100 w-1/2">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold text-black drop-shadow-lg flex items-center">
-                <i class="fas fa-history text-blue-600 mr-3"></i>Audit Log
-            </h3>
-            <a href="audit_log" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                <i class="fas fa-download mr-2"></i>Export .txt
+            <div class="flex items-center">
+                <div class="p-2 bg-blue-100 rounded mr-3">
+                    <i class="fas fa-history text-blue-600 text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">Audit Log</h3>
+                    <p class="text-xs text-gray-500">Riwayat aktivitas sistem</p>
+                </div>
+            </div>
+            <a href="audit_log" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 flex items-center text-sm">
+                <i class="fas fa-download mr-1"></i>Export
             </a>
         </div>
-        <div class="max-h-64 overflow-y-auto space-y-2">
+        <div class="max-h-48 overflow-y-auto">
             <?php
-            $audit_logs = mysqli_query($conn, "SELECT action, table_name, username, created_at FROM audit_log ORDER BY created_at DESC LIMIT 10");
-            while ($log = mysqli_fetch_assoc($audit_logs)) {
-                echo "<div class='flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors shadow-sm text-sm'>";
-                echo "<span class='font-medium text-gray-700'>{$log['action']} ({$log['table_name']}) oleh {$log['username']}</span>";
-                echo "<span class='text-xs text-gray-500'>" . date('d/m/Y H:i', strtotime($log['created_at'])) . "</span>";
-                echo "</div>";
-            }
-            if (mysqli_num_rows($audit_logs) == 0) {
-                echo "<div class='p-2 bg-gray-50 rounded-lg text-gray-500 text-sm'>Belum ada aktivitas audit.</div>";
+            $audit_logs = mysqli_query($conn, "SELECT action, table_name, username, created_at FROM audit_log ORDER BY created_at DESC LIMIT 5");
+            if (mysqli_num_rows($audit_logs) > 0) {
+                echo "<table class='w-full text-sm text-gray-700 border-collapse'>";
+                echo "<thead><tr class='border-b border-gray-200'><th class='text-left py-2 px-1'>Aksi</th><th class='text-left py-2 px-1'>Tabel</th><th class='text-left py-2 px-1'>User</th><th class='text-left py-2 px-1'>Waktu</th></tr></thead>";
+                echo "<tbody>";
+                while ($log = mysqli_fetch_assoc($audit_logs)) {
+                    echo "<tr class='border-b border-gray-100'>";
+                    echo "<td class='py-2 px-1 font-medium'>{$log['action']}</td>";
+                    echo "<td class='py-2 px-1'>{$log['table_name']}</td>";
+                    echo "<td class='py-2 px-1'>{$log['username']}</td>";
+                    echo "<td class='py-2 px-1'>" . date('d/m H:i', strtotime($log['created_at'])) . "</td>";
+                    echo "</tr>";
+                }
+                echo "</tbody></table>";
+            } else {
+                echo "<p class='text-gray-500 text-center py-4'>Belum ada aktivitas audit</p>";
             }
             ?>
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
-        <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center">
-            <i class="fas fa-bell text-orange-600 mr-3"></i>Notifikasi Sistem
-        </h3>
-        <div class="space-y-4">
-            <div class="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
-                    <p class="font-medium">Periksa data RT yang belum lengkap.</p>
+    <!-- Recent Users -->
+    <div class="bg-white rounded-lg shadow p-4 border border-gray-100 w-1/2">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <div class="p-2 bg-green-100 rounded mr-3">
+                    <i class="fas fa-users text-green-600 text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">Pengguna Terbaru</h3>
+                    <p class="text-xs text-gray-500">Pengguna yang baru terdaftar</p>
                 </div>
             </div>
-            <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-400 text-green-800 rounded-r-lg shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-600 mr-3"></i>
-                    <p class="font-medium">Sistem backup otomatis telah dilakukan.</p>
-                </div>
+            <a href="manage_users" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 flex items-center text-sm">
+                <i class="fas fa-eye mr-1"></i>Lihat Semua
+            </a>
+        </div>
+        <div class="max-h-48 overflow-y-auto">
+            <?php
+            if (mysqli_num_rows($recent_users) > 0) {
+                echo "<table class='w-full text-sm text-gray-700 border-collapse'>";
+                echo "<thead><tr class='border-b border-gray-200'><th class='text-left py-2 px-1'>Username</th><th class='text-left py-2 px-1'>Role</th><th class='text-left py-2 px-1'>Dibuat</th></tr></thead>";
+                echo "<tbody>";
+                while ($user = mysqli_fetch_assoc($recent_users)) {
+                    echo "<tr class='border-b border-gray-100'>";
+                    echo "<td class='py-2 px-1 font-medium'>{$user['username']}</td>";
+                    echo "<td class='py-2 px-1'>{$user['role']}</td>";
+                    echo "<td class='py-2 px-1'>" . date('d/m H:i', strtotime($user['created_at'])) . "</td>";
+                    echo "</tr>";
+                }
+                echo "</tbody></table>";
+            } else {
+                echo "<p class='text-gray-500 text-center py-4'>Belum ada pengguna</p>";
+            }
+            ?>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="grid grid-cols-1 gap-6 mb-10">
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl p-6 border border-gray-100 transition-all duration-300 animate-slide-left" style="animation-delay: 1.8s;">
+        <div class="flex items-center mb-6">
+            <div class="p-3 bg-yellow-100 rounded-xl mr-4">
+                <i class="fas fa-bolt text-yellow-600 text-xl"></i>
             </div>
-            <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-400 text-blue-800 rounded-r-lg shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <i class="fas fa-info-circle text-blue-600 mr-3"></i>
-                    <p class="font-medium">Update sistem tersedia. Klik untuk info lebih lanjut.</p>
-                </div>
+            <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center">
+                <i class="fas fa-bolt text-yellow-600 mr-3"></i>Quick Actions
+            </h3>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <a href="tambah_user" class="group p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hover:from-blue-100 hover:to-blue-200 transition-all duration-300 border border-blue-200 hover:border-blue-300 hover:shadow-lg">
+                <i class="fas fa-user-plus text-blue-600 text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <h4 class="font-bold text-blue-900 mb-1 text-sm">Tambah User</h4>
+                <p class="text-xs text-blue-700">Buat akun baru</p>
+            </a>
+            <a href="tambah_rt" class="group p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl hover:from-green-100 hover:to-green-200 transition-all duration-300 border border-green-200 hover:border-green-300 hover:shadow-lg">
+                <i class="fas fa-plus-circle text-green-600 text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <h4 class="font-bold text-green-900 mb-1 text-sm">Tambah RT</h4>
+                <p class="text-xs text-green-700">Buat RT baru</p>
+            </a>
+            <a href="manage_users" class="group p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl hover:from-purple-100 hover:to-purple-200 transition-all duration-300 border border-purple-200 hover:border-purple-300 hover:shadow-lg">
+                <i class="fas fa-users-cog text-purple-600 text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <h4 class="font-bold text-purple-900 mb-1 text-sm">Kelola User</h4>
+                <p class="text-xs text-purple-700">Edit & hapus user</p>
+            </a>
+            <a href="manage_rt_rw" class="group p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl hover:from-orange-100 hover:to-orange-200 transition-all duration-300 border border-orange-200 hover:border-orange-300 hover:shadow-lg">
+                <i class="fas fa-map-marked-alt text-orange-600 text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <h4 class="font-bold text-orange-900 mb-1 text-sm">Kelola RT/RW</h4>
+                <p class="text-xs text-orange-700">Atur struktur</p>
+            </a>
+            <a href="gallery" class="group p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl hover:from-pink-100 hover:to-pink-200 transition-all duration-300 border border-pink-200 hover:border-pink-300 hover:shadow-lg">
+                <i class="fas fa-images text-pink-600 text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <h4 class="font-bold text-pink-900 mb-1 text-sm">Galeri</h4>
+                <p class="text-xs text-pink-700">Kelola foto</p>
+            </a>
+            <a href="export_audit_log" class="group p-4 bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-xl hover:from-indigo-100 hover:to-indigo-200 transition-all duration-300 border border-indigo-200 hover:border-indigo-300 hover:shadow-lg">
+                <i class="fas fa-file-export text-indigo-600 text-2xl mb-2 group-hover:scale-110 transition-transform"></i>
+                <h4 class="font-bold text-indigo-900 mb-1 text-sm">Export Log</h4>
+                <p class="text-xs text-indigo-700">Unduh audit log</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Distribusi RT -->
+    <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl p-6 border border-gray-100 transition-all duration-300 animate-slide-right" style="animation-delay: 2.0s;">
+        <div class="flex items-center mb-6">
+            <div class="p-3 bg-green-100 rounded-xl mr-4">
+                <i class="fas fa-chart-pie text-green-600 text-xl"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-800">Distribusi RT</h3>
+                <p class="text-sm text-gray-500">Status aktif dan tidak aktif RT</p>
+            </div>
+        </div>
+        <div class="flex items-center justify-center">
+            <div class="w-64 h-64">
+                <canvas id="rtDistributionChart"></canvas>
+            </div>
+        </div>
+        <div class="mt-4 flex justify-center space-x-6 text-sm">
+            <div class="flex items-center">
+                <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                <span>Aktif: <?= $data['rt_aktif'] ?> RT</span>
+            </div>
+            <div class="flex items-center">
+                <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                <span>Tidak Aktif: <?= $data['rt_tidak_aktif'] ?> RT</span>
             </div>
         </div>
     </div>
 </div>
 
-<div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
-    <h4 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center">
-        <i class="fas fa-chart-pie text-purple-600 mr-3"></i>Ringkasan Data Sistem
-    </h4>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-blue-800 text-sm font-medium">Total Warga Aktif</p>
-                    <p class="text-2xl font-bold text-blue-900"><?php echo $data['warga']; ?></p>
-                </div>
-                <i class="fas fa-users text-blue-600 text-3xl"></i>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-green-800 text-sm font-medium">Total KK Terdaftar</p>
-                    <p class="text-2xl font-bold text-green-900"><?php echo $data['kk']; ?></p>
-                </div>
-                <i class="fas fa-home text-green-600 text-3xl"></i>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-800 text-sm font-medium">Total RT</p>
-                    <p class="text-2xl font-bold text-purple-900"><?php echo $data['rt']; ?></p>
-                </div>
-                <i class="fas fa-map-marker-alt text-purple-600 text-3xl"></i>
-            </div>
-        </div>
-        <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-xl border border-yellow-200 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-yellow-800 text-sm font-medium">Total RW</p>
-                    <p class="text-2xl font-bold text-yellow-900"><?php echo $data['rw']; ?></p>
-                </div>
-                <i class="fas fa-building text-yellow-600 text-3xl"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-200">
-    <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg">Kelola Data</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="manage_users" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
-            <i class="fas fa-users text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola User</h4>
-            <p class="text-sm text-gray-600">Tambah, edit, hapus user</p>
-        </a>
-        <a href="manage_rt_rw" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
-            <i class="fas fa-map-marker-alt text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola RT/RW</h4>
-            <p class="text-sm text-gray-600">Atur struktur RT dan RW</p>
-        </a>
-        <a href="manage_master_data" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
-            <i class="fas fa-database text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Data Master</h4>
-            <p class="text-sm text-gray-600">Kelola data utama sistem</p>
-        </a>
-        <a href="gallery" class="group p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:shadow-lg">
-            <i class="fas fa-images text-gray-600 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
-            <h4 class="font-bold text-black mb-2 drop-shadow-sm">Kelola Galeri</h4>
-            <p class="text-sm text-gray-600">Tambah dan kelola galeri</p>
-        </a>
-    </div>
-</div>
-
-<div class="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8">
-    <div class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+<!-- Traffic Analytics -->
+<div class="section-divider"></div>
+<div class="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-100 mb-8 transition-all duration-300 animate-fade-in" style="animation-delay: 1.6s;">
+    <div class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 transition-colors rounded-t-2xl"
          onclick="toggleTraffic()">
-        <h3 class="text-xl font-bold text-gray-800 flex items-center">
-            <i class="fas fa-chart-line text-blue-600 mr-3"></i>Traffic Pengunjung
-        </h3>
-        <i id="trafficIcon" class="fas fa-minus text-gray-600"></i>
+        <div class="flex items-center">
+            <div class="p-3 bg-blue-100 rounded-xl mr-4">
+                <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-800">Traffic Pengunjung</h3>
+                <p class="text-sm text-gray-500">Analitik kunjungan harian</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="hidden lg:flex items-center space-x-2 text-sm text-gray-600">
+                <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                <span>Live Data</span>
+            </div>
+            <i id="trafficIcon" class="fas fa-minus text-gray-600 text-lg hover:text-gray-800 transition-colors"></i>
+        </div>
     </div>
     <div id="trafficBody" class="p-6 pt-0">
-        <div class="mb-4 flex items-center justify-center space-x-6">
-            <div class="flex items-center">
-                <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-                <span class="text-sm text-gray-600">Pengunjung Harian</span>
+        <div class="mb-6 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+                    <span class="text-sm font-medium text-gray-700">Pengunjung Harian</span>
+                </div>
             </div>
-            <div class="text-center">
-                <p class="text-2xl font-bold text-blue-600"><?php echo array_sum($traffic); ?></p>
-                <p class="text-xs text-gray-500">Total 7 hari</p>
+            <div class="text-center bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-3 rounded-xl border border-blue-200">
+                <p class="text-3xl font-bold text-blue-600"><?php echo number_format(array_sum($traffic)); ?></p>
+                <p class="text-xs text-gray-500 font-medium">Total 7 hari terakhir</p>
             </div>
         </div>
-        <canvas id="trafficChart" height="120"></canvas>
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+            <canvas id="trafficChart" height="120"></canvas>
+        </div>
+        <div class="mt-4 flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+            <div class="flex items-center">
+                <i class="fas fa-mouse-pointer mr-1 text-blue-500"></i>
+                Klik untuk detail
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-sync-alt mr-1 text-green-500"></i>
+                Update otomatis
+            </div>
+        </div>
     </div>
 </div>
 
@@ -252,6 +334,10 @@ function toggleTraffic(){
         icon.classList.replace('fa-minus','fa-plus');
     }
 }
+
+
+
+
 
 new Chart(document.getElementById('trafficChart'), {
     type: 'line',
@@ -300,5 +386,41 @@ new Chart(document.getElementById('trafficChart'), {
         }
     }
 });
+
+new Chart(document.getElementById('rtDistributionChart'), {
+    type: 'pie',
+    data: {
+        labels: ['Aktif', 'Tidak Aktif'],
+        datasets: [{
+            data: [<?= $data['rt_aktif'] ?>, <?= $data['rt_tidak_aktif'] ?>],
+            backgroundColor: ['#10B981', '#EF4444'],
+            borderColor: ['#FFFFFF', '#FFFFFF'],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#FFFFFF',
+                bodyColor: '#FFFFFF',
+                cornerRadius: 8,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += context.parsed + ' RT';
+                        return label;
+                    }
+                }
+            }
+        }
+    }
+});
 </script>
+
 

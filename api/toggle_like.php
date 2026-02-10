@@ -9,8 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/database.php';
 
-$input = json_decode(file_get_contents('php://input'), true);
-$gallery_id = (int)$input['gallery_id'];
+$gallery_id = (int)$_POST['gallery_id'];
 $user_id = $_SESSION['user_id'];
 
 if (!$gallery_id) {

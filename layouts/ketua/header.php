@@ -12,17 +12,16 @@ if ($user_id) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ketua RT/RW</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-    </style>
+<meta charset="UTF-8">
+<title>Lurahgo.id - Dashboard RT/RW</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { background-color: #1e3a8a; }
+</style>
 </head>
 <body class="bg-blue-900 min-h-screen flex flex-col">
 <header class="bg-gradient-to-r from-slate-900/70 to-slate-800/70 backdrop-blur-md shadow-lg border-b border-slate-600/30 relative ml-64">
@@ -34,6 +33,7 @@ if ($user_id) {
             </button>
             <h1 class="text-2xl font-bold text-white tracking-wide"></h1>
         </div>
+
 
         <div class="flex items-center space-x-6">
 
@@ -50,7 +50,7 @@ if ($user_id) {
                 </span>
             </div>
 
-            <a href="../../auth/logout.php" class="text-white/80 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/20">
+            <a href="logout" class="text-white/80 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/20">
                 <i class="fas fa-sign-out-alt text-xl"></i>
             </a>
         </div>

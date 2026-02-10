@@ -51,9 +51,9 @@ if ($_SESSION['role'] == 'admin') {
     $users = mysqli_query($conn, "SELECT * FROM users $where_clause LIMIT $limit OFFSET $offset");
 ?>
 
-<div class="ml-64 min-h-screen bg-blue-900">
+<div id="mainContent" class="ml-64 min-h-screen bg-gradient-to-br from-white to-gray-50">
 <div class="p-8">
-<h1 class="text-2xl font-bold mb-6 text-white drop-shadow-lg">Manage Users</h1>
+<h1 class="text-2xl font-bold mb-6 text-gray-800 drop-shadow-lg">Manage Users</h1>
 
     <a href="/PROJECT/tambah_user" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block drop-shadow-sm">Tambah User</a>
 
@@ -62,36 +62,58 @@ if ($_SESSION['role'] == 'admin') {
         <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 drop-shadow-sm">Cari</button>
     </form>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <?php while ($user = mysqli_fetch_assoc($users)) { ?>
-        <div class="bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-white/30 hover:shadow-2xl hover:bg-white/30 transition-all duration-300">
-            <div class="flex items-center mb-4">
-                <?php if ($user['profile_photo']): ?>
-                    <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-12 h-12 rounded-full object-cover border-2 border-white/30">
-                <?php else: ?>
-                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
-                        <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
-                    </div>
-                <?php endif; ?>
-                <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-white drop-shadow-sm"><?php echo $user['username']; ?></h3>
-                    <p class="text-sm text-white/70 drop-shadow-sm"><strong>Jabatannya: </strong><?php echo $user['role']; ?></p>
-                </div>
-            </div>
-            <div class="mb-4">
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Email:</strong> <?php echo $user['email']; ?></p>
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>ID Database:</strong> <?php echo $user['id']; ?></p>
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Dibuat:</strong> <?php echo isset($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : 'N/A'; ?></p>
-            </div>
-            <div class="flex gap-2">
-                <a href="/PROJECT/edit_user?id=<?php echo $user['id']; ?>" class="flex-1 py-2 px-3 rounded-lg font-semibold text-white bg-gradient-to-r from-green-400 to-emerald-600 hover:scale-105 transition-all duration-300 drop-shadow-sm text-center">Edit</a>
-                <form method="POST" class="flex-1">
-                    <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                    <button type="submit" name="delete_user" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah anda yakin untuk menghapus?')">Delete</button>
-                </form>
-            </div>
-        </div>
-        <?php } ?>
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
+        <table class="w-full table-auto">
+            <thead class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Username</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Role</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Created At</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <?php while ($user = mysqli_fetch_assoc($users)) { ?>
+                <tr class="hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 transition-all duration-300 transform hover:shadow-md">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $user['id']; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="flex items-center">
+                            <?php if ($user['profile_photo']): ?>
+                                <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover mr-3 shadow-lg">
+                            <?php else: ?>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm mr-3 shadow-lg">
+                                    <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
+                                </div>
+                            <?php endif; ?>
+                            <?php echo $user['username']; ?>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $user['email']; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold shadow-md <?php echo ($user['role'] == 'admin') ? 'bg-gradient-to-r from-purple-400 to-purple-600 text-white' : 'bg-gradient-to-r from-blue-400 to-blue-600 text-white'; ?>">
+                            <?php echo ucfirst($user['role']); ?>
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo isset($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : 'N/A'; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex space-x-2">
+                            <a href="/PROJECT/edit_user?id=<?php echo $user['id']; ?>" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </a>
+                            <form method="POST" class="inline">
+                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                <button type="submit" name="delete_user" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center" onclick="return confirm('Apakah anda yakin untuk menghapus?')">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
     </div>
 
     <div class="mt-4 flex justify-center">

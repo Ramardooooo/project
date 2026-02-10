@@ -1,29 +1,34 @@
 
 
-<section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+<?php
+include __DIR__ . '/../config/database.php';
+
+$query = "SELECT g.*, 
+          COUNT(l.id) as like_count,
+          CASE WHEN EXISTS(SELECT 1 FROM gallery_likes gl WHERE gl.gallery_id = g.id AND gl.user_id = ?) THEN 1 ELSE 0 END as user_liked
+          FROM gallery g 
+          LEFT JOIN gallery_likes l ON g.id = l.gallery_id 
+          GROUP BY g.id 
+          ORDER BY g.created_at DESC";
+
+$stmt = mysqli_prepare($conn, $query);
+$user_id = $_SESSION['user_id'] ?? null;
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
+?>
+
+<section id="gallery" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-            <h2 class="text-5xl font-bold text-gray-800 mb-4">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">
                 Galeri Kegiatan
             </h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"></div>
-            <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
                 Dokumentasi kegiatan dan momen berharga di lingkungan RT/RW kami
             </p>
         </div>
-        <?php
-            $query = "SELECT g.*,
-                      (SELECT COUNT(*) FROM gallery_likes WHERE gallery_id = g.id) as like_count,
-                      (SELECT COUNT(*) FROM gallery_likes WHERE gallery_id = g.id AND user_id = ?) as user_liked
-                      FROM gallery g
-                      ORDER BY g.created_at DESC";
-            $stmt = mysqli_prepare($conn, $query);
-            mysqli_stmt_bind_param($stmt, "i", $_SESSION['user_id']);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            mysqli_stmt_close($stmt);
-        ?>
         <?php if (empty($gallery_items)): ?>
             <div class="text-center py-16">
                 <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-full w-32 h-32 mx-auto mb-6 flex items-center justify-center">
@@ -39,6 +44,7 @@
                             <img src="beranda/gallery/<?php echo $item['image_path']; ?>"
                                  alt="<?php echo $item['title']; ?>"
                                  class="gallery-image w-full h-64 object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110"
+                                 onclick="openModal('<?php echo $item['image_path']; ?>', '<?php echo $item['title']; ?>', '<?php echo $item['description']; ?>', '<?php echo date('d M Y', strtotime($item['created_at'])); ?>')"
                                  data-title="<?php echo $item['title']; ?>"
                                  data-description="<?php echo $item['description']; ?>"
                                  data-date="<?php echo date('d M Y', strtotime($item['created_at'])); ?>">
@@ -102,5 +108,5 @@
     </div>
 </div>
 
-<script src="beranda/gallery.js"></script>
-<script src="beranda/like.js"></script>
+<script src="beranda/script/gallery.js"></script>
+<script src="beranda/script/like.js"></script>

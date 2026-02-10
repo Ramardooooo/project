@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include '../../../config/database.php';
 include '../../../layouts/admin/header.php';

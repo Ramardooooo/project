@@ -1,4 +1,4 @@
-<section class="relative py-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
+<section id="hero" class="relative py-20 bg-gradient-to-br from-blue-900/90 via-blue-800/90 to-blue-900/90 overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&h=1080&fit=crop&crop=center'); background-size: cover; background-position: center;">
 
     <div class="relative max-w-7xl mx-auto px-6 text-center">
         <div class="mb-8">
@@ -47,17 +47,6 @@
         </div>
     </div>
 
-    <div id="floating-notification" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-500 z-50 max-w-sm">
-        <div class="flex items-center">
-            <i class="fas fa-check-circle mr-3 text-xl"></i>
-            <div>
-                <h4 class="font-semibold">Berhasil!</h4>
-                <p class="text-sm opacity-90">Data RT berhasil diperbarui</p>
-            </div>
-            <button onclick="closeNotification()" class="ml-4 text-white hover:text-gray-200">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
+
 </section>
 

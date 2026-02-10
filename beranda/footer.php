@@ -1,4 +1,4 @@
-<footer class="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-16">
+<footer id="contact" class="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-16">
     <div class="max-w-7xl mx-auto px-6">
 
         <div class="grid md:grid-cols-4 gap-8 mb-12">

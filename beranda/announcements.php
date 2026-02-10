@@ -27,18 +27,17 @@
                         <i class="fas fa-code text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Update Sistem v19.1</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Soon</h3>
                         <p class="text-sm text-gray-500 flex items-center">
                             <i class="fas fa-calendar-alt mr-1"></i>15 Desember 2025
                         </p>
                     </div>
                 </div>
                 <p class="text-gray-600 leading-relaxed">
-                    Peningkatan performa sistem, perbaikan bug, dan fitur-fitur baru
-                    untuk pengalaman pengguna yang lebih baik.
+                    Soon
                 </p>
                 <div class="mt-4 flex items-center text-blue-600 font-medium">
-                    <span class="text-sm">Baca selengkapnya</span>
+                    <span class="text-sm">Soon</span>
                     <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
                 </div>
             </div>
@@ -49,18 +48,17 @@
                         <i class="fas fa-graduation-cap text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Pelatihan Digital</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Soon</h3>
                         <p class="text-sm text-gray-500 flex items-center">
                             <i class="fas fa-calendar-alt mr-1"></i>20 Desember 2025
                         </p>
                     </div>
                 </div>
                 <p class="text-gray-600 leading-relaxed">
-                    Program pelatihan penggunaan sistem management RT/RW secara
-                    online untuk meningkatkan kompetensi digital.
+                    Soon
                 </p>
                 <div class="mt-4 flex items-center text-green-600 font-medium">
-                    <span class="text-sm">Daftar sekarang</span>
+                    <span class="text-sm">Soon</span>
                     <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
                 </div>
             </div>
@@ -71,15 +69,14 @@
                         <i class="fas fa-chart-bar text-2xl text-white"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Dashboard Analytics</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Soon</h3>
                         <p class="text-sm text-gray-500 flex items-center">
                             <i class="fas fa-calendar-alt mr-1"></i>1 Januari 2026
                         </p>
                     </div>
                 </div>
                 <p class="text-gray-600 leading-relaxed">
-                    Fitur analitik baru untuk monitoring kegiatan RT/RW dengan
-                    visualisasi data yang informatif dan real-time.
+                    Soon
                 </p>
                 <div class="mt-4 flex items-center text-purple-600 font-medium">
                     <span class="text-sm">Pelajari fitur</span>
@@ -89,14 +86,6 @@
 
         </div>
 
-        <div class="text-center mt-16">
-            <div class="inline-block">
-                <a href="#" class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105">
-                    <i class="fas fa-newspaper mr-2 group-hover:animate-pulse"></i>
-                    Lihat Semua Pengumuman
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
-                </a>
-            </div>
-        </div>
+
     </div>
 </section>

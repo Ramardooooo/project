@@ -71,9 +71,11 @@ if ($_SESSION['role'] == 'admin') {
     $rt = mysqli_query($conn, "SELECT * FROM rt $where_clause LIMIT $limit OFFSET $offset");
 ?>
 
-<div id="mainContent" class="ml-64 min-h-screen bg-blue-900 transition-all duration-300">
+<div id="mainContent" class="ml-64 min-h-screen bg-gradient-to-br from-white to-gray-50">
 <div class="p-8">
     <a href="tambah_rt" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block drop-shadow-sm">Tambah RT</a>
+
+    <h1 class="text-2xl font-bold mb-6 text-gray-800 drop-shadow-lg">Manage RT/RW</h1>
 
     <form method="GET" class="mb-4">
         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari RT atau Ketua RT..." class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 drop-shadow-sm">
@@ -82,42 +84,60 @@ if ($_SESSION['role'] == 'admin') {
 
 
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <?php while ($r = mysqli_fetch_assoc($rt)) { ?>
-        <div class="bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-white/30 hover:shadow-2xl hover:bg-white/30 transition-all duration-300">
-            <div class="flex items-center mb-4">
-                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg">
-                    <?php echo strtoupper(substr($r['nama_rt'], 0, 1)); ?>
-                </div>
-                <div class="ml-4">
-                    <h3 class="text-lg font-semibold text-white drop-shadow-sm"><?php echo $r['nama_rt']; ?></h3>
-                    <p class="text-sm text-white/70 drop-shadow-sm">Ketua RT: <?php echo $r['ketua_rt']; ?></p>
-                </div>
-            </div>
-            <div class="mb-4">
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>ID:</strong> <?php echo $r['id']; ?></p>
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Status:</strong>
-                    <span class="px-2 py-1 rounded-full text-xs font-medium <?php echo ($r['status'] == 'aktif') ? 'bg-green-500 text-white' : 'bg-red-500 text-white'; ?>">
-                        <?php echo ucfirst(str_replace('_', ' ', $r['status'])); ?>
-                    </span>
-                </p>
-                <p class="text-sm text-white/80 drop-shadow-sm"><strong>Dibuat:</strong> <?php echo isset($r['created_at']) ? date('d M Y', strtotime($r['created_at'])) : 'N/A'; ?></p>
-            </div>
-            <div class="flex gap-2">
-                <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="py-2 px-3 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:scale-105 transition-all duration-300 drop-shadow-sm text-center">Edit</a>
-                <form method="POST" class="inline">
-                    <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
-                    <button type="submit" name="toggle_status" class="py-2 px-3 rounded-lg font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:scale-105 transition-all duration-300 drop-shadow-sm" title="Toggle Status">
-                        <?php echo ($r['status'] == 'aktif') ? 'Nonaktifkan' : 'Aktifkan'; ?>
-                    </button>
-                </form>
-                <form method="POST" class="inline">
-                    <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
-                    <button type="submit" name="delete_rt" class="bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-purple-600 transition duration-200 drop-shadow-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Delete</button>
-                </form>
-            </div>
-        </div>
-        <?php } ?>
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
+        <table class="w-full table-auto">
+            <thead class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama RT</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Ketua RT</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Created At</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <?php while ($r = mysqli_fetch_assoc($rt)) { ?>
+                <tr class="hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 transition-all duration-300 transform hover:shadow-md">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $r['id']; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm mr-3 shadow-lg">
+                                <?php echo strtoupper(substr($r['nama_rt'], 0, 1)); ?>
+                            </div>
+                            <?php echo $r['nama_rt']; ?>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $r['ketua_rt']; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold shadow-md <?php echo ($r['status'] == 'aktif') ? 'bg-gradient-to-r from-green-400 to-green-600 text-white' : 'bg-gradient-to-r from-red-400 to-red-600 text-white'; ?>">
+                            <?php echo ucfirst(str_replace('_', ' ', $r['status'])); ?>
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo isset($r['created_at']) ? date('d M Y', strtotime($r['created_at'])) : 'N/A'; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex space-x-2">
+                            <a href="/PROJECT/edit_rt?id=<?php echo $r['id']; ?>" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </a>
+                            <form method="POST" class="inline">
+                                <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
+                                <button type="submit" name="toggle_status" class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center" title="Toggle Status">
+                                    <i class="fas fa-toggle-on mr-1"></i> <?php echo ($r['status'] == 'aktif') ? 'Nonaktifkan' : 'Aktifkan'; ?>
+                                </button>
+                            </form>
+                            <form method="POST" class="inline">
+                                <input type="hidden" name="rt_id" value="<?php echo $r['id']; ?>">
+                                <button type="submit" name="delete_rt" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
     </div>
 
     <div class="mt-4 flex justify-center">
@@ -141,3 +161,5 @@ if ($_SESSION['role'] == 'admin') {
 <?php
 }
 ?>
+</div>
+</div>

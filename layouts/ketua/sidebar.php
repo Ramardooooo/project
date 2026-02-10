@@ -1,33 +1,114 @@
-<aside class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-slate-900/90 to-slate-800/90 backdrop-blur-md shadow-xl z-40 border-r border-slate-600/30">
-    <nav class="mt-20 px-4">
-        <a href="dashboard_ketua" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-tachometer-alt mr-3 text-lg"></i>
-            <span class="font-medium">Dashboard</span>
-        </a>
-        <a href="manage_warga" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-users mr-3 text-lg"></i>
-            <span class="font-medium">Kelola Warga</span>
-        </a>
-        <a href="manage_kk" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-home mr-3 text-lg"></i>
-            <span class="font-medium">Kelola KK</span>
-        </a>
-        <a href="manage_wilayah" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-map-marker-alt mr-3 text-lg"></i>
-            <span class="font-medium">Kelola Wilayah</span>
-        </a>
-        <a href="mutasi_warga" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-exchange-alt mr-3 text-lg"></i>
-            <span class="font-medium">Mutasi Warga</span>
-        </a>
-        <a href="laporan" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-chart-bar mr-3 text-lg"></i>
-            <span class="font-medium">Laporan</span>
-        </a>
-        <a href="pengumuman" class="flex items-center px-4 py-3 text-white/80 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg mb-2 border-l-4 border-transparent hover:border-blue-400">
-            <i class="fas fa-bullhorn mr-3 text-lg"></i>
-            <span class="font-medium">Pengumuman</span>
-        </a>
-    </nav>
-</aside>
+<script src="../../PROJECT/layouts/ketua/sidebar.js"></script>
+<div id="sidebar"
+class="min-h-screen fixed top-0 left-0 z-50
+bg-gradient-to-b from-slate-900/80 to-slate-800/80 backdrop-blur-xl backdrop-saturate-150
+text-white shadow-2xl border-r border-slate-600/30
+transition-all duration-300 ease-in-out"
+style="width:256px;">
+
+    <div class="p-6 border-b border-white/20">
+        <div class="flex items-center justify-between gap-2">
+            <div class="text-lg font-semibold flex items-center gap-2">
+                <i class="fas fa-crown text-yellow-400"></i>
+                <span id="sidebarTitle">Ketua Panel</span>
+            </div>
+
+            <div class="flex gap-1">
+                <button onclick="togglePosition()"
+                class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+
+                <button onclick="toggleSidebar()"
+                class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10">
+                    <i id="sidebarToggleIcon" class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-xs text-white/70 mt-1" id="sidebarSubtitle">
+            Dashboard Ketua
+        </div>
+    </div>
+
+    <ul class="mt-4 space-y-1 px-3" id="sidebarMenu">
+
+        <li>
+            <a href="dashboard_ketua"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                <i class="fas fa-tachometer-alt text-sm"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li>
+            <button onclick="toggleKelola()"
+            class="w-full flex items-center justify-between px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-cogs text-sm"></i>
+                    <span>Kelola</span>
+                </div>
+                <i id="arrowKelola" class="fas fa-chevron-down text-xs transition-transform"></i>
+            </button>
+
+            <ul id="kelolaMenu"
+            class="ml-6 mt-1 space-y-1 hidden">
+                <li>
+                    <a href="manage_warga"
+                    class="block px-4 py-2 text-sm rounded-lg hover:bg-white/20 transition">
+                        Kelola Warga
+                    </a>
+                </li>
+                <li>
+                    <a href="manage_kk"
+                    class="block px-4 py-2 text-sm rounded-lg hover:bg-white/20 transition">
+                        Kelola KK
+                    </a>
+                </li>
+                <li>
+                    <a href="manage_wilayah"
+                    class="block px-4 py-2 text-sm rounded-lg hover:bg-white/20 transition">
+                        Kelola Wilayah
+                    </a>
+                </li>
+                <li>
+                    <a href="manage_master_data"
+                    class="block px-4 py-2 text-sm rounded-lg hover:bg-white/20 transition">
+                        Kelola Master Data
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="mutasi_warga"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                <i class="fas fa-exchange-alt text-sm"></i>
+                <span>Mutasi Warga</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="laporan"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                <i class="fas fa-chart-bar text-sm"></i>
+                <span>Laporan</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="pengumuman"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                <i class="fas fa-bullhorn text-sm"></i>
+                <span>Pengumuman</span>
+            </a>
+        </li>
+    </ul>
+
+    <div id="sidebarFooter"
+    class="absolute bottom-4 left-4 right-4 text-center text-xs text-white/70">
+        <div>Version 1.0</div>
+        <div>© 2025 Ketua Panel</div>
+    </div>
+</div>
 
