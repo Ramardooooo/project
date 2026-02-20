@@ -81,7 +81,7 @@ if ($_SESSION['role'] === 'admin') {
     margin: 2rem 0;
 }
 </style>
-<div id="mainContent" class="ml-64 min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+<div id="mainContent" class="ml-64 min-h-screen bg-gray-50">
 <div class="p-6 lg:p-8">
 
 

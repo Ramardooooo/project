@@ -1,3 +1,21 @@
+<?php
+include 'config/database.php';
+
+// Create announcements table if not exists
+$create_table = "CREATE TABLE IF NOT EXISTS announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+mysqli_query($conn, $create_table);
+
+// Fetch announcements from database
+$query = "SELECT * FROM announcements ORDER BY created_at DESC LIMIT 6";
+$result = mysqli_query($conn, $query);
+$announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
+?>
+
 <section id="announcements" class="py-20 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-5">
@@ -19,73 +37,43 @@
             </p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50">
-                <div class="flex items-center mb-6">
-                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fas fa-code text-2xl text-white"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Soon</h3>
-                        <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-1"></i>15 Desember 2025
-                        </p>
-                    </div>
-                </div>
-                <p class="text-gray-600 leading-relaxed">
-                    Soon
-                </p>
-                <div class="mt-4 flex items-center text-blue-600 font-medium">
-                    <span class="text-sm">Soon</span>
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
-                </div>
+        <?php if (empty($announcements)) : ?>
+            <div class="text-center py-12">
+                <i class="fas fa-bullhorn text-gray-400 text-5xl mb-4"></i>
+                <p class="text-gray-500 text-lg">Belum ada pengumuman</p>
             </div>
-
-            <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50">
-                <div class="flex items-center mb-6">
-                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fas fa-graduation-cap text-2xl text-white"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Soon</h3>
-                        <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-1"></i>20 Desember 2025
+        <?php else : ?>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <?php foreach ($announcements as $index => $announcement) : ?>
+                    <?php 
+                    $colors = ['blue', 'green', 'purple', 'indigo', 'cyan', 'pink'];
+                    $color = $colors[$index % count($colors)];
+                    $icons = ['fa-code', 'fa-graduation-cap', 'fa-chart-bar', 'fa-bell', 'fa-newspaper', 'fa-calendar'];
+                    $icon = $icons[$index % count($icons)];
+                    ?>
+                    <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50">
+                        <div class="flex items-center mb-6">
+                            <div class="w-14 h-14 bg-gradient-to-br from-<?php echo $color; ?>-500 to-<?php echo $color; ?>-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas <?php echo $icon; ?> text-2xl text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-1"><?php echo htmlspecialchars($announcement['title']); ?></h3>
+                                <p class="text-sm text-gray-500 flex items-center">
+                                    <i class="fas fa-calendar-alt mr-1"></i><?php echo date('d M Y', strtotime($announcement['created_at'])); ?>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 leading-relaxed">
+                            <?php echo htmlspecialchars($announcement['content']); ?>
                         </p>
+                        <div class="mt-4 flex items-center text-<?php echo $color; ?>-600 font-medium">
+                            <span class="text-sm">Baca selengkapnya</span>
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                        </div>
                     </div>
-                </div>
-                <p class="text-gray-600 leading-relaxed">
-                    Soon
-                </p>
-                <div class="mt-4 flex items-center text-green-600 font-medium">
-                    <span class="text-sm">Soon</span>
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
-                </div>
+                <?php endforeach; ?>
             </div>
-
-            <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50 md:col-span-2 lg:col-span-1">
-                <div class="flex items-center mb-6">
-                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                        <i class="fas fa-chart-bar text-2xl text-white"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Soon</h3>
-                        <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-1"></i>1 Januari 2026
-                        </p>
-                    </div>
-                </div>
-                <p class="text-gray-600 leading-relaxed">
-                    Soon
-                </p>
-                <div class="mt-4 flex items-center text-purple-600 font-medium">
-                    <span class="text-sm">Pelajari fitur</span>
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform duration-300"></i>
-                </div>
-            </div>
-
-        </div>
-
+        <?php endif; ?>
 
     </div>
 </section>

@@ -5,14 +5,9 @@
 
             <!-- Company Info -->
             <div class="md:col-span-2">
-                <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
-                        <i class="fas fa-home text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-2xl font-bold">Lurahgo.id</h4>
-                        <p class="text-blue-100">Platform Digital RT/RW</p>
-                    </div>
+                <div class="mb-6">
+                    <h4 class="text-2xl font-bold">Lurahgo.id</h4>
+                    <p class="text-blue-100">Platform Digital RT/RW</p>
                 </div>
                 <p class="text-blue-100 mb-6 leading-relaxed">
                     Sistem manajemen RT/RW terdepan di Indonesia. Membantu ribuan RT/RW
@@ -97,3 +92,4 @@
 
 </body>
 </html>
+

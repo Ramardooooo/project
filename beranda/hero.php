@@ -3,14 +3,14 @@
     <div class="relative max-w-7xl mx-auto px-6 text-center">
         <div class="mb-8">
             <span class="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium mb-6 border border-white/20">
-                <i class="fas fa-crown mr-2 text-yellow-400"></i>Lurahgo Semakin Di Depan!
+                Lurahgo Semakin Di Depan
             </span>
         </div>
 
         <h1 class="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Kelola RT/RW dengan
-            <span class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent animate-pulse">
-                Website Raja Canggih
+            <span class="text-yellow-300">
+                Sistem Raja Canggih
             </span>
         </h1>
 
@@ -49,4 +49,3 @@
 
 
 </section>
-

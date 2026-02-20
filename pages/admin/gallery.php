@@ -87,11 +87,11 @@ $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 ?>
 
-<div id="mainContent" class="ml-64 min-h-screen bg-blue-900">
+<div id="mainContent" class="ml-64 min-h-screen bg-gray-100">
 
     <div class="p-8">
 
-        <h1 class="text-4xl font-extrabold mb-8 text-white drop-shadow-lg">
+        <h1 class="text-4xl font-extrabold mb-8 text-gray-800 drop-shadow-lg">
             Kelola Galeri
         </h1>
 
@@ -109,8 +109,7 @@ $gallery_items = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-7 mb-8 border border-white/20 hover:shadow-2xl hover:bg-white/95 transition-all duration-300">
 
-            <h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center gap-2">
-                <i class="fas fa-plus-circle text-green-600"></i>
+<h3 class="text-xl font-bold mb-6 text-black drop-shadow-lg flex items-center gap-2">
                 Tambah Item Galeri
             </h3>
 

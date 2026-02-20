@@ -19,3 +19,8 @@ function toggleMaster() {
     $('masterMenu')?.classList.toggle('hidden');
     $('arrowMaster')?.classList.toggle('rotate-180');
 }
+
+function toggleKelola() {
+    $('kelolaMenu')?.classList.toggle('hidden');
+    $('arrowKelola')?.classList.toggle('rotate-180');
+}

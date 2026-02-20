@@ -51,31 +51,32 @@ if ($_SESSION['role'] == 'admin') {
     $users = mysqli_query($conn, "SELECT * FROM users $where_clause LIMIT $limit OFFSET $offset");
 ?>
 
-<div class="ml-64 p-8 bg-white min-h-screen">
-<h1 class="text-2xl font-bold mb-6 text-gray-800 drop-shadow-lg">Manage Users</h1>
-
+<div id="mainContent" class="ml-64 min-h-screen bg-gray-50">
+<div class="p-8">
     <a href="/PROJECT/tambah_user" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block drop-shadow-sm">Tambah User</a>
+
+    <h1 class="text-2xl font-bold mb-6 text-gray-800 drop-shadow-lg">Manage Users</h1>
 
     <form method="GET" class="mb-4">
         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Cari Username..." class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 drop-shadow-sm">
         <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 drop-shadow-sm">Cari</button>
     </form>
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-900">
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
+        <table class="w-full table-auto">
+            <thead class="bg-slate-800 text-white">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Username</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Role</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Created At</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Username</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Role</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Created At</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <?php while ($user = mysqli_fetch_assoc($users)) { ?>
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-gray-100 transition-all duration-300 transform hover:shadow-md">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $user['id']; ?></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <div class="flex items-center">
@@ -89,23 +90,25 @@ if ($_SESSION['role'] == 'admin') {
                             <?php echo $user['username']; ?>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $user['email']; ?></td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo $user['email']; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <span class="px-3 py-1 rounded-full text-xs font-semibold shadow-md <?php echo ($user['role'] == 'admin') ? 'bg-purple-500 text-white' : 'bg-blue-500 text-white'; ?>">
                             <?php echo ucfirst($user['role']); ?>
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo isset($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : 'N/A'; ?></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?php echo isset($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : 'N/A'; ?></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="/PROJECT/edit_user?id=<?php echo $user['id']; ?>" class="text-blue-600 hover:text-blue-900 mr-3">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <form method="POST" class="inline" onsubmit="return confirm('Apakah anda yakin untuk menghapus?')">
-                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                            <button type="submit" name="delete_user" class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        </form>
+                        <div class="flex space-x-2">
+                            <a href="/PROJECT/edit_user?id=<?php echo $user['id']; ?>" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </a>
+                            <form method="POST" class="inline">
+                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                <button type="submit" name="delete_user" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md hover:shadow-lg flex items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 <?php } ?>
