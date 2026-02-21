@@ -4,13 +4,31 @@ const $ = id => document.getElementById(id);
 
 function toggleSidebar() {
     sidebarCollapsed = !sidebarCollapsed;
-    $('sidebar').style.width = sidebarCollapsed ? '64px' : '256px';
-    $('sidebarToggleIcon').className = sidebarCollapsed ? 'fas fa-arrow-right' : 'fas fa-bars';
-    ['sidebarTitle','sidebarSubtitle','sidebarMenu','sidebarFooter']
-        .forEach(id => $(id).style.display = sidebarCollapsed ? 'none' : '');
-    const main = $('mainContent');
-    main.classList.remove('ml-64','ml-16');
-    main.classList.add(sidebarCollapsed ? 'ml-16' : 'ml-64');
+    
+    const sidebar = $('sidebar');
+    const header = $('mainHeader');
+    const mainContent = $('mainContent');
+    
+    // Toggle sidebar width
+    sidebar.style.width = sidebarCollapsed ? '64px' : '256px';
+    
+    // Toggle sidebar elements
+    ['sidebarTitle','sidebarSubtitle','sidebarMenu','sidebarFooter'].forEach(id => {
+        const el = $(id);
+        if (el) el.style.display = sidebarCollapsed ? 'none' : '';
+    });
+    
+    // Toggle header margin
+    if (header) {
+        header.classList.remove('ml-64', 'ml-16');
+        header.classList.add(sidebarCollapsed ? 'ml-16' : 'ml-64');
+    }
+    
+    // Toggle main content margin
+    if (mainContent) {
+        mainContent.classList.remove('ml-64', 'ml-16');
+        mainContent.classList.add(sidebarCollapsed ? 'ml-16' : 'ml-64');
+    }
 }
 
 function toggleMaster() {
@@ -38,12 +56,12 @@ style="width:256px;">
             <div class="flex gap-1">
                 <button onclick="togglePosition()"
                 class="text-gray-500 hover:text-gray-800 p-1 rounded-lg hover:bg-gray-100">
-                    <i class="fas fa-exchange-alt"></i>
+                    <i class=""></i>
                 </button>
 
                 <button onclick="toggleSidebar()"
                 class="text-gray-500 hover:text-gray-800 p-1 rounded-lg hover:bg-gray-100">
-                    <i id="sidebarToggleIcon" class="fas fa-bars"></i>
+                    <i id="sidebarToggleIcon" class=""></i>
                 </button>
             </div>
         </div>
@@ -58,16 +76,16 @@ style="width:256px;">
         <li>
             <a href="/PROJECT/home"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-home text-sm text-gray-500"></i>
-                <span class="text-gray-700">Beranda</span>
+                <i class="fas fa-home text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Beranda</span>
             </a>
         </li>
 
         <li>
             <a href="dashboard_admin"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-tachometer-alt text-sm text-gray-500"></i>
-                <span class="text-gray-700">Dashboard</span>
+                <i class="fas fa-tachometer-alt text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Dashboard</span>
             </a>
         </li>
 
@@ -76,8 +94,8 @@ style="width:256px;">
             <button onclick="toggleMaster()"
             class="w-full flex items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-100 transition">
                 <div class="flex items-center gap-3">
-                    <i class="fas fa-database text-sm text-gray-500"></i>
-                    <span class="text-gray-700">Data Master</span>
+                    <i class="fas fa-database text-sm text-gray-500 w-5"></i>
+                    <span class="text-gray-700 sidebar-text">Data Master</span>
                 </div>
                 <i id="arrowMaster" class="fas fa-chevron-down text-xs text-gray-500 transition-transform"></i>
             </button>
@@ -103,13 +121,13 @@ style="width:256px;">
             <button onclick="toggleKelola()"
             class="w-full flex items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-100 transition">
                 <div class="flex items-center gap-3">
-                    <i class="fas fa-cogs text-sm text-gray-500"></i>
-                    <span class="text-gray-700">Kelola</span>
+                    <i class="fas fa-cogs text-sm text-gray-500 w-5"></i>
+                    <span class="text-gray-700 sidebar-text">Kelola</span>
                 </div>
                 <i id="arrowKelola" class="fas fa-chevron-down text-xs text-gray-500 transition-transform"></i>
             </button>
 
-<ul id="kelolaMenu"
+            <ul id="kelolaMenu"
             class="ml-6 mt-1 space-y-1 hidden">
                 <li>
                     <a href="gallery"

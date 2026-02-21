@@ -22,7 +22,7 @@ $mutasi_pindah = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as tota
 $mutasi_meninggal = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM mutasi_warga WHERE jenis_mutasi = 'meninggal'"))['total'];
 ?>
 
-<div class="ml-64 min-h-screen bg-white">
+<div id="mainContent" class="ml-64 min-h-screen bg-white transition-all duration-300">
     <div class="p-8">
         <div class="mb-8">
         </div>

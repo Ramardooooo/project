@@ -1,4 +1,3 @@
-<script src="../../PROJECT/layouts/admin/sidebar.js"></script>
 <div id="sidebar"
 class="min-h-screen fixed top-0 left-0 z-50
 bg-white text-gray-800 shadow-md border-r border-gray-200
@@ -7,20 +6,8 @@ style="width:256px;">
 
     <div class="p-6 border-b border-gray-200">
         <div class="flex items-center justify-between gap-2">
-<div class="text-lg font-semibold">
+            <div class="text-lg font-semibold">
                 <span id="sidebarTitle">Lurahgo.id</span>
-            </div>
-
-            <div class="flex gap-1">
-                <button onclick="togglePosition()"
-                class="text-gray-500 hover:text-gray-800 p-1 rounded-lg hover:bg-gray-100">
-                    <i class="fas fa-exchange-alt"></i>
-                </button>
-
-                <button onclick="toggleSidebar()"
-                class="text-gray-500 hover:text-gray-800 p-1 rounded-lg hover:bg-gray-100">
-                    <i id="sidebarToggleIcon" class="fas fa-bars"></i>
-                </button>
             </div>
         </div>
 
@@ -34,40 +21,40 @@ style="width:256px;">
         <li>
             <a href="/PROJECT/home"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-home text-sm text-gray-500"></i>
-                <span class="text-gray-700">Beranda</span>
+                <i class="fas fa-home text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Beranda</span>
             </a>
         </li>
 
         <li>
             <a href="/PROJECT/dashboard_user"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-tachometer-alt text-sm text-gray-500"></i>
-                <span class="text-gray-700">Dashboard</span>
+                <i class="fas fa-tachometer-alt text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Dashboard</span>
             </a>
         </li>
 
         <li>
-            <a href="/PROJECT/profile"
+            <a href="data_diri"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-user text-sm text-gray-500"></i>
-                <span class="text-gray-700">Profile</span>
+                <i class="fas fa-user text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Data Diri</span>
             </a>
         </li>
 
         <li>
-            <a href="/PROJECT/settings"
+            <a href="anggota_kk"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-cog text-sm text-gray-500"></i>
-                <span class="text-gray-700">Pengaturan</span>
+                <i class="fas fa-users text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Daftar Anggota</span>
             </a>
         </li>
 
         <li>
-            <a href="/PROJECT/gallery"
+            <a href="settings"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-images text-sm text-gray-500"></i>
-                <span class="text-gray-700">Galeri</span>
+                <i class="fas fa-cog text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Pengaturan</span>
             </a>
         </li>
 
@@ -75,7 +62,6 @@ style="width:256px;">
 
     <div id="sidebarFooter"
     class="absolute bottom-4 left-4 right-4 text-center text-xs text-gray-400">
-        <div>Version 1.0</div>
         <div>&copy; 2025 Lurahgo.id</div>
     </div>
 </div>

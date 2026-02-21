@@ -1,4 +1,4 @@
-<div class="ml-64 p-8 bg-white min-h-screen">
+<div id="mainContent" class="ml-64 p-8 bg-white min-h-screen transition-all duration-300">
     <h1 class="text-3xl font-bold mb-8 text-gray-800">Manajemen Wilayah</h1>
 
     <!-- Tabs -->

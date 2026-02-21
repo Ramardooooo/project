@@ -19,14 +19,21 @@ if ($user_id) {
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    #sidebar.mini { width: 64px !important; }
+    #sidebar.mini + #mainContent, body:has(#sidebar.mini) header { margin-left: 64px !important; }
+    body:has(#sidebar.mini) header.ml-64 { margin-left: 64px !important; }
+    body:has(#sidebar.mini) #mainContent.ml-64 { margin-left: 64px !important; }
+    #mainContent, header.ml-64 { transition: margin-left 0.3s ease; }
+</style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-<header class="bg-white shadow-sm border-b border-gray-200 relative ml-64">
+<header class="bg-white shadow-sm border-b border-gray-200 ml-64 transition-all duration-300" id="mainHeader">
     <div class="flex justify-between items-center px-8 py-5">
 
         <div class="flex items-center">
-            <button class="text-gray-600 hover:text-gray-900 mr-6 lg:hidden transition-colors duration-200">
-                <i class="fas fa-bars text-2xl"></i>
+            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-gray-900 mr-4 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100" id="hamburgerBtn">
+                <i class="fas fa-bars text-xl"></i>
             </button>
             <h1 class="text-2xl font-bold text-gray-800 tracking-wide"></h1>
         </div>

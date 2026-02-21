@@ -14,14 +14,21 @@ $user_query = "SELECT * FROM users WHERE id = '$user_id'";
 $user_result = mysqli_query($conn, $user_query);
 $user = mysqli_fetch_assoc($user_result);
 
-$nama = $user['nama'] ?? '';
-$kk_query = "SELECT * FROM kk WHERE kepala_keluaraga = '$nama'";
-$kk_result = mysqli_query($conn, $kk_query);
-$kk = mysqli_fetch_assoc($kk_result);
+$nama = $user['username'] ?? '';
 
-$warga_query = "SELECT rt, rw FROM warga WHERE nama = '$nama'";
+// Get KK based on warga's kk_id (not by kepala_keluarga)
+$kk = null;
+$kk_id_from_warga = null;
+$warga_query = "SELECT rt, rw, kk_id FROM warga WHERE nama = '$nama'";
 $warga_result = mysqli_query($conn, $warga_query);
 $warga = mysqli_fetch_assoc($warga_result);
+
+if ($warga && isset($warga['kk_id']) && $warga['kk_id']) {
+    $kk_id_from_warga = $warga['kk_id'];
+    $kk_query = "SELECT * FROM kk WHERE id = '$kk_id_from_warga'";
+    $kk_result = mysqli_query($conn, $kk_query);
+    $kk = mysqli_fetch_assoc($kk_result);
+}
 
 $rt_name = 'Belum ada';
 $rw_name = 'Belum ada';
@@ -41,9 +48,14 @@ if ($warga && isset($warga['rt']) && isset($warga['rw'])) {
     }
 }
 
-$personal_query = "SELECT nik, alamat, tanggal_lahir, jk FROM warga WHERE nama = '$nama'";
+// Get personal data with status_approval and pekerjaan
+$personal_query = "SELECT nik, alamat, tanggal_lahir, jk, kk_id, status_approval, pekerjaan FROM warga WHERE nama = '$nama'";
 $personal_result = mysqli_query($conn, $personal_query);
 $personal = mysqli_fetch_assoc($personal_result);
+
+// Get status approval
+$status_approval = $personal['status_approval'] ?? 'diterima';
+$kk_id = $personal['kk_id'] ?? null;
 
 $warga_list = [];
 if ($rt_id && $rw_id) {
@@ -65,28 +77,121 @@ $announcements_query = "SELECT title, content, created_at FROM announcements ORD
 $announcements_result = mysqli_query($conn, $announcements_query);
 $announcements = mysqli_fetch_all($announcements_result, MYSQLI_ASSOC);
 
-$gallery_query = "SELECT title, image_path FROM gallery ORDER BY created_at DESC LIMIT 6";
-$gallery_result = mysqli_query($conn, $gallery_query);
-$gallery_images = mysqli_fetch_all($gallery_result, MYSQLI_ASSOC);
+// Check if user has filled their data - redirect if not
+if (!$personal || empty($personal['nik'])) {
+    echo "<script>window.location.href = 'input_data_diri.php';</script>";
+    exit();
+}
+
+// Initialize variables to avoid warnings
+$message = '';
+$show_form = false;
+
+$rt_list = [];
+$rw_list = [];
+$rt_result = mysqli_query($conn, "SELECT * FROM rt ORDER BY nama_rt");
+if ($rt_result) $rt_list = mysqli_fetch_all($rt_result, MYSQLI_ASSOC);
+$rw_result = mysqli_query($conn, "SELECT * FROM rw ORDER BY name");
+if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
 
 ?>
 <div id="mainContent" class="ml-64 min-h-screen bg-gray-50">
     <div class="p-8">
         
-        <!-- Welcome Section -->
-        <div class="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 rounded-2xl p-8 mb-8 text-white shadow-xl">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">Selamat Datang, <?php echo htmlspecialchars($nama); ?>!</h1>
-                    <p class="text-blue-100">Dashboard Warga - RT <?php echo $rt_name; ?> / RW <?php echo $rw_name; ?></p>
-                </div>
-                <div class="hidden md:block">
-                    <div class="bg-white/20 rounded-full p-4">
-                        <i class="fas fa-home text-4xl text-white"></i>
+        <!-- Status Info - Persistent -->
+        <?php if (isset($status_approval)): ?>
+            <?php 
+            if ($status_approval === 'diterima') {
+                $status_class = 'bg-green-100 border-green-400 text-green-700';
+                $status_icon = 'fa-check-circle';
+                $status_text = 'Data Anda DITERIMA';
+            } elseif ($status_approval === 'ditolak') {
+                $status_class = 'bg-red-100 border-red-400 text-red-700';
+                $status_icon = 'fa-times-circle';
+                $status_text = 'Data Anda DITOLAK - Silakan perbaiki data Anda';
+            } else {
+                $status_class = 'bg-yellow-100 border-yellow-400 text-yellow-700';
+                $status_icon = 'fa-clock';
+                $status_text = 'Data Anda MENUNGGU persetujuan';
+            }
+            ?>
+            <div id="status-banner" class="<?php echo $status_class; ?> border-l-4 px-4 py-3 rounded-lg mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas <?php echo $status_icon; ?> mr-3 text-xl"></i>
+                        <span class="font-medium"><?php echo $status_text; ?></span>
                     </div>
+                    <button onclick="document.getElementById('status-banner').style.display='none'" class="text-gray-500 hover:text-gray-700 ml-4">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
+        <?php endif; ?>
+
+        <!-- Message -->
+        <?php if ($message): ?>
+            <?php echo $message; ?>
+        <?php endif; ?>
+
+        <!-- Data Diri Form (if not set) -->
+        <?php if ($show_form): ?>
+        <div class="bg-white rounded-xl shadow-md mb-8 p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-user-plus text-blue-500 mr-2"></i>
+                Lengkapi Data Diri Anda
+            </h3>
+            <p class="text-gray-600 mb-4">Silakan lengkapi data diri Anda untuk melanjutkan.</p>
+            <form method="POST" class="space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">NIK</label>
+                        <input type="text" name="nik" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+                        <select name="jk" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Pilih</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">RT</label>
+                        <select name="rt_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Pilih RT</option>
+                            <?php foreach ($rt_list as $rt): ?>
+                                <option value="<?php echo $rt['id']; ?>"><?php echo htmlspecialchars($rt['nama_rt']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
+                        <input type="text" name="alamat" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">RW</label>
+                        <select name="rw_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Pilih RW</option>
+                            <?php foreach ($rw_list as $rw): ?>
+                                <option value="<?php echo $rw['id']; ?>"><?php echo htmlspecialchars($rw['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" name="submit_data_diri" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-save mr-2"></i>Simpan Data Diri
+                </button>
+            </form>
         </div>
+        <?php endif; ?>
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -144,7 +249,7 @@ $gallery_images = mysqli_fetch_all($gallery_result, MYSQLI_ASSOC);
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                     <i class="fas fa-chart-pie text-blue-500 mr-2"></i>
-                    Komposisi Jenis Kelamin
+                    Statistik JK RT / RW
                 </h3>
                 <div class="space-y-4">
                     <div>
@@ -168,10 +273,10 @@ $gallery_images = mysqli_fetch_all($gallery_result, MYSQLI_ASSOC);
                 </div>
             </div>
 
-<div class="bg-white rounded-xl shadow-md p-6 lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-2">
                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                     <i class="fas fa-user-circle text-green-500 mr-2"></i>
-                    Data Diri Warga
+                    Data Diri Anda
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="bg-gray-50 rounded-lg p-3">
@@ -187,9 +292,15 @@ $gallery_images = mysqli_fetch_all($gallery_result, MYSQLI_ASSOC);
                         <p class="text-sm font-semibold text-gray-800"><?php echo $personal && $personal['jk'] === 'L' ? 'Laki-laki' : ($personal['jk'] === 'P' ? 'Perempuan' : '-'); ?></p>
                     </div>
                 </div>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-500">Alamat</p>
-                    <p class="text-sm font-semibold text-gray-800"><?php echo $personal ? htmlspecialchars($personal['alamat'] ?? '-') : '-'; ?></p>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-xs text-gray-500">Alamat</p>
+                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal ? htmlspecialchars($personal['alamat'] ?? '-') : '-'; ?></p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-xs text-gray-500">Pekerjaan</p>
+                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal && isset($personal['pekerjaan']) && $personal['pekerjaan'] ? htmlspecialchars($personal['pekerjaan']) : '-'; ?></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -205,7 +316,7 @@ $gallery_images = mysqli_fetch_all($gallery_result, MYSQLI_ASSOC);
             <div class="overflow-x-auto">
                 <table class="min-w-full">
                     <thead class="bg-gray-50">
-<tr>
+                        <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
@@ -230,7 +341,7 @@ $gallery_images = mysqli_fetch_all($gallery_result, MYSQLI_ASSOC);
                                             -
                                         <?php endif; ?>
                                     </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $warga_item['tanggal_lahir'] ? date('d-m-Y', strtotime($warga_item['tanggal_lahir'])) : '-'; ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $warga_item['tanggal_lahir'] ? date('d-m-Y', strtotime($warga_item['tanggal_lahir'])) : '-'; ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500"><?php echo htmlspecialchars($warga_item['alamat'] ?? '-'); ?></td>
                                 </tr>
                             <?php endforeach; ?>

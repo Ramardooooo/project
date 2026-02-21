@@ -54,7 +54,7 @@ $wilayah_data = mysqli_fetch_assoc($laporan_wilayah);
 
 ?>
 
-<div class="ml-64 p-8 bg-gray-50 min-h-screen">
+<div id="mainContent" class="ml-64 p-8 bg-gray-50 min-h-screen transition-all duration-300">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Laporan</h1>
         <a href="/PROJECT/pages/ketua/export_laporan.php" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md">
