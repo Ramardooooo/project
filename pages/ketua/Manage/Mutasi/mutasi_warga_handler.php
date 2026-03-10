@@ -25,6 +25,9 @@ if (isset($_POST['mutasi_datang'])) {
     $mutasi_stmt = mysqli_prepare($conn, $mutasi_query);
     mysqli_stmt_bind_param($mutasi_stmt, "isss", $warga_id, $tanggal_mutasi, $keterangan, $nama_warga);
     mysqli_stmt_execute($mutasi_stmt);
+    
+    // Log activity - mutasi datang (exclude from activity list as per user request)
+    // Activity logging skipped for mutasi as per user request
 
     header("Location: mutasi_warga");
     exit();

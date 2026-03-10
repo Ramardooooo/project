@@ -212,6 +212,20 @@ if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
                     <div>
                         <p class="text-sm text-gray-500">No. KK</p>
                         <p class="text-xl font-bold text-gray-800"><?php echo $kk ? htmlspecialchars($kk['no_kk']) : '-'; ?></p>
+                        <?php if ($kk && isset($kk['kepala_keluaraga'])): ?>
+                            <?php 
+                            // Get kepala keluarga NIK
+                            $kepala_nik = '';
+                            if ($kk) {
+                                $nik_query = mysqli_query($conn, "SELECT nik FROM warga WHERE nama = '" . mysqli_real_escape_string($conn, $kk['kepala_keluaraga']) . "' LIMIT 1");
+                                $nik_result = mysqli_fetch_assoc($nik_query);
+                                $kepala_nik = $nik_result['nik'] ?? '';
+                            }
+                            ?>
+                            <?php if (!empty($kepala_nik)): ?>
+                                <p class="text-xs text-gray-500 mt-1">NIK KK: <?php echo htmlspecialchars($kepala_nik); ?></p>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                     <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                         <i class="fas fa-id-card text-green-600"></i>

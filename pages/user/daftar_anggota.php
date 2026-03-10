@@ -5,17 +5,15 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
     exit();
 }
 
-ob_start();
-
 include '../../config/database.php';
-include '../../layouts/user/header.php';
-include '../../layouts/user/sidebar.php';
+require_once '../../vendor/autoload.php';
 
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
 // Get user's KK information - simplified query
-$kk_result = mysqli_query($conn, "SELECT kk.id, kk.no_kk, kk.kepala_keluaraga
+$kk_result = mysqli_query($conn, "SELECT kk.id, kk.no_kk, kk.kepala_keluaraga,
+    (SELECT w.nik FROM warga w WHERE w.nama = kk.kepala_keluaraga LIMIT 1) as kepala_nik
     FROM kk 
     INNER JOIN warga ON warga.kk_id = kk.id 
     WHERE warga.nama = '$username' 
@@ -44,8 +42,158 @@ if ($user_kk) {
     }
 }
 
-// Export to PDF - just set flag
-$show_print = isset($_POST['export_pdf']) && $user_kk;
+// Handle PDF Export
+if (isset($_POST['export_pdf']) && $user_kk) {
+    $dompdf = new Dompdf\Dompdf();
+    
+    // Build HTML for PDF
+    $html = '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: Arial, sans-serif; font-size: 11px; color: #333; }
+            .header { text-align: center; padding: 15px; border-bottom: 3px solid #1e40af; }
+            .header h2 { color: #1e40af; font-size: 18px; margin-bottom: 3px; }
+            .header p { color: #666; font-size: 10px; }
+            .kk-info { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 15px 20px; }
+            .kk-info h1 { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+            .kk-info p { font-size: 10px; opacity: 0.9; }
+            .info-table { width: 100%; padding: 15px 20px; border-bottom: 2px solid #1e40af; }
+            .info-table td { padding: 3px 0; font-size: 11px; }
+            .info-table .label { font-weight: bold; color: #1e40af; width: 150px; }
+            .info-table .value { font-weight: bold; }
+            table { width: 100%; border-collapse: collapse; padding: 15px 20px; }
+            th { background: #1e40af; color: white; padding: 8px 6px; text-align: left; font-size: 9px; text-transform: uppercase; }
+            td { padding: 6px; border-bottom: 1px solid #e5e5e5; font-size: 10px; }
+            tr:nth-child(even) { background: #f9fafb; }
+            tr:hover { background: #f0f4f8; }
+            .text-center { text-align: center; }
+            .footer { background: #1e40af; color: white; padding: 8px 20px; text-align: center; font-size: 9px; }
+            .no-data { text-align: center; padding: 30px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h2>KARTU KELUARGA</h2>
+            <p>Sistem Informasi Kependudukan Desa/Kelurahan</p>
+        </div>
+        
+        <div class="kk-info">
+            <h1>Kartu Keluarga</h1>
+            <p>Republic of Indonesia</p>
+        </div>
+        
+        <table class="info-table">
+            <tr>
+                <td class="label">Nomor KK</td>
+                <td class="value">: ' . htmlspecialchars($user_kk['no_kk'] ?? '-') . '</td>
+                <td class="label">Jumlah Anggota</td>
+                <td class="value">: ' . count($anggota) . ' orang</td>
+            </tr>
+            <tr>
+                <td class="label">Nama Kepala Keluarga</td>
+                <td class="value" colspan="3">: ' . htmlspecialchars($user_kk['kepala_keluaraga'] ?? '-') . '</td>
+            </tr>
+        </table>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 30px;">No</th>
+                    <th>Nama Lengkap</th>
+                    <th style="width: 100px;">NIK</th>
+                    <th class="text-center" style="width: 40px;">JK</th>
+                    <th style="width: 70px;">Tgl Lahir</th>
+                    <th>Tempat Lahir</th>
+                    <th class="text-center" style="width: 50px;">Gol. Darah</th>
+                    <th>Agama</th>
+                    <th>Status Kawin</th>
+                    <th>Pekerjaan</th>
+                    <th style="width: 80px;">Peran</th>
+                </tr>
+            </thead>
+            <tbody>';
+    
+    if (count($anggota) > 0) {
+        $no = 1;
+        foreach ($anggota as $member) {
+            $html .= '
+                <tr>
+                    <td class="text-center">' . $no++ . '</td>
+                    <td>' . htmlspecialchars($member['nama']) . '</td>
+                    <td>' . htmlspecialchars($member['nik'] ?? '-') . '</td>
+                    <td class="text-center">' . ($member['jk'] === 'L' ? 'L' : 'P') . '</td>
+                    <td>' . ($member['tanggal_lahir'] ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-') . '</td>
+                    <td>' . htmlspecialchars($member['tempat_lahir'] ?? '-') . '</td>
+                    <td class="text-center">' . htmlspecialchars($member['goldar'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($member['agama'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($member['status_kawin'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($member['pekerjaan'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($member['peran']) . '</td>
+                </tr>';
+        }
+    } else {
+        $html .= '
+                <tr>
+                    <td colspan="11" class="no-data">Belum ada anggota keluarga</td>
+                </tr>';
+    }
+    
+    $html .= '
+            </tbody>
+        </table>
+        
+        <!-- Tanda Tangan -->
+        <table style="margin-top: 20px; padding: 0 20px;">
+            <tr>
+                <td style="width: 33%; text-align: center; padding: 10px;">
+                    <p style="font-size: 10px; margin-bottom: 40px;">Diketahui oleh,</p>
+                    <p style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">KEPALA DESA/KELURAHAN</p>
+                    <p style="font-size: 9px;">( _______________________ )</p>
+                </td>
+                <td style="width: 33%; text-align: center; padding: 10px;">
+                    <p style="font-size: 10px; margin-bottom: 40px;">Disetujui oleh,</p>
+                    <p style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">KETUA RT</p>
+                    <p style="font-size: 9px;">( _______________________ )</p>
+                </td>
+                <td style="width: 34%; text-align: center; padding: 10px;">
+                    <p style="font-size: 10px; margin-bottom: 40px;">Saya yang bertanda tangan,</p>
+                    <p style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">KEPALA KELUARGA</p>
+                    <p style="font-size: 9px;">( ' . strtoupper(htmlspecialchars($user_kk['kepala_keluaraga'] ?? '________________')) . ' )</p>
+                </td>
+            </tr>
+        </table>
+        
+        <!-- Tanggal Cetak -->
+        <table style="margin-top: 15px; padding: 0 20px;">
+            <tr>
+                <td style="text-align: center; font-size: 9px; color: #666;">
+                    Dicetak pada: ' . date('d F Y') . ' | Sistem Informasi Kependudukan
+                </td>
+            </tr>
+        </table>
+        
+        <div class="footer">
+            <p>&copy; ' . date('Y') . ' Sistem Informasi Kepentingan Desa/Kelurahan</p>
+        </div>
+    </body>
+    </html>';
+    
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'landscape');
+    $dompdf->render();
+    
+    // Download the PDF directly
+    $filename = 'Kartu_Keluarga_' . str_replace(' ', '_', $user_kk['no_kk']) . '_' . date('Y-m-d') . '.pdf';
+    $dompdf->stream($filename, array('Attachment' => 1));
+    exit();
+}
+
+include '../../layouts/user/header.php';
+include '../../layouts/user/sidebar.php';
 ?>
 
 <div id="mainContent" class="ml-64 min-h-screen bg-gray-50">
@@ -69,7 +217,7 @@ $show_print = isset($_POST['export_pdf']) && $user_kk;
             <?php if ($user_kk): ?>
                 <!-- KK Info Card -->
                 <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 mb-6 text-white shadow-lg">
-                    <div class="flex items-center justify-between">
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-blue-100 text-sm mb-1">Nomor Kartu Keluarga</p>
                             <p class="text-2xl font-bold"><?php echo htmlspecialchars($user_kk['no_kk']); ?></p>
@@ -77,6 +225,9 @@ $show_print = isset($_POST['export_pdf']) && $user_kk;
                         <div class="text-right">
                             <p class="text-blue-100 text-sm mb-1">Kepala Keluarga</p>
                             <p class="text-xl font-semibold"><?php echo htmlspecialchars($user_kk['kepala_keluaraga']); ?></p>
+                            <?php if (!empty($user_kk['kepala_nik'])): ?>
+                                <p class="text-blue-200 text-sm">NIK: <?php echo htmlspecialchars($user_kk['kepala_nik']); ?></p>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-blue-400">
@@ -171,82 +322,3 @@ $show_print = isset($_POST['export_pdf']) && $user_kk;
     </div>
 </div>
 
-<?php if ($show_print): ?>
-<script>
-window.onload = function() {
-    window.print();
-};
-</script>
-<style>
-@media print {
-    body * { visibility: hidden; }
-    .kk-container, .kk-container * { visibility: visible; }
-    .kk-container { position: absolute; left: 0; top: 0; width: 100%; }
-}
-</style>
-<div class="kk-container" style="display: block !important;">
-    <div style="text-align: center; padding: 15px; border-bottom: 3px solid #1e40af;">
-        <h2 style="margin: 0; color: #1e40af; font-size: 18px;">KARTU KELUARGA</h2>
-        <p style="color: #666; font-size: 11px;">KELURAHAN/DESA APPLICATION</p>
-    </div>
-    <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 20px 30px; text-align: center;">
-        <h1 style="margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 3px;">Kartu Keluarga</h1>
-        <p style="margin: 5px 0 0 0; font-size: 12px;">Republic of Isfi</p>
-    </div>
-    <div style="padding: 20px 30px; border-bottom: 2px solid #1e40af;">
-        <table style="width: 100%; font-size: 12px;">
-            <tr>
-                <td style="font-weight: bold; width: 150px; color: #1e40af;">Nomor KK</td>
-                <td>: <strong><?php echo htmlspecialchars($user_kk['no_kk'] ?? ''); ?></strong></td>
-                <td style="font-weight: bold; width: 100px; color: #1e40af;">Jumlah Anggota</td>
-                <td>: <?php echo count($anggota); ?> orang</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; color: #1e40af;">Nama Kepala Keluarga</td>
-                <td>: <strong><?php echo htmlspecialchars($user_kk['kepala_keluaraga'] ?? ''); ?></strong></td>
-            </tr>
-        </table>
-    </div>
-    <div style="padding: 20px 30px;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
-            <thead>
-                <tr style="background: #1e40af; color: white;">
-                    <th style="padding: 8px; border: 1px solid #1e40af; text-align: center;">No</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Nama Lengkap</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">NIK</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af; text-align: center;">JK</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Tgl Lahir</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Tempat Lahir</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af; text-align: center;">Gol. Darah</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Agama</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Status Kawin</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Pekerjaan</th>
-                    <th style="padding: 8px; border: 1px solid #1e40af;">Peran</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (count($anggota) > 0): ?>
-                    <?php $no = 1; foreach ($anggota as $member): ?>
-                    <tr>
-                        <td style="padding: 6px; border: 1px solid #1e40af; text-align: center;"><?php echo $no++; ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['nama']); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['nik']); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af; text-align: center;"><?php echo $member['jk'] === 'L' ? 'L' : 'P'; ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo $member['tanggal_lahir'] ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-'; ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['tempat_lahir'] ?? '-'); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af; text-align: center;"><?php echo htmlspecialchars($member['goldar'] ?? '-'); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['agama'] ?? '-'); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['status_kawin'] ?? '-'); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['pekerjaan'] ?? '-'); ?></td>
-                        <td style="padding: 6px; border: 1px solid #1e40af;"><?php echo htmlspecialchars($member['peran']); ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-    <div style="background: #1e40af; color: white; padding: 10px 30px; text-align: center; font-size: 10px;">
-        <p>&copy; <?php echo date('Y'); ?> Lurahgo.id - Sistem Informasi Kependudukan</p>
-    </div>
-</div>
-<?php endif; ?>

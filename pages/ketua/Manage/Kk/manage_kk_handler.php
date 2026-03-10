@@ -32,7 +32,8 @@ if (isset($_POST['reject_kk']) && $has_status_approval) {
 }
 
 $query = "SELECT k.id, k.no_kk, k.kepala_keluaraga" . ($has_status_approval ? ", k.status_approval" : "") . ", 
-          (SELECT COUNT(*) FROM warga w WHERE w.kk_id = k.id) as anggota_count 
+          (SELECT COUNT(*) FROM warga w WHERE w.kk_id = k.id) as anggota_count,
+          (SELECT w.nik FROM warga w WHERE w.nama = k.kepala_keluaraga LIMIT 1) as kepala_nik
           FROM kk k WHERE 1=1";
 $params = [];
 $types = '';
@@ -101,6 +102,11 @@ if (isset($_POST['add_kk'])) {
         mysqli_stmt_bind_param($stmt, "ss", $no_kk, $kepala_keluaraga);
     }
     mysqli_stmt_execute($stmt);
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('add', 'kk', 'KK baru ditambahkan: $no_kk', $user_id)");
+    
     header("Location: manage_kk");
     exit();
 }
@@ -114,13 +120,29 @@ if (isset($_POST['edit_kk'])) {
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "ssi", $no_kk, $kepala_keluaraga, $id);
     mysqli_stmt_execute($stmt);
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('edit', 'kk', 'Data KK diperbarui: $no_kk', $user_id)");
+    
     header("Location: manage_kk");
     exit();
 }
 
 if (isset($_POST['delete_kk'])) {
     $id = (int)$_POST['id'];
+    
+    // Get KK info for logging
+    $kk_result = mysqli_query($conn, "SELECT no_kk FROM kk WHERE id = $id");
+    $kk_data = mysqli_fetch_assoc($kk_result);
+    $kk_no = $kk_data['no_kk'] ?? 'Unknown';
+    
     mysqli_query($conn, "DELETE FROM kk WHERE id = $id");
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('delete', 'kk', 'KK dihapus: $kk_no', $user_id)");
+    
     header("Location: manage_kk");
     exit();
 }

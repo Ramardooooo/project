@@ -83,9 +83,9 @@
                         <?php endwhile; ?>
                     </select>
                 </div>
-                <div>
+<div>
                     <label class="block text-sm font-medium text-gray-700">Tanggal Mutasi</label>
-                    <input type="date" name="tanggal_mutasi" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <input type="date" name="tanggal_mutasi" required value="<?php echo date('Y-m-d'); ?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div id="alamatTujuanField" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700">Alamat Tujuan</label>
@@ -167,3 +167,4 @@ document.getElementById('mutasiForm').addEventListener('submit', function(e) {
     this.appendChild(hiddenInput);
 });
 </script>
+ja

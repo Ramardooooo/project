@@ -109,7 +109,7 @@ if (isset($_POST['submit_data_diri'])) {
         $update_warga = "UPDATE warga SET $update_fields WHERE nama='$nama'";
         if (mysqli_query($conn, $update_warga)) {
             $message = 'Data berhasil diperbarui!';
-            header("Location: ../../pages/user/dashboard_user.php?success=1");
+            header("Location: data_diri?Berhasil Memperbarui");
             exit();
         } else {
             $error = 'Gagal memperbarui data!';
@@ -146,6 +146,10 @@ if (isset($_POST['submit_data_diri'])) {
         }
         
         if (mysqli_query($conn, $insert_warga)) {
+            // Log activity - user registration
+            $logged_user_id = $_SESSION['user_id'] ?? null;
+            mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('register', 'warga', 'Warga baru mendaftar: $nama', $logged_user_id)");
+            
             $message = 'Data berhasil disimpan! Menunggu persetujuan dari Ketua RT.';
             header("Location: ../../pages/user/dashboard_user.php?success=1");
             exit();

@@ -141,7 +141,16 @@ style="width:256px;">
                         Kelola Pengumuman
                     </a>
                 </li>
+
+                
             </ul>
+            <li>
+            <a href="settings"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+                <i class="fas fa-cog text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Pengaturan</span>
+            </a>
+        </li>
         </li>
         <?php } ?>
     </ul>

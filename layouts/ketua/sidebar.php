@@ -58,6 +58,14 @@ style="width:256px;">
 
     <ul class="mt-4 space-y-1 px-3" id="sidebarMenu">
 
+    <li>
+            <a href="home"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+                <i class="fas fa-home text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Beranda</span>
+            </a>
+        </li>
+
         <li>
             <a href="dashboard_ketua"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
@@ -96,12 +104,6 @@ style="width:256px;">
                         Kelola Wilayah
                     </a>
                 </li>
-                <li>
-                    <a href="manage_master_data"
-                    class="block px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100 transition">
-                        Kelola Master Data
-                    </a>
-                </li>
             </ul>
         </li>
 
@@ -119,13 +121,13 @@ style="width:256px;">
                 <i class="fas fa-chart-bar text-sm text-gray-500 w-5"></i>
                 <span class="text-gray-700 sidebar-text">Laporan</span>
             </a>
-        </li>
+</li>
 
-        <li>
-            <a href="home"
+<li>
+            <a href="settings"
             class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-                <i class="fas fa-bullhorn text-sm text-gray-500 w-5"></i>
-                <span class="text-gray-700 sidebar-text">Beranda</span>
+                <i class="fas fa-cog text-sm text-gray-500 w-5"></i>
+                <span class="text-gray-700 sidebar-text">Pengaturan</span>
             </a>
         </li>
     </ul>

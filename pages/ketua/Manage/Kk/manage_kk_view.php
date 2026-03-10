@@ -84,7 +84,12 @@
                         </td>
                         <?php endif; ?>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($kk['no_kk'] ?? ''); ?></td>
-                        <td class="px-6 py-4 text-sm text-gray-900"><?php echo htmlspecialchars($kk['kepala_keluaraga'] ?? ''); ?></td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <?php echo htmlspecialchars($kk['kepala_keluaraga'] ?? ''); ?>
+                            <?php if (!empty($kk['kepala_nik'])): ?>
+                                <br><span class="text-xs text-gray-500">NIK: <?php echo htmlspecialchars($kk['kepala_nik']); ?></span>
+                            <?php endif; ?>
+                        </td>
                         <td class="px-6 py-4 text-sm text-gray-500"><?php echo $kk['anggota_count'] ?? 0; ?> orang</td>
                         <td class="px-6 py-4 text-sm">
                             <?php if ($has_status_approval && $status_approval == 'menunggu'): ?>
@@ -152,7 +157,19 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Kepala Keluarga</label>
-                    <input type="text" name="kepala_keluaraga" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    <select name="kepala_keluaraga" id="add_kepala_keluarga" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500" onchange="updateAddKKInfo()">
+                        <option value="">Pilih Warga</option>
+                        <?php 
+                        // Get warga list for dropdown - show nama and nik
+                        $warga_dropdown = mysqli_query($conn, "SELECT id, nama, nik FROM warga WHERE status = 'aktif' ORDER BY nama ASC");
+                        while ($w = mysqli_fetch_assoc($warga_dropdown)): 
+                        ?>
+                            <option value="<?php echo htmlspecialchars($w['nama']); ?>" data-nik="<?php echo htmlspecialchars($w['nik'] ?? ''); ?>">
+                                <?php echo htmlspecialchars($w['nama']); ?> - NIK: <?php echo htmlspecialchars($w['nik'] ?? '-'); ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Pilih warga yang akan menjadi kepala keluarga</p>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
                     <button type="button" onclick="closeAddModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</button>
@@ -181,7 +198,19 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Kepala Keluarga</label>
-                    <input type="text" name="kepala_keluaraga" id="edit_kepala_keluaraga" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    <select name="kepala_keluaraga" id="edit_kepala_keluarga" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                        <option value="">Pilih Warga</option>
+                        <?php 
+                        // Reset the warga dropdown query for edit modal
+                        $warga_dropdown_edit = mysqli_query($conn, "SELECT id, nama, nik FROM warga WHERE status = 'aktif' ORDER BY nama ASC");
+                        while ($w_edit = mysqli_fetch_assoc($warga_dropdown_edit)): 
+                        ?>
+                            <option value="<?php echo htmlspecialchars($w_edit['nama']); ?>" data-nik="<?php echo htmlspecialchars($w_edit['nik'] ?? ''); ?>">
+                                <?php echo htmlspecialchars($w_edit['nama']); ?> - NIK: <?php echo htmlspecialchars($w_edit['nik'] ?? '-'); ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Pilih warga yang akan menjadi kepala keluarga</p>
                 </div>
                 <div class="flex justify-end space-x-3 pt-4">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</button>

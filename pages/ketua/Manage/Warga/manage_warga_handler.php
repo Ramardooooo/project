@@ -44,18 +44,40 @@ if ($check_col && mysqli_num_rows($check_col) > 0) {
 // Handle Accept/Deny actions
 if (isset($_POST['approve_warga']) && $has_status_approval) {
     $warga_id = (int)$_POST['warga_id'];
+    
+    // Get warga name for logging
+    $warga_result = mysqli_query($conn, "SELECT nama FROM warga WHERE id = $warga_id");
+    $warga_data = mysqli_fetch_assoc($warga_result);
+    $warga_nama = $warga_data['nama'] ?? 'Unknown';
+    
     $stmt = mysqli_prepare($conn, "UPDATE warga SET status_approval = 'diterima' WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $warga_id);
     mysqli_stmt_execute($stmt);
+    
+    // Log activity - approve warga
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, entity_id, description, user_id) VALUES ('approve', 'warga', $warga_id, 'Warga disetujui: $warga_nama', $user_id)");
+    
     header("Location: manage_warga.php");
     exit();
 }
 
 if (isset($_POST['reject_warga']) && $has_status_approval) {
     $warga_id = (int)$_POST['warga_id'];
+    
+    // Get warga name for logging
+    $warga_result = mysqli_query($conn, "SELECT nama FROM warga WHERE id = $warga_id");
+    $warga_data = mysqli_fetch_assoc($warga_result);
+    $warga_nama = $warga_data['nama'] ?? 'Unknown';
+    
     $stmt = mysqli_prepare($conn, "UPDATE warga SET status_approval = 'ditolak' WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $warga_id);
     mysqli_stmt_execute($stmt);
+    
+    // Log activity - reject warga
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, entity_id, description, user_id) VALUES ('reject', 'warga', $warga_id, 'Warga ditolak: $warga_nama', $user_id)");
+    
     header("Location: manage_warga.php");
     exit();
 }
@@ -63,9 +85,20 @@ if (isset($_POST['reject_warga']) && $has_status_approval) {
 // Handle Delete
 if (isset($_POST['delete_warga'])) {
     $warga_id = (int)$_POST['id'];
+    
+    // Get warga name for logging
+    $warga_result = mysqli_query($conn, "SELECT nama FROM warga WHERE id = $warga_id");
+    $warga_data = mysqli_fetch_assoc($warga_result);
+    $warga_nama = $warga_data['nama'] ?? 'Unknown';
+    
     $stmt = mysqli_prepare($conn, "DELETE FROM warga WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $warga_id);
     mysqli_stmt_execute($stmt);
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, entity_id, description, user_id) VALUES ('delete', 'warga', $warga_id, 'Warga dihapus: $warga_nama', $user_id)");
+    
     header("Location: manage_warga.php");
     exit();
 }
@@ -127,6 +160,11 @@ if (isset($_POST['add_warga'])) {
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, $types, ...$params);
     mysqli_stmt_execute($stmt);
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('add', 'warga', 'Warga baru ditambahkan: $nama', $user_id)");
+    
     header("Location: manage_warga.php");
     exit();
 }
@@ -180,6 +218,11 @@ if (isset($_POST['edit_warga'])) {
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, $types, ...$params);
     mysqli_stmt_execute($stmt);
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('edit', 'warga', 'Data warga diperbarui: $nama', $user_id)");
+    
     header("Location: manage_warga.php");
     exit();
 }
