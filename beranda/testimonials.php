@@ -79,7 +79,6 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
         <p class="text-gray-600 italic mb-4">" ' . htmlspecialchars($row['description']) . '"</p>
         <div class="flex mt-4">' . $rating_stars . '</div>
-        <p class="text-sm text-gray-500 mt-2">Rating: ' . $row['rating'] . '/5</p>
     </div>';
 }
 mysqli_stmt_close($stmt);

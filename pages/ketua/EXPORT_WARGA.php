@@ -1,14 +1,16 @@
 <?php
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'ketua') {
+if (!isset($_SESSION['role']) || strtolower(trim($_SESSION['role'])) !== 'ketua') {
     header("Location: ../../home.php");
     exit();
 }
 
+
 include '../../config/database.php';
 require_once '../../vendor/autoload.php';
+use Dompdf\Dompdf;
 
-// Check dynamic columns (same as manage_warga.php)
+// Check dynamic columns
 $has_tempat_lahir = false;
 $check_col = mysqli_query($conn, "SHOW COLUMNS FROM warga LIKE 'tempat_lahir'");
 if ($check_col && mysqli_num_rows($check_col) > 0) $has_tempat_lahir = true;
@@ -35,9 +37,9 @@ $rt_filter = $_GET['rt'] ?? '';
 $rw_filter = $_GET['rw'] ?? '';
 $status_filter = $_GET['status'] ?? '';
 $approval_filter = $_GET['approval'] ?? '';
-$format = $_GET['format'] ?? 'pdf'; // pdf or csv
+$format = $_GET['format'] ?? 'pdf';
 
-// Build query (same as manage_warga.php)
+// Build query
 $select_fields = "w.id, w.nik, w.nama, w.jk, w.tanggal_lahir, w.pekerjaan, w.alamat, w.rt, w.rw, w.kk_id, w.status";
 if ($has_tempat_lahir) $select_fields .= ", w.tempat_lahir";
 if ($has_goldar) $select_fields .= ", w.goldar";
@@ -91,123 +93,243 @@ if (!empty($params)) {
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
-if ($format === 'csv') {
-    // CSV Export
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="data_warga_' . date('Y-m-d_H-i') . '.csv"');
-    $output = fopen('php://output', 'w');
+// CSV Export removed as per request - PDF only
+
+// PDF Export
+$single_warga = null;
+if (isset($_GET['id'])) {
+    $warga_id = (int)$_GET['id'];
+    $single_query = "SELECT $select_fields, rt.nama_rt, rw.name as nama_rw, kk.no_kk, kk.kepala_keluaraga FROM warga w 
+                     LEFT JOIN rt ON w.rt = rt.id LEFT JOIN rw ON w.rw = rw.id LEFT JOIN kk ON w.kk_id = kk.id WHERE w.id = ?";
+    $single_stmt = mysqli_prepare($conn, $single_query);
+    mysqli_stmt_bind_param($single_stmt, 'i', $warga_id);
+    mysqli_stmt_execute($single_stmt);
+    $single_result = mysqli_stmt_get_result($single_stmt);
+    $single_warga = mysqli_fetch_assoc($single_result);
+}
+
+if ($single_warga) {
+    // Single warga PDF (portrait, no logo)
+    $html = '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 30px; color: #333; line-height: 1.4; font-size: 12px; }
+            .header { text-align: center; border-bottom: 3px solid #1e40af; padding-bottom: 15px; margin-bottom: 20px; }
+            .title { color: #1e40af; font-size: 20pt; font-weight: bold; margin: 10px 0; }
+            .subtitle { color: #64748b; font-size: 12pt; }
+            .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+            .detail-item { border-left: 4px solid #1e40af; padding-left: 12px; margin-bottom: 12px; }
+            .label { font-weight: bold; color: #374151; display: block; margin-bottom: 4px; font-size: 11px; }
+            .value { font-size: 14px; color: #111827; word-wrap: break-word; }
+            .status { padding: 3px 10px; border-radius: 20px; font-weight: bold; font-size: 11px; }
+            .aktif { background: #dcfce7; color: #166534; }
+            .menunggu { background: #fef3c7; color: #92400e; }
+            .diterima { background: #d1fae5; color: #065f46; }
+            .ditolak { background: #fee2e2; color: #991b1b; }
+            .footer { margin-top: 40px; text-align: center; color: #6b7280; font-size: 11px; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+            @page { margin: 0.5in; }
+            .detail-item .value { text-align: left; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="title">DETAIL WARGA</div>
+            <div class="subtitle">Data Kartu Keluarga & Warga</div>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <span class="label">NIK:</span>
+                <span class="value">' . htmlspecialchars($single_warga['nik'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Nama:</span>
+                <span class="value">' . htmlspecialchars($single_warga['nama'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Jenis Kelamin:</span>
+                <span class="value">' . htmlspecialchars($single_warga['jk'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Tanggal Lahir:</span>
+                <span class="value">' . ($single_warga['tanggal_lahir'] ? date('d-m-Y', strtotime($single_warga['tanggal_lahir'])) : '-') . '</span>
+            </div>';
     
-    // Headers
-    $headers = ['NIK', 'Nama', 'JK', 'Tgl Lahir', 'Tempat Lahir', 'Gol Darah', 'Agama', 'Status Kawin', 'Pekerjaan', 'Alamat', 'RT', 'RW', 'No KK', 'Kepala Keluarga', 'Status', 'Approval'];
-    if (!$has_tempat_lahir) unset($headers[4]);
-    if (!$has_goldar) unset($headers[5]);
-    if (!$has_agama) unset($headers[6]);
-    if (!$has_status_kawin) unset($headers[7]);
-    if (!$has_status_approval) array_pop($headers);
-    fputcsv($output, $headers);
-    
-    // Data rows
-    while ($row = mysqli_fetch_assoc($result)) {
-        $row_data = [
-            $row['nik'] ?? '',
-            $row['nama'] ?? '',
-            $row['jk'] ?? '',
-            $row['tanggal_lahir'] ? date('d-m-Y', strtotime($row['tanggal_lahir'])) : '',
-            $row['tempat_lahir'] ?? '',
-            $row['goldar'] ?? '',
-            $row['agama'] ?? '',
-            $row['status_kawin'] ?? '',
-            $row['pekerjaan'] ?? '',
-            $row['alamat'] ?? '',
-            $row['nama_rt'] ?? '',
-            $row['nama_rw'] ?? '',
-            $row['no_kk'] ?? '',
-            $row['kepala_keluaraga'] ?? '',
-            $row['status'] ?? '',
-            $row['status_approval'] ?? ''
-        ];
-        if (!$has_tempat_lahir) array_splice($row_data, 4, 1);
-        if (!$has_goldar) array_splice($row_data, 5, 1);
-        if (!$has_agama) array_splice($row_data, 6, 1);
-        if (!$has_status_kawin) array_splice($row_data, 7, 1);
-        if (!$has_status_approval) array_pop($row_data);
-        fputcsv($output, $row_data);
+    if ($has_tempat_lahir) {
+        $html .= '
+            <div class="detail-item">
+                <span class="label">Tempat Lahir:</span>
+                <span class="value">' . htmlspecialchars($single_warga['tempat_lahir'] ?? '-') . '</span>
+            </div>';
     }
-    fclose($output);
+    if ($has_goldar) {
+        $html .= '
+            <div class="detail-item">
+                <span class="label">Golongan Darah:</span>
+                <span class="value">' . htmlspecialchars($single_warga['goldar'] ?? '-') . '</span>
+            </div>';
+    }
+    if ($has_agama) {
+        $html .= '
+            <div class="detail-item">
+                <span class="label">Agama:</span>
+                <span class="value">' . htmlspecialchars($single_warga['agama'] ?? '-') . '</span>
+            </div>';
+    }
+    if ($has_status_kawin) {
+        $html .= '
+            <div class="detail-item">
+                <span class="label">Status Kawin:</span>
+                <span class="value">' . htmlspecialchars($single_warga['status_kawin'] ?? '-') . '</span>
+            </div>';
+    }
+    
+    $html .= '
+            <div class="detail-item">
+                <span class="label">Pekerjaan:</span>
+                <span class="value">' . htmlspecialchars($single_warga['pekerjaan'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Alamat:</span>
+                <span class="value">' . htmlspecialchars($single_warga['alamat'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">RT/RW:</span>
+                <span class="value">' . htmlspecialchars(($single_warga['nama_rt'] ?? '-') . '/' . ($single_warga['nama_rw'] ?? '-')) . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">No KK:</span>
+                <span class="value">' . htmlspecialchars($single_warga['no_kk'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Kepala Keluarga:</span>
+                <span class="value">' . htmlspecialchars($single_warga['kepala_keluaraga'] ?? '-') . '</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Status:</span>
+                <span class="value status ' . strtolower($single_warga['status'] ?? '') . '">' . htmlspecialchars(ucfirst($single_warga['status'] ?? '-')) . '</span>
+            </div>';
+    
+    if ($has_status_approval) {
+        $html .= '
+            <div class="detail-item">
+                <span class="label">Approval:</span>
+                <span class="value status ' . strtolower($single_warga['status_approval'] ?? '') . '">' . htmlspecialchars(ucfirst($single_warga['status_approval'] ?? '-')) . '</span>
+            </div>';
+    }
+    
+    $html .= '
+        </div>
+        <div class="footer">
+            Dicetak pada ' . date('d F Y H:i:s') . '
+        </div>
+    </body>
+    </html>';
+    
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+    $dompdf->stream('detail_warga_' . $single_warga['nik'] . '_' . date('Y-m-d') . '.pdf', ['Attachment' => true]);
     exit();
 } else {
-    // PDF Export (enhanced from manage_warga.php)
-    $dompdf = new \Dompdf\Dompdf();
-    
+    // List PDF (landscape table, no logo)
     $html = '
-    <h1 style="text-align: center; color: #1f2937; margin-bottom: 30px;">Data Warga ' . htmlspecialchars($search ?: 'Lengkap') . '</h1>
-    <p style="text-align: center; color: #6b7280; margin-bottom: 30px;">
-        Di generate pada ' . date('d F Y H:i:s') . '<br>
-        Filter: ' . htmlspecialchars("Search: $search, RT: $rt_filter, RW: $rw_filter, Status: $status_filter, Approval: $approval_filter") . '
-    </p>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="background-color: #f3f4f6;">
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">NIK</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Nama</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">JK</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Tgl Lahir</th>';
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+            .header { text-align: center; border-bottom: 3px solid #1e40af; padding-bottom: 15px; margin-bottom: 20px; }
+            .title { color: #1e40af; font-size: 20pt; font-weight: bold; margin: 0; }
+            .subtitle { color: #64748b; font-size: 12pt; margin: 5px 0 0 0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #d1d5db; padding: 6px 8px; text-align: center; font-size: 10px; word-wrap: break-word; max-width: 1in; }
+            th { background: #f9fafb; font-weight: bold; font-size: 9px; }
+            td { font-size: 9px; }
+            tr:nth-child(even) { background: #f9fafb; }
+            .footer { margin-top: 20px; text-align: center; color: #6b7280; font-size: 11px; }
+            @page { margin: 0.3in; }
+            table { font-size: 9px; width: 100%; table-layout: fixed; }
+            th, td { width: auto; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="title">LAPORAN DATA WARGA</div>
+            <div class="subtitle">' . date('d F Y H:i:s') . '</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>NIK</th>
+                    <th>Nama</th>
+                    <th>JK</th>
+                    <th>Tgl Lahir</th>';
     
-    if ($has_tempat_lahir) $html .= '<th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Tempat Lahir</th>';
-    if ($has_goldar) $html .= '<th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Gol. Darah</th>';
-    if ($has_agama) $html .= '<th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Agama</th>';
-    if ($has_status_kawin) $html .= '<th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Status Kawin</th>';
+    if ($has_tempat_lahir) $html .= '<th>Tempat Lahir</th>';
+    if ($has_goldar) $html .= '<th>Gol. Darah</th>';
+    if ($has_agama) $html .= '<th>Agama</th>';
+    if ($has_status_kawin) $html .= '<th>Status Kawin</th>';
+    
     $html .= '
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Pekerjaan</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Alamat</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">RT/RW</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">No KK</th>
-                <th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Status</th>';
-    if ($has_status_approval) $html .= '<th style="border: 1px solid #d1d5db; padding: 12px; text-align: left; font-weight: bold;">Approval</th>';
+                    <th>Pekerjaan</th>
+                    <th>Alamat</th>
+                    <th>RT/RW</th>
+                    <th>No KK</th>
+                    <th>Status</th>';
+    
+    if ($has_status_approval) $html .= '<th>Approval</th>';
+    
     $html .= '
-            </tr>
-        </thead>
-        <tbody>';
+                </tr>
+            </thead>
+            <tbody>';
     
     $total = 0;
-    mysqli_data_seek($result, 0); // Reset result
+    mysqli_data_seek($result, 0);
     while ($row = mysqli_fetch_assoc($result)) {
         $total++;
         $html .= '
-            <tr>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['nik'] ?? '-') . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['nama'] ?? '-') . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . ($row['jk'] ?? '-') . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . ($row['tanggal_lahir'] ? date('d-m-Y', strtotime($row['tanggal_lahir'])) : '-') . '</td>';
+                <tr>
+                    <td>' . htmlspecialchars($row['nik'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($row['nama'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($row['jk'] ?? '-') . '</td>
+                    <td>' . ($row['tanggal_lahir'] ? date('d-m-Y', strtotime($row['tanggal_lahir'])) : '-') . '</td>';
         
-        if ($has_tempat_lahir) $html .= '<td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['tempat_lahir'] ?? '-') . '</td>';
-        if ($has_goldar) $html .= '<td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['goldar'] ?? '-') . '</td>';
-        if ($has_agama) $html .= '<td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['agama'] ?? '-') . '</td>';
-        if ($has_status_kawin) $html .= '<td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['status_kawin'] ?? '-') . '</td>';
+        if ($has_tempat_lahir) $html .= '<td>' . htmlspecialchars($row['tempat_lahir'] ?? '-') . '</td>';
+        if ($has_goldar) $html .= '<td>' . htmlspecialchars($row['goldar'] ?? '-') . '</td>';
+        if ($has_agama) $html .= '<td>' . htmlspecialchars($row['agama'] ?? '-') . '</td>';
+        if ($has_status_kawin) $html .= '<td>' . htmlspecialchars($row['status_kawin'] ?? '-') . '</td>';
         
         $html .= '
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['pekerjaan'] ?? '-') . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars(substr($row['alamat'] ?? '-', 0, 40)) . (strlen($row['alamat'] ?? '') > 40 ? '...' : '') . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars(($row['nama_rt'] ?? '-') . '/' . ($row['nama_rw'] ?? '-')) . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars($row['no_kk'] ?? '-') . '</td>
-                <td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars(ucfirst($row['status'] ?? '-')) . '</td>';
+                    <td>' . htmlspecialchars($row['pekerjaan'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars(substr($row['alamat'] ?? '-', 0, 30) . (strlen($row['alamat'] ?? '') > 30 ? '...' : '')) . '</td>
+                    <td>' . htmlspecialchars(($row['nama_rt'] ?? '-') . '/' . ($row['nama_rw'] ?? '-')) . '</td>
+                    <td>' . htmlspecialchars($row['no_kk'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars(ucfirst($row['status'] ?? '-')) . '</td>';
         
-        if ($has_status_approval) $html .= '<td style="border: 1px solid #d1d5db; padding: 10px;">' . htmlspecialchars(ucfirst($row['status_approval'] ?? '-')) . '</td>';
+        if ($has_status_approval) $html .= '<td>' . htmlspecialchars(ucfirst($row['status_approval'] ?? '-')) . '</td>';
+        
         $html .= '
-            </tr>';
+                </tr>';
     }
     
     $html .= '
-        </tbody>
-    </table>
-    <div style="margin-top: 40px; text-align: center; color: #6b7280; font-size: 14px;">
-        Total Warga: ' . $total . ' | ' . date('d F Y H:i:s') . '
-    </div>';
+            </tbody>
+        </table>
+        <div class="footer">
+            Total Warga: ' . $total . ' | Filter: ' . (empty($search) ? 'Semua' : 'Search: ' . htmlspecialchars($search)) . ', RT: ' . htmlspecialchars($rt_filter ?: 'Semua') . ', RW: ' . htmlspecialchars($rw_filter ?: 'Semua') . '
+        </div>
+    </body>
+    </html>';
     
+    $dompdf = new Dompdf();
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'landscape');
     $dompdf->render();
-    $dompdf->stream("data_warga_" . date('Y-m-d') . ".pdf", ["Attachment" => true]);
+    $dompdf->stream('data_warga_' . date('Y-m-d') . '.pdf', ['Attachment' => true]);
     exit();
 }
 ?>

@@ -205,13 +205,7 @@ include '../../layouts/user/sidebar.php';
                     <h1 class="text-3xl font-bold text-gray-800 mb-2">Daftar Anggota Keluarga</h1>
                     <p class="text-gray-600">Lihat anggota kartu keluarga Anda</p>
                 </div>
-                <?php if ($user_kk): ?>
-                <form method="POST">
-                    <button type="submit" name="export_pdf" class="px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition shadow-lg flex items-center">
-                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
-                    </button>
-                </form>
-                <?php endif; ?>
+                <!-- Export button removed -->
             </div>
 
             <?php if ($user_kk): ?>

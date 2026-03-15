@@ -306,13 +306,8 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
         <h1 class="text-3xl font-bold text-gray-800">Manajemen Data Warga</h1>
         <div class="flex gap-3">
             <div class="flex gap-2">
-                <a href="/PROJECT\pages\ketua/EXPORT_WARGA.php?format.pdf<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg flex items-center text-sm">
-                    <i class="fas fa-file-pdf mr-1"></i>PDF
-                </a>
-                <!-- CSV button removed per user request -->
-
-                <a href="../export_warga.php" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg flex items-center text-sm">
-                    <i class="fas fa-download mr-1"></i>Export Page
+                <a href="\PROJECT\pages\ketua/export_warga.php?format.pdf<?php echo $_SERVER['QUERY_STRING']; ?>" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg flex items-center text-sm">
+                    <i class="fas fa-file-pdf mr-1"></i>PDF Export
                 </a>
             </div>
             <button onclick="openAddModal()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
