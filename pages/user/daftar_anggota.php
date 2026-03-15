@@ -312,8 +312,8 @@ include '../../layouts/user/sidebar.php';
                 <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-8 text-center">
                     <i class="fas fa-exclamation-triangle text-4xl text-yellow-400 mb-4"></i>
                     <h3 class="text-lg font-semibold text-yellow-800 mb-2">Anda Belum Terhubung dengan KK</h3>
-                    <p class="text-yellow-700 mb-4">Silakan hubungi Ketua RT untuk 加入 kartu keluarga.</p>
-                    <a href="input_data_diri.php" class="inline-block px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                    <p class="text-yellow-700 mb-4">Silakan hubungi Ketua RT untuk membuat kartu keluarga.</p>
+                    <a href="data_diri" class="inline-block px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
                         <i class="fas fa-user-plus mr-2"></i>Input Data Diri
                     </a>
                 </div>

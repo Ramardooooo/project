@@ -12,7 +12,7 @@
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Data Warga</h3>
                 <p class="text-gray-600 mb-6">Kelola data warga dengan mudah</p>
-                <a href="auth/login.php" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Masuk</a>
+                <a href="<?php echo $_SESSION['role'] === 'admin' ? 'dashboard_admin' : ($_SESSION['role'] === 'ketua' ? 'dashboard_ketua' : 'dashboard_user'); ?>" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Masuk</a>
             </div>
 
             <div class="bg-white rounded-lg shadow-md text-center p-6">
@@ -21,7 +21,7 @@
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Manajemen Pengguna</h3>
                 <p class="text-gray-600 mb-6">Kelola pengguna sistem</p>
-                <a href="auth/login.php" class="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">Masuk</a>
+                <a href="<?php echo $_SESSION['role'] === 'admin' ? 'dashboard_admin' : ($_SESSION['role'] === 'ketua' ? 'dashboard_ketua' : 'dashboard_user'); ?>" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Masuk</a>
             </div>
 
             <div class="bg-white rounded-lg shadow-md text-center p-6">
@@ -30,7 +30,7 @@
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Informasi RT/RW</h3>
                 <p class="text-gray-600 mb-6">Platform informasi digital</p>
-                <a href="auth/login.php" class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">Masuk</a>
+               <a href="<?php echo $_SESSION['role'] === 'admin' ? 'dashboard_admin' : ($_SESSION['role'] === 'ketua' ? 'dashboard_ketua' : 'dashboard_user'); ?>" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Masuk</a>
             </div>
         </div>
     </div>

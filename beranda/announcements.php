@@ -26,8 +26,8 @@ $announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <div class="relative max-w-7xl mx-auto px-6">
 
         <div class="text-center mb-16">
-            <span class="inline-block px-4 py-2 bg-gradient-to-r from-indigo-100 to-cyan-100 text-indigo-800 rounded-full text-sm font-medium mb-4">
-                <i class="fas fa-bell mr-2 text-indigo-600"></i>Update Terbaru
+<span class="inline-block px-4 py-2 bg-gradient-to-r from-indigo-100 to-cyan-100 text-indigo-800 rounded-full text-sm font-medium mb-4">
+                Update Terbaru
             </span>
             <h2 class="text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
                 Pengumuman & Berita
@@ -46,15 +46,11 @@ $announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($announcements as $index => $announcement) : ?>
                     <?php 
-                    $colors = ['blue', 'green', 'purple', 'indigo', 'cyan', 'pink'];
-                    $color = $colors[$index % count($colors)];
-                    $icons = ['fa-code', 'fa-graduation-cap', 'fa-chart-bar', 'fa-bell', 'fa-newspaper', 'fa-calendar'];
-                    $icon = $icons[$index % count($icons)];
                     ?>
                     <div class="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-8 transform hover:-translate-y-1 transition-all duration-300 border border-white/50">
                         <div class="flex items-center mb-6">
-                            <div class="w-14 h-14 bg-gradient-to-br from-<?php echo $color; ?>-500 to-<?php echo $color; ?>-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                                <i class="fas <?php echo $icon; ?> text-2xl text-white"></i>
+                            <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-bullhorn text-2xl text-white"></i>
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-1"><?php echo htmlspecialchars($announcement['title']); ?></h3>

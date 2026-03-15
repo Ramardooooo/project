@@ -10,7 +10,8 @@ include '../../layouts/user/header.php';
 include '../../layouts/user/sidebar.php';
 
 $user_id = $_SESSION['user_id'];
-$user_query = "SELECT * FROM users WHERE id = '$user_id'";
+$user_id_esc = mysqli_real_escape_string($conn, $user_id);
+$user_query = "SELECT * FROM users WHERE id = '$user_id_esc'"; 
 $user_result = mysqli_query($conn, $user_query);
 $user = mysqli_fetch_assoc($user_result);
 
@@ -19,8 +20,12 @@ $nama = $user['username'] ?? '';
 // Get KK based on warga's kk_id (not by kepala_keluarga)
 $kk = null;
 $kk_id_from_warga = null;
-$warga_query = "SELECT rt, rw, kk_id FROM warga WHERE nama = '$nama'";
+$nama_esc = mysqli_real_escape_string($conn, $nama);
+$warga_query = "SELECT rt, rw, kk_id FROM warga WHERE nama = '$nama_esc'";
 $warga_result = mysqli_query($conn, $warga_query);
+if (!$warga_result) {
+    die('Warga query error: ' . mysqli_error($conn));
+}
 $warga = mysqli_fetch_assoc($warga_result);
 
 if ($warga && isset($warga['kk_id']) && $warga['kk_id']) {
@@ -39,7 +44,9 @@ if ($warga && isset($warga['rt']) && isset($warga['rw'])) {
     $rt_id = $warga['rt'];
     $rw_id = $warga['rw'];
     
-    $rt_rw_names_query = "SELECT rt.nama_rt, rw.name as nama_rw FROM rt JOIN rw ON rt.id_rw = rw.id WHERE rt.id = '$rt_id' AND rw.id = '$rw_id'";
+$rt_id_esc = mysqli_real_escape_string($conn, $rt_id ?? '');
+$rw_id_esc = mysqli_real_escape_string($conn, $rw_id ?? '');
+$rt_rw_names_query = "SELECT rt.nama_rt, rw.name as nama_rw FROM rt JOIN rw ON rt.id_rw = rw.id WHERE rt.id = '$rt_id_esc' AND rw.id = '$rw_id_esc'";
     $rt_rw_names_result = mysqli_query($conn, $rt_rw_names_query);
     $rt_rw_names = mysqli_fetch_assoc($rt_rw_names_result);
     if ($rt_rw_names) {
@@ -49,17 +56,20 @@ if ($warga && isset($warga['rt']) && isset($warga['rw'])) {
 }
 
 // Get personal data with status_approval and pekerjaan
-$personal_query = "SELECT nik, alamat, tanggal_lahir, jk, kk_id, status_approval, pekerjaan FROM warga WHERE nama = '$nama'";
+$personal_query = "SELECT nik, alamat, tanggal_lahir, jk, kk_id, status_approval, pekerjaan FROM warga WHERE nama = '$nama_esc'"; 
 $personal_result = mysqli_query($conn, $personal_query);
+if (!$personal_result) {
+    die('Personal query error: ' . mysqli_error($conn));
+}
 $personal = mysqli_fetch_assoc($personal_result);
 
 // Get status approval
-$status_approval = $personal['status_approval'] ?? 'diterima';
+$status_approval = $personal ? ($personal['status_approval'] ?? 'diterima') : 'menunggu';
 $kk_id = $personal['kk_id'] ?? null;
 
 $warga_list = [];
 if ($rt_id && $rw_id) {
-    $warga_list_query = "SELECT nama, nik, alamat, jk, tanggal_lahir FROM warga WHERE rt = '$rt_id' AND rw = '$rw_id' ORDER BY nama ASC";
+$warga_list_query = "SELECT nama, nik, alamat, jk, tanggal_lahir FROM warga WHERE rt = '$rt_id_esc' AND rw = '$rw_id_esc' ORDER BY nama ASC";
     $warga_list_result = mysqli_query($conn, $warga_list_query);
     $warga_list = mysqli_fetch_all($warga_list_result, MYSQLI_ASSOC);
 }
@@ -77,12 +87,6 @@ $announcements_query = "SELECT title, content, created_at FROM announcements ORD
 $announcements_result = mysqli_query($conn, $announcements_query);
 $announcements = mysqli_fetch_all($announcements_result, MYSQLI_ASSOC);
 
-// Check if user has filled their data - redirect if not
-if (!$personal || empty($personal['nik'])) {
-    echo "<script>window.location.href = 'input_data_diri.php';</script>";
-    exit();
-}
-
 // Initialize variables to avoid warnings
 $message = '';
 $show_form = false;
@@ -99,7 +103,7 @@ if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
     <div class="p-8">
         
         <!-- Status Info - Persistent -->
-        <?php if (isset($status_approval)): ?>
+        <?php if ($status_approval !== 'diterima'): ?>
             <?php 
             if ($status_approval === 'diterima') {
                 $status_class = 'bg-green-100 border-green-400 text-green-700';
@@ -295,25 +299,25 @@ if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-500">NIK</p>
-                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal ? htmlspecialchars($personal['nik']) : '-'; ?></p>
+<?php echo $personal && isset($personal['nik']) ? htmlspecialchars($personal['nik']) : 'Belum Terdaftar'; ?></p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-500">Tanggal Lahir</p>
-                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal && $personal['tanggal_lahir'] ? date('d-m-Y', strtotime($personal['tanggal_lahir'])) : '-'; ?></p>
+<p class="text-sm font-semibold text-gray-800"><?php echo $personal && isset($personal['tanggal_lahir']) ? date('d-m-Y', strtotime($personal['tanggal_lahir'])) : 'Belum Terdaftar'; ?></p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-500">Jenis Kelamin</p>
-                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal && $personal['jk'] === 'L' ? 'Laki-laki' : ($personal['jk'] === 'P' ? 'Perempuan' : '-'); ?></p>
+<p class="text-sm font-semibold text-gray-800"><?php echo $personal && isset($personal['jk']) && $personal['jk'] === 'L' ? 'Laki-laki' : ($personal && isset($personal['jk']) && $personal['jk'] === 'P' ? 'Perempuan' : 'Belum Terdaftar'); ?></p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-4">
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-500">Alamat</p>
-                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal ? htmlspecialchars($personal['alamat'] ?? '-') : '-'; ?></p>
+<p class="text-sm font-semibold text-gray-800"><?php echo $personal && isset($personal['alamat']) && $personal['alamat'] ? htmlspecialchars($personal['alamat']) : 'Belum Terdaftar'; ?></p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-500">Pekerjaan</p>
-                        <p class="text-sm font-semibold text-gray-800"><?php echo $personal && isset($personal['pekerjaan']) && $personal['pekerjaan'] ? htmlspecialchars($personal['pekerjaan']) : '-'; ?></p>
+<p class="text-sm font-semibold text-gray-800"><?php echo $personal && isset($personal['pekerjaan']) && $personal['pekerjaan'] ? htmlspecialchars($personal['pekerjaan']) : 'Belum Terdaftar'; ?></p>
                     </div>
                 </div>
             </div>
@@ -333,9 +337,7 @@ if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">JK</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Lahir</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
                         </tr>
                     </thead>
@@ -345,7 +347,6 @@ if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $no++; ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo htmlspecialchars($warga_item['nama']); ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo htmlspecialchars($warga_item['nik'] ?? '-'); ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <?php if ($warga_item['jk'] === 'L'): ?>
                                             <span class="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">Laki-laki</span>
@@ -355,7 +356,6 @@ if ($rw_result) $rw_list = mysqli_fetch_all($rw_result, MYSQLI_ASSOC);
                                             -
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $warga_item['tanggal_lahir'] ? date('d-m-Y', strtotime($warga_item['tanggal_lahir'])) : '-'; ?></td>
                                     <td class="px-6 py-4 text-sm text-gray-500"><?php echo htmlspecialchars($warga_item['alamat'] ?? '-'); ?></td>
                                 </tr>
                             <?php endforeach; ?>

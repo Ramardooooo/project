@@ -92,7 +92,7 @@ $announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                        <i class="fas fa-heading text-gray-500"></i>
+<i class="fas fa-edit text-gray-500"></i>
                         Judul Pengumuman
                     </label>
 
@@ -105,7 +105,7 @@ $announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                        <i class="fas fa-align-left text-gray-500"></i>
+<i class="fas fa-paragraph text-gray-500"></i>
                         Isi Pengumuman
                     </label>
 

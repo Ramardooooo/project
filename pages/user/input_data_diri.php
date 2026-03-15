@@ -99,7 +99,7 @@ if (isset($_POST['submit_data_diri'])) {
     
     if (mysqli_num_rows($check_result) > 0) {
         // Update existing record - build dynamic query
-        $update_fields = "nik='$nik', tanggal_lahir='$tanggal_lahir', alamat='$alamat', jk='$jk', pekerjaan='$pekerjaan', rt='$rt_id_post', rw='$rw_id_post', kk_id='$kk_id_post'";
+        $update_fields = "nik='$nik', tanggal_lahir='$tanggal_lahir', alamat='$alamat', jk='$jk', pekerjaan='$pekerjaan', rt='$rt_id_post', rw='$rw_id_post', kk_id='$kk_id_post', status_approval='menunggu'";
         
         if ($has_tempat_lahir) $update_fields .= ", tempat_lahir='$tempat_lahir'";
         if ($has_goldar) $update_fields .= ", goldar='$goldar'";
@@ -151,7 +151,7 @@ if (isset($_POST['submit_data_diri'])) {
             mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('register', 'warga', 'Warga baru mendaftar: $nama', $logged_user_id)");
             
             $message = 'Data berhasil disimpan! Menunggu persetujuan dari Ketua RT.';
-            header("Location: ../../pages/user/dashboard_user.php?success=1");
+            header("Location: dashboard_user?success=1");
             exit();
         } else {
             $error = 'Gagal menyimpan data!';
@@ -173,52 +173,66 @@ if (isset($_POST['submit_data_diri'])) {
             
             <!-- Header -->
             <div class="flex items-center mb-6">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mr-10">
+                <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center mr-4 text-white">
+                    <i class="fas fa-user-plus text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Data Diri</h1>
-                    <p class="text-gray-500 text-sm">Lengkapi data diri Anda dengan benar</p>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Data Diri</h1>
+                    <p class="text-gray-600 text-base font-medium mt-1">Lengkapi data diri Anda untuk pendaftaran warga</p>
                 </div>
             </div>
 
-            <?php if ($message): ?>
+<?php if ($message): ?>
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     <?php echo $message; ?>
                 </div>
             <?php endif; ?>
-            
+
             <?php if ($error): ?>
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     <?php echo $error; ?>
                 </div>
             <?php endif; ?>
 
-            <!-- Status Info -->
-            <?php if ($existing_data && $has_status_approval && isset($existing_data['status_approval'])): ?>
-                <?php 
+            <?php if ($existing_data && $has_status_approval && isset($existing_data['status_approval']) && $existing_data['status_approval'] !== 'diterima'): 
                 $status = $existing_data['status_approval'];
                 $status_class = '';
                 $status_icon = '';
                 $status_text = '';
+                $status_color = '';
                 
                 if ($status === 'diterima') {
-                    $status_class = 'bg-green-100 border-green-400 text-green-700';
+                    $status_class = 'bg-green-50 border-green-400 text-green-800';
                     $status_icon = 'fa-check-circle';
                     $status_text = 'Data Anda telah DITERIMA';
+                    $status_color = 'green';
                 } elseif ($status === 'ditolak') {
-                    $status_class = 'bg-red-100 border-red-400 text-red-700';
+                    $status_class = 'bg-red-50 border-red-400 text-red-800';
                     $status_icon = 'fa-times-circle';
                     $status_text = 'Data Anda DITOLAK - Silakan perbaiki data Anda';
+                    $status_color = 'red';
                 } else {
-                    $status_class = 'bg-yellow-100 border-yellow-400 text-yellow-700';
+                    $status_class = 'bg-yellow-50 border-yellow-400 text-yellow-800';
                     $status_icon = 'fa-clock';
-                    $status_text = 'Data Anda MENUNGGU persetujuan';
+                    $status_text = 'Data Anda MENUNGGU persetujuan Ketua RT';
+                    $status_color = 'yellow';
                 }
-                ?>
-                <div id="status-banner" class="<?php echo $status_class; ?> border-l-4 px-4 py-3 rounded mb-4">
-                    <div class="flex items-center">
-                        <i class="fas <?php echo $status_icon; ?> mr-3"></i>
-                        <span class="font-medium"><?php echo $status_text; ?></span>
+            ?>
+                <div id="status-banner" class="border-l-4 <?php echo $status_class; ?> px-6 py-4 rounded-xl mb-6 shadow-sm border-8">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-<?php echo $status_color; ?>-100 rounded-xl flex items-center justify-center mr-4 p-3">
+                                <i class="fas <?php echo $status_icon; ?> text-<?php echo $status_color; ?>-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-lg"><?php echo $status_text; ?></p>
+                                <p class="text-sm opacity-75">Status persetujuan data warga Anda</p>
+                            </div>
+                        </div>
+                        <button onclick="document.getElementById('status-banner').style.display='none'" 
+                                class="p-2 hover:bg-opacity-75 rounded-lg transition-all hover:scale-105">
+                            <i class="fas fa-times text-<?php echo $status_color; ?>-500 text-xl"></i>
+                        </button>
                     </div>
                 </div>
             <?php endif; ?>
@@ -347,17 +361,32 @@ if (isset($_POST['submit_data_diri'])) {
                     </div>
 
                     <!-- Info -->
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                        <p class="text-sm text-yellow-800">Data akan ditinjau oleh Ketua RT untuk persetujuan.</p>
-                    </div>
 
-                    <!-- Submit -->
-                    <div>
-                        <button type="submit" name="submit_data_diri" 
-                                class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-                            Simpan Data Diri
-                        </button>
-                    </div>
+                            <?php if (!$existing_data): ?>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                                <p class="text-sm text-yellow-800"><i class="fas fa-info-circle mr-2"></i>Data akan ditinjau oleh Ketua RT untuk persetujuan.</p>
+                            </div>
+                            <?php endif; ?>
+
+                            <!-- Submit -->
+                            <?php if (!$existing_data): ?>
+                            <div>
+                                <button type="submit" name="submit_data_diri" 
+                                        class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                                    Simpan Data Diri
+                                </button>
+                            </div>
+                            <?php else: ?>
+                            <div class="text-center py-8">
+                                <i class="fas fa-check-circle text-green-500 text-4xl mb-4"></i>
+                                <p class="text-gray-600 text-lg font-semibold">Data Diri Sudah Terdaftar</p>
+                                <p class="text-sm text-gray-500 mt-2">Gunakan tombol Edit Data Diri untuk mengubah data.</p>
+                            </div>
+                            <?php endif; ?>
+                            <a href="edit_data_diri" class="block w-full py-3 mt-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition text-center">
+                                <i class="fas fa-edit mr-2"></i>Edit Data Diri
+                            </a>
+
                 </form>
             </div>
         </div>

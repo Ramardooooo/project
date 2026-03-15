@@ -158,6 +158,63 @@ if (isset($_POST['edit_warga'])) {
     exit();
 }
 
+
+// Handle Approve - MUST be before any output
+if (isset($_POST['approve_warga'])) {
+    $warga_id = (int)$_POST['id'];
+    
+    $warga_result = mysqli_query($conn, "SELECT nama FROM warga WHERE id = $warga_id");
+    $warga_data = mysqli_fetch_assoc($warga_result);
+    $warga_nama = $warga_data['nama'] ?? 'Unknown';
+    
+    $stmt = mysqli_prepare($conn, "UPDATE warga SET status_approval = 'diterima' WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $warga_id);
+    mysqli_stmt_execute($stmt);
+    
+    // Send notification
+    $user_result = mysqli_query($conn, "SELECT id FROM users WHERE username = '" . mysqli_real_escape_string($conn, $warga_nama) . "'");
+    if ($user_row = mysqli_fetch_assoc($user_result)) {
+        $title = 'Data Diri Anda Disetujui';
+        $message_notif = 'Data diri Anda telah disetujui oleh Ketua RT';
+        mysqli_query($conn, "INSERT INTO notifications (title, message, type, role, user_id) VALUES ('$title', '$message_notif', 'approval', 'user', " . $user_row['id'] . ")");
+    }
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('approve', 'warga', 'Approval edit warga diterima: $warga_nama', $user_id)");
+    
+    header("Location: manage_warga");
+    exit();
+}
+
+// Handle Reject - MUST be before any output
+if (isset($_POST['reject_warga'])) {
+    $warga_id = (int)$_POST['id'];
+    
+    $warga_result = mysqli_query($conn, "SELECT nama FROM warga WHERE id = $warga_id");
+    $warga_data = mysqli_fetch_assoc($warga_result);
+    $warga_nama = $warga_data['nama'] ?? 'Unknown';
+    
+    $stmt = mysqli_prepare($conn, "UPDATE warga SET status_approval = 'ditolak' WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $warga_id);
+    mysqli_stmt_execute($stmt);
+    
+    // Send notification
+    $user_result = mysqli_query($conn, "SELECT id FROM users WHERE username = '" . mysqli_real_escape_string($conn, $warga_nama) . "'");
+    if ($user_row = mysqli_fetch_assoc($user_result)) {
+        $title = 'Data Diri Anda Ditolak';
+        $message_notif = 'Data diri Anda ditolak oleh Ketua RT. Silakan perbaiki dan ajukan kembali.';
+        mysqli_query($conn, "INSERT INTO notifications (title, message, type, role, user_id) VALUES ('$title', '$message_notif', 'approval', 'user', " . $user_row['id'] . ")");
+    }
+    
+    // Log activity
+    $user_id = $_SESSION['user_id'] ?? null;
+    mysqli_query($conn, "INSERT INTO activities (action, entity, description, user_id) VALUES ('reject', 'warga', 'Approval edit warga ditolak: $warga_nama', $user_id)");
+    
+    header("Location: manage_warga");
+    exit();
+}
+
 // Handle Delete - MUST be before any output
 if (isset($_POST['delete_warga'])) {
     $warga_id = (int)$_POST['id'];
@@ -179,9 +236,12 @@ if (isset($_POST['delete_warga'])) {
     exit();
 }
 
-// Now include the layouts (after handling redirects)
+
+/* Legacy PDF export removed - use EXPORT_WARGA.php buttons */
+ // Now include the layouts (after handling redirects)
 include '../../../layouts/ketua/header.php';
 include '../../../layouts/ketua/sidebar.php';
+
 
 $search = $_GET['search'] ?? '';
 $page = (int)($_GET['page'] ?? 1);
@@ -244,9 +304,21 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
 <div id="mainContent" class="ml-64 p-8 bg-white min-h-screen transition-all duration-300">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Manajemen Data Warga</h1>
-        <button onclick="openAddModal()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            <i class="fas fa-plus mr-2"></i>Tambah Warga
-        </button>
+        <div class="flex gap-3">
+            <div class="flex gap-2">
+                <a href="/PROJECT\pages\ketua/EXPORT_WARGA.php?format.pdf<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg flex items-center text-sm">
+                    <i class="fas fa-file-pdf mr-1"></i>PDF
+                </a>
+                <!-- CSV button removed per user request -->
+
+                <a href="../export_warga.php" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg flex items-center text-sm">
+                    <i class="fas fa-download mr-1"></i>Export Page
+                </a>
+            </div>
+            <button onclick="openAddModal()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <i class="fas fa-plus mr-2"></i>Tambah Warga
+            </button>
+        </div>
     </div>
 
     <!-- Search -->
@@ -274,10 +346,13 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Agama</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status Kawin</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pekerjaan</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Alamat</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">RT/RW</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">KK</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Approval</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Aksi</th>
+
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -292,6 +367,7 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
                         <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['agama'] ?? '-'); ?></td>
                         <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['status_kawin'] ?? '-'); ?></td>
                         <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['pekerjaan'] ?? '-'); ?></td>
+                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars(substr($warga['alamat'] ?? '-', 0, 30) . (strlen($warga['alamat'] ?? '') > 30 ? '...' : '')); ?></td>
                         <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars(($warga['nama_rt'] ?? '-') . '/' . ($warga['nama_rw'] ?? '-')); ?></td>
                         <td class="px-4 py-3 text-sm text-gray-600">
                             <?php if (isset($warga['kk_id']) && $warga['kk_id'] && isset($warga['no_kk'])): ?>
@@ -313,10 +389,38 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
                                 <?php echo ucfirst($status); ?>
                             </span>
                         </td>
+                        <td class="px-4 py-3">
+                            <?php if ($has_status_approval && isset($warga['status_approval'])): ?>
+                                <?php 
+                                $app_status = $warga['status_approval'];
+                                $app_class = $app_status === 'menunggu' ? 'bg-yellow-100 text-yellow-800' : ($app_status === 'diterima' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
+                                ?>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $app_class; ?>">
+                                    <?php echo ucfirst($app_status); ?>
+                                </span>
+                                <?php if ($app_status === 'menunggu'): ?>
+                                    <form method="POST" class="inline ml-2" onsubmit="return confirm('Yakin terima edit ini?')">
+                                        <input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
+                                        <button type="submit" name="approve_warga" class="text-green-600 hover:text-green-800 text-xs">
+                                            <i class="fas fa-check mr-1"></i>Terima
+                                        </button>
+                                    </form>
+                                    <form method="POST" class="inline ml-1" onsubmit="return confirm('Yakin tolak edit ini?')">
+                                        <input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
+                                        <button type="submit" name="reject_warga" class="text-red-600 hover:text-red-800 text-xs">
+                                            <i class="fas fa-times mr-1"></i>Tolak
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <span class="text-gray-400">-</span>
+                            <?php endif; ?>
+                        </td>
                         <td class="px-4 py-3 text-sm">
                             <button onclick="openEditModal(<?php echo $warga['id']; ?>, '<?php echo addslashes($warga['nik'] ?? ''); ?>', '<?php echo addslashes($warga['nama'] ?? ''); ?>', '<?php echo $warga['jk'] ?? 'L'; ?>', '<?php echo addslashes($warga['alamat'] ?? ''); ?>', '<?php echo addslashes($warga['tempat_lahir'] ?? ''); ?>', '<?php echo addslashes($warga['goldar'] ?? ''); ?>', '<?php echo addslashes($warga['agama'] ?? ''); ?>', '<?php echo addslashes($warga['status_kawin'] ?? ''); ?>', '<?php echo addslashes($warga['pekerjaan'] ?? ''); ?>', '<?php echo $warga['tanggal_lahir'] ?? ''; ?>', <?php echo $warga['rt'] ?? 'null'; ?>, <?php echo $warga['rw'] ?? 'null'; ?>)" class="text-blue-600 hover:text-blue-800 mr-3">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </button>
+
                             <form method="POST" class="inline" onsubmit="return confirm('Yakin hapus warga ini?')">
                                 <input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
                                 <button type="submit" name="delete_warga" class="text-red-600 hover:text-red-800">

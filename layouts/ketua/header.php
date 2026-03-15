@@ -31,17 +31,34 @@ if ($user_id) {
 <body class="bg-gray-100 min-h-screen flex flex-col">
 <header class="bg-white shadow-sm border-b border-gray-200 ml-64 transition-all duration-300" id="mainHeader">
     <div class="flex justify-between items-center px-8 py-5">
-
         <div class="flex items-center">
             <button onclick="toggleSidebar()" class="text-gray-600 hover:text-gray-900 mr-4 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100" id="hamburgerBtn">
                 <i class="fas fa-bars text-xl"></i>
             </button>
             <h1 class="text-2xl font-bold text-gray-800 tracking-wide"></h1>
         </div>
+        <div class="flex items-center space-x-3">
+            <!-- Notifications Ketua -->
+            <div class="relative">
+                <button id="notifBtnKetua" class="p-2.5 text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-all duration-200" onclick="toggleNotifications('ketua')">
+                    <i class="fas fa-bell text-xl relative z-10"></i>
+                    <span id="notifBadgeKetua" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-lg min-w-[20px]">0</span>
+                </button>
+                <div id="notifDropdownKetua" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border ring-1 ring-black/5 z-[9999] overflow-hidden">
+                    <div class="p-4 border-b bg-gradient-to-r from-emerald-50 to-teal-50">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-gray-800 text-lg">Pemberitahuan Ketua</h4>
+                            <button onclick="markAllRead('ketua')" class="text-xs text-emerald-600 hover:text-emerald-800 font-medium hover:underline">Tandai semua</button>
+                        </div>
+                    </div>
+                    <div id="notifListKetua" class="max-h-96 overflow-y-auto"></div>
+                    <div class="p-3 border-t text-center bg-gray-50">
+                        <span class="text-emerald-600 font-medium text-sm">Full list coming soon</span>
+                    </div>
+                </div>
+            </div>
 
-
-        <div class="flex items-center space-x-6">
-
+            <!-- Profile -->
             <div class="flex items-center space-x-3 bg-gray-50 rounded-full px-4 py-2 border border-gray-200">
                 <?php if ($user && $user['profile_photo']): ?>
                     <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
@@ -55,9 +72,29 @@ if ($user_id) {
                 </span>
             </div>
 
-            <a href="logout" class="text-gray-500 hover:text-gray-700 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100">
+            <!-- Logout -->
+            <a href="logout" class="flex items-center space-x-2 text-gray-500 hover:text-gray-900 transition-colors duration-200 p-2.5 rounded-full hover:bg-gray-100">
                 <i class="fas fa-sign-out-alt text-xl"></i>
+                <span class="text-xs font-medium hidden sm:inline">Logout</span>
             </a>
         </div>
     </div>
 </header>
+
+<script src="/static/notifications.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    window.loadNotifications('ketua');
+    console.log('Ketua notifications loaded');
+});
+</script>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    // ... rest toggleSidebar code (same as user header)
+}
+</script>
+</body>
+</html>  
+

@@ -33,8 +33,10 @@ if (isset($_POST['reject_kk']) && $has_status_approval) {
 
 $query = "SELECT k.id, k.no_kk, k.kepala_keluaraga" . ($has_status_approval ? ", k.status_approval" : "") . ", 
           (SELECT COUNT(*) FROM warga w WHERE w.kk_id = k.id) as anggota_count,
-          (SELECT w.nik FROM warga w WHERE w.nama = k.kepala_keluaraga LIMIT 1) as kepala_nik
-          FROM kk k WHERE 1=1";
+COALESCE(w.nik, '') as kepala_nik
+          FROM kk k 
+          LEFT JOIN warga w ON LOWER(TRIM(w.nama)) = LOWER(TRIM(k.kepala_keluaraga)) AND w.status = 'aktif'
+          WHERE 1=1";
 $params = [];
 $types = '';
 
@@ -48,11 +50,11 @@ if (!empty($search)) {
 
 if ($has_status_approval) {
     $query .= " ORDER BY 
-        CASE WHEN status_approval = 'menunggu' THEN 0 
-             WHEN status_approval = 'diterima' THEN 1 
+        CASE WHEN k.status_approval = 'menunggu' THEN 0 
+             WHEN k.status_approval = 'diterima' THEN 1 
              ELSE 2 END, 
-        id DESC 
-        LIMIT ? OFFSET ?";
+        k.id DESC 
+        LIMIT ? OFFSET ?"; 
 } else {
     $query .= " ORDER BY id DESC LIMIT ? OFFSET ?";
 }
@@ -90,7 +92,7 @@ $total_pages = ceil($total / $limit);
 
 if (isset($_POST['add_kk'])) {
     $no_kk = mysqli_real_escape_string($conn, $_POST['no_kk']);
-    $kepala_keluaraga = mysqli_real_escape_string($conn, $_POST['kepala_keluaraga']);
+    $kepala_keluaraga = mysqli_real_escape_string($conn, $_POST['kepala_keluarga'] ?? $_POST['kepala_keluaraga']);
 
     if ($has_status_approval) {
         $query = "INSERT INTO kk (no_kk, kepala_keluaraga, status_approval) VALUES (?, ?, 'menunggu')";
@@ -114,7 +116,7 @@ if (isset($_POST['add_kk'])) {
 if (isset($_POST['edit_kk'])) {
     $id = (int)$_POST['id'];
     $no_kk = mysqli_real_escape_string($conn, $_POST['no_kk']);
-    $kepala_keluaraga = mysqli_real_escape_string($conn, $_POST['kepala_keluaraga']);
+    $kepala_keluaraga = mysqli_real_escape_string($conn, $_POST['kepala_keluarga'] ?? $_POST['kepala_keluaraga']);
 
     $query = "UPDATE kk SET no_kk=?, kepala_keluaraga=? WHERE id=?";
     $stmt = mysqli_prepare($conn, $query);
