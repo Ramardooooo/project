@@ -1,4 +1,4 @@
-usersrt_testing-- --------------------------------------------------------
+-- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               8.4.3 - MySQL Community Server - GPL
 -- Server OS:                    Win64
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `activities` (
   `user_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   `content` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `audit_log` (
   `username` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `gallery` (
   `image_path` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `gallery_likes` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `gallery_likes_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `gallery` (`id`) ON DELETE CASCADE,
   CONSTRAINT `gallery_likes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -91,10 +91,14 @@ CREATE TABLE IF NOT EXISTS `gallery_likes` (
 CREATE TABLE IF NOT EXISTS `kk` (
   `id` int NOT NULL AUTO_INCREMENT,
   `kepala_keluaraga` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `status_approval` enum('menunggu','diterima','ditolak') DEFAULT 'diterima',
   `alamat` text,
   `no_kk` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `kepala_keluarga_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `kepala_keluarga_id` (`kepala_keluarga_id`),
+  CONSTRAINT `kk_ibfk_1` FOREIGN KEY (`kepala_keluarga_id`) REFERENCES `warga` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -109,21 +113,25 @@ CREATE TABLE IF NOT EXISTS `mutasi_warga` (
   `keterangan` text,
   PRIMARY KEY (`id`),
   KEY `warga_id` (`warga_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table rt_testing.notifications
 CREATE TABLE IF NOT EXISTS `notifications` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `type` enum('warning','success','info','error') NOT NULL DEFAULT 'info',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `message` text NOT NULL,
-  `is_read` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `type` enum('approval','announcement','activity','info') DEFAULT 'info',
+  `role` enum('user','ketua','admin','all') DEFAULT 'all',
+  `is_read` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user` (`user_id`),
+  KEY `idx_read` (`is_read`),
+  KEY `idx_role` (`role`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -135,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `rt` (
   `status` enum('aktif','tidak aktif') DEFAULT 'aktif',
   `id_rw` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -144,7 +152,22 @@ CREATE TABLE IF NOT EXISTS `rw` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table rt_testing.testimonials
+CREATE TABLE IF NOT EXISTS `testimonials` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `rating` int NOT NULL,
+  `description` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int DEFAULT NULL,
+  `profile_photo` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `testimonials_chk_1` CHECK (((`rating` >= 1) and (`rating` <= 5)))
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -161,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -176,11 +199,19 @@ CREATE TABLE IF NOT EXISTS `warga` (
   `rw` int DEFAULT NULL,
   `kk_id` int DEFAULT NULL,
   `status` enum('aktif','tidak_aktif','meninggal','pindah') DEFAULT NULL,
+  `status_approval` enum('menunggu','diterima','ditolak') DEFAULT 'diterima',
   `tanggal_mutasi` date DEFAULT NULL,
   `tanggal_lahir` date DEFAULT NULL,
+  `pekerjaan` varchar(100) DEFAULT NULL,
   `jenis_kelamin` enum('L','P') DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `agama` varchar(20) DEFAULT NULL,
+  `status_kawin` varchar(20) DEFAULT NULL,
+  `tempat_lahir` varchar(100) DEFAULT NULL,
+  `goldar` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `warga_kk_id_ibfk` (`kk_id`),
+  CONSTRAINT `warga_kk_id_ibfk` FOREIGN KEY (`kk_id`) REFERENCES `kk` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
