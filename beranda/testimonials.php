@@ -51,8 +51,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     $avatar_url = '';
     if (!empty($user_photo)) {
         $possible_paths = [
-            '../account/account/uploads/profiles/' . $user_photo,
-            '../../account/account/uploads/profiles/' . $user_photo,
+'../account/uploads/profiles/' . $user_photo,
+'../../account/uploads/profiles/' . $user_photo,
             '../account/uploads/profiles/' . $user_photo,
             '../../account/uploads/profiles/' . $user_photo,
             $user_photo

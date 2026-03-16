@@ -20,22 +20,24 @@ $laporan_warga = mysqli_query($conn, "
         SUM(CASE WHEN status = 'pindah' THEN 1 ELSE 0 END) as warga_pindah,
         SUM(CASE WHEN status = 'meninggal' THEN 1 ELSE 0 END) as warga_meninggal
     FROM warga
-");
+") or die(mysqli_error($conn));
 
 $laporan_kk = mysqli_query($conn, "
-    SELECT COUNT(*) as total_kk, 0 as rata_rata_anggota
-    FROM kk
-");
+    SELECT 
+        COUNT(kk.id) as total_kk,
+        ROUND(COALESCE(SUM(w.count)/COUNT(kk.id), 0), 1) as rata_rata_anggota
+    FROM kk 
+    LEFT JOIN (
+        SELECT kk_id, COUNT(*) as count FROM warga GROUP BY kk_id
+    ) w ON kk.id = w.kk_id
+") or die(mysqli_error($conn));
 
 $laporan_wilayah = mysqli_query($conn, "
-    SELECT
-        COUNT(DISTINCT rt.id) as total_rt,
-        COUNT(DISTINCT rw.id) as total_rw,
-        COUNT(w.id) as total_warga_wilayah
-    FROM rt
-    CROSS JOIN rw
-    LEFT JOIN warga w ON w.status = 'aktif'
-");
+    SELECT 
+        (SELECT COUNT(*) FROM rt) as total_rt,
+        (SELECT COUNT(*) FROM rw) as total_rw,
+        (SELECT COUNT(*) FROM warga WHERE status = 'aktif') as total_warga_wilayah
+") or die(mysqli_error($conn));
 
 $mutasi_bulanan = mysqli_query($conn, "
     SELECT
@@ -46,7 +48,7 @@ $mutasi_bulanan = mysqli_query($conn, "
     WHERE tanggal_mutasi >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
     GROUP BY DATE_FORMAT(tanggal_mutasi, '%Y-%m'), jenis_mutasi
     ORDER BY bulan DESC, jenis_mutasi
-");
+") or die(mysqli_error($conn));
 
 $warga_data = mysqli_fetch_assoc($laporan_warga);
 $kk_data = mysqli_fetch_assoc($laporan_kk);
@@ -57,8 +59,8 @@ $wilayah_data = mysqli_fetch_assoc($laporan_wilayah);
 <div id="mainContent" class="ml-64 p-8 bg-gray-50 min-h-screen transition-all duration-300">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Laporan</h1>
-        <a href="/PROJECT/pages/ketua/export_laporan.php" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md">
-            <i class="fas fa-download mr-2"></i>Export to PDF
+        <a href="\PROJECT\pages\ketua/export_laporan.php" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md flex items-center">
+            <i class="fas fa-file-pdf mr-2"></i>Export Laporan PDF
         </a>
     </div>
 
@@ -173,6 +175,8 @@ $wilayah_data = mysqli_fetch_assoc($laporan_wilayah);
         </div>
     </div>
 </div>
+
+<?php include '../../layouts/admin/footer.php'; ?>
 
 </body>
 </html>

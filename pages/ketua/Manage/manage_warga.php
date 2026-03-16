@@ -58,7 +58,7 @@ if (isset($_POST['add_warga'])) {
     $insert_fields = "nik, nama, jk, tanggal_lahir, pekerjaan, alamat, rt, rw, kk_id, status";
     $insert_values = "?, ?, ?, ?, ?, ?, ?, ?, ?, 'aktif'";
     $params = [$nik, $nama, $jk, $tanggal_lahir, $pekerjaan, $alamat, $rt, $rw, $kk_id];
-    $types = "ssssssiii";
+$types = "ssssssiii";
     
     if ($has_tempat_lahir && $tempat_lahir_val) {
         $insert_fields .= ", tempat_lahir";
@@ -121,8 +121,8 @@ if (isset($_POST['edit_warga'])) {
     $status_kawin = !empty($_POST['status_kawin']) ? mysqli_real_escape_string($conn, $_POST['status_kawin']) : null;
     
     $update_fields = "nik=?, nama=?, jk=?, tanggal_lahir=?, pekerjaan=?, alamat=?, rt=?, rw=?, kk_id=?";
-    $params = [$nik, $nama, $jk, $tanggal_lahir, $pekerjaan, $alamat, $rt, $rw, $kk_id, $id];
-    $types = "ssssssiiii";
+$params = [$nik, $nama, $jk, $tanggal_lahir, $pekerjaan, $alamat, $rt, $rw, $kk_id];
+$types = "ssssssiii";
     
     if ($has_tempat_lahir && $tempat_lahir_val) {
         $update_fields .= ", tempat_lahir=?";
@@ -145,7 +145,7 @@ if (isset($_POST['edit_warga'])) {
         $types .= "s";
     }
     
-    $sql = "UPDATE warga SET $update_fields WHERE id=?";
+$sql = "UPDATE warga SET $update_fields WHERE id=$id";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, $types, ...$params);
     mysqli_stmt_execute($stmt);
@@ -326,109 +326,158 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
         </form>
     </div>
 
-    <!-- Warga Table -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">NIK</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nama</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">JK</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tgl Lahir</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tempat Lahir</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Gol. Darah</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Agama</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status Kawin</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pekerjaan</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Alamat</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">RT/RW</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">KK</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Approval</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Aksi</th>
+  <!-- Warga Table -->
+<div class="bg-white rounded-xl shadow-lg overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead class="bg-gray-50">
+<tr>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">NIK</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nama</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">JK</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tgl Lahir</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tempat Lahir</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Gol. Darah</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Agama</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status Kawin</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pekerjaan</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Alamat</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">RT/RW</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">KK</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Approval</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Aksi</th>
+</tr>
+</thead>
 
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <?php while ($warga = mysqli_fetch_assoc($warga_result)): ?>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-3 text-sm text-gray-900"><?php echo htmlspecialchars($warga['nik'] ?? ''); ?></td>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($warga['nama'] ?? ''); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo ($warga['jk'] ?? '') == 'L' ? 'L' : 'P'; ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo $warga['tanggal_lahir'] ? date('d-m-Y', strtotime($warga['tanggal_lahir'])) : '-'; ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['tempat_lahir'] ?? '-'); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['goldar'] ?? '-'); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['agama'] ?? '-'); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['status_kawin'] ?? '-'); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['pekerjaan'] ?? '-'); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars(substr($warga['alamat'] ?? '-', 0, 30) . (strlen($warga['alamat'] ?? '') > 30 ? '...' : '')); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars(($warga['nama_rt'] ?? '-') . '/' . ($warga['nama_rw'] ?? '-')); ?></td>
-                        <td class="px-4 py-3 text-sm text-gray-600">
-                            <?php if (isset($warga['kk_id']) && $warga['kk_id'] && isset($warga['no_kk'])): ?>
-                                <span class="text-blue-600"><?php echo htmlspecialchars($warga['no_kk']); ?></span>
-                            <?php else: ?>
-                                <span class="text-gray-400">-</span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="px-4 py-3">
-                            <?php 
-                            $status = $warga['status'] ?? 'aktif';
-                            $status_class = '';
-                            if($status == 'aktif') $status_class = 'bg-green-100 text-green-800';
-                            elseif($status == 'tidak_aktif') $status_class = 'bg-yellow-100 text-yellow-800';
-                            elseif($status == 'meninggal') $status_class = 'bg-gray-100 text-gray-800';
-                            elseif($status == 'pindah') $status_class = 'bg-red-100 text-red-800';
-                            ?>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $status_class; ?>">
-                                <?php echo ucfirst($status); ?>
-                            </span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <?php if ($has_status_approval && isset($warga['status_approval'])): ?>
-                                <?php 
-                                $app_status = $warga['status_approval'];
-                                $app_class = $app_status === 'menunggu' ? 'bg-yellow-100 text-yellow-800' : ($app_status === 'diterima' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
-                                ?>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $app_class; ?>">
-                                    <?php echo ucfirst($app_status); ?>
-                                </span>
-                                <?php if ($app_status === 'menunggu'): ?>
-                                    <form method="POST" class="inline ml-2" onsubmit="return confirm('Yakin terima edit ini?')">
-                                        <input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
-                                        <button type="submit" name="approve_warga" class="text-green-600 hover:text-green-800 text-xs">
-                                            <i class="fas fa-check mr-1"></i>Terima
-                                        </button>
-                                    </form>
-                                    <form method="POST" class="inline ml-1" onsubmit="return confirm('Yakin tolak edit ini?')">
-                                        <input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
-                                        <button type="submit" name="reject_warga" class="text-red-600 hover:text-red-800 text-xs">
-                                            <i class="fas fa-times mr-1"></i>Tolak
-                                        </button>
-                                    </form>
-                                <?php endif; ?>
-                            <?php else: ?>
-                                <span class="text-gray-400">-</span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            <button onclick="openEditModal(<?php echo $warga['id']; ?>, '<?php echo addslashes($warga['nik'] ?? ''); ?>', '<?php echo addslashes($warga['nama'] ?? ''); ?>', '<?php echo $warga['jk'] ?? 'L'; ?>', '<?php echo addslashes($warga['alamat'] ?? ''); ?>', '<?php echo addslashes($warga['tempat_lahir'] ?? ''); ?>', '<?php echo addslashes($warga['goldar'] ?? ''); ?>', '<?php echo addslashes($warga['agama'] ?? ''); ?>', '<?php echo addslashes($warga['status_kawin'] ?? ''); ?>', '<?php echo addslashes($warga['pekerjaan'] ?? ''); ?>', '<?php echo $warga['tanggal_lahir'] ?? ''; ?>', <?php echo $warga['rt'] ?? 'null'; ?>, <?php echo $warga['rw'] ?? 'null'; ?>)" class="text-blue-600 hover:text-blue-800 mr-3">
-                                <i class="fas fa-edit mr-1"></i>Edit
-                            </button>
+<tbody class="divide-y divide-gray-200">
 
-                            <form method="POST" class="inline" onsubmit="return confirm('Yakin hapus warga ini?')">
-                                <input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
-                                <button type="submit" name="delete_warga" class="text-red-600 hover:text-red-800">
-                                    <i class="fas fa-trash mr-1"></i>Hapus
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<?php while ($warga = mysqli_fetch_assoc($warga_result)): ?>
+<tr class="hover:bg-gray-50">
+
+<td class="px-4 py-3 text-sm text-gray-900"><?php echo htmlspecialchars($warga['nik'] ?? ''); ?></td>
+<td class="px-4 py-3 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($warga['nama'] ?? ''); ?></td>
+<td class="px-4 py-3 text-sm text-gray-600"><?php echo ($warga['jk'] ?? '') == 'L' ? 'L' : 'P'; ?></td>
+
+<td class="px-4 py-3 text-sm text-gray-600">
+<?php echo !empty($warga['tanggal_lahir']) ? date('d-m-Y', strtotime($warga['tanggal_lahir'])) : '-'; ?>
+</td>
+
+<td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['tempat_lahir'] ?? '-'); ?></td>
+<td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['goldar'] ?? '-'); ?></td>
+<td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['agama'] ?? '-'); ?></td>
+<td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['status_kawin'] ?? '-'); ?></td>
+<td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['pekerjaan'] ?? '-'); ?></td>
+
+<td class="px-4 py-3 text-sm text-gray-600">
+<?php
+$alamat = $warga['alamat'] ?? '-';
+echo htmlspecialchars(substr($alamat,0,30) . (strlen($alamat) > 30 ? '...' : ''));
+?>
+</td>
+
+<td class="px-4 py-3 text-sm text-gray-600">
+<?php echo htmlspecialchars(($warga['nama_rt'] ?? '-') . '/' . ($warga['nama_rw'] ?? '-')); ?>
+</td>
+
+<td class="px-4 py-3 text-sm text-gray-600">
+<?php if (!empty($warga['kk_id']) && !empty($warga['no_kk'])): ?>
+<span class="text-blue-600"><?php echo htmlspecialchars($warga['no_kk']); ?></span>
+<?php else: ?>
+<span class="text-gray-400">-</span>
+<?php endif; ?>
+</td>
+
+<td class="px-4 py-3">
+<?php
+$status = $warga['status'] ?? 'aktif';
+$status_class = '';
+
+if($status == 'aktif') $status_class='bg-green-100 text-green-800';
+elseif($status == 'tidak_aktif') $status_class='bg-yellow-100 text-yellow-800';
+elseif($status == 'meninggal') $status_class='bg-gray-100 text-gray-800';
+elseif($status == 'pindah') $status_class='bg-red-100 text-red-800';
+?>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $status_class; ?>">
+<?php echo ucfirst($status); ?>
+</span>
+</td>
+
+<td class="px-4 py-3">
+<?php if ($has_status_approval && isset($warga['status_approval'])): ?>
+
+<?php
+$app_status = $warga['status_approval'];
+$app_class = $app_status === 'menunggu' ? 'bg-yellow-100 text-yellow-800' :
+($app_status === 'diterima' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
+?>
+
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $app_class; ?>">
+<?php echo ucfirst($app_status); ?>
+</span>
+
+<?php if ($app_status === 'menunggu'): ?>
+
+<form method="POST" class="inline ml-2" onsubmit="return confirm('Yakin terima edit ini?')">
+<input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
+<button type="submit" name="approve_warga" class="text-green-600 hover:text-green-800 text-xs">
+<i class="fas fa-check mr-1"></i>Terima
+</button>
+</form>
+
+<form method="POST" class="inline ml-1" onsubmit="return confirm('Yakin tolak edit ini?')">
+<input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
+<button type="submit" name="reject_warga" class="text-red-600 hover:text-red-800 text-xs">
+<i class="fas fa-times mr-1"></i>Tolak
+</button>
+</form>
+
+<?php endif; ?>
+
+<?php else: ?>
+<span class="text-gray-400">-</span>
+<?php endif; ?>
+</td>
+
+<td class="px-4 py-3 text-sm">
+
+<button
+onclick='openEditModal(
+<?php echo (int)$warga["id"]; ?>,
+<?php echo json_encode($warga["nik"] ?? ""); ?>,
+<?php echo json_encode($warga["nama"] ?? ""); ?>,
+<?php echo json_encode($warga["jk"] ?? "L"); ?>,
+<?php echo json_encode($warga["alamat"] ?? ""); ?>,
+<?php echo json_encode($warga["tempat_lahir"] ?? ""); ?>,
+<?php echo json_encode($warga["goldar"] ?? ""); ?>,
+<?php echo json_encode($warga["agama"] ?? ""); ?>,
+<?php echo json_encode($warga["status_kawin"] ?? ""); ?>,
+<?php echo json_encode($warga["pekerjaan"] ?? ""); ?>,
+<?php echo json_encode($warga["tanggal_lahir"] ?? ""); ?>,
+<?php echo (int)($warga["rt"] ?? 0); ?>,
+<?php echo (int)($warga["rw"] ?? 0); ?>,
+<?php echo (int)($warga["kk_id"] ?? 0); ?>
+)'
+class="text-blue-600 hover:text-blue-800 mr-3">
+<i class="fas fa-edit mr-1"></i>Edit
+</button>
+
+<form method="POST" class="inline" onsubmit="return confirm('Yakin hapus warga ini?')">
+<input type="hidden" name="id" value="<?php echo $warga['id']; ?>">
+<button type="submit" name="delete_warga" class="text-red-600 hover:text-red-800">
+<i class="fas fa-trash mr-1"></i>Hapus
+</button>
+</form>
+
+</td>
+
+</tr>
+<?php endwhile; ?>
+
+</tbody>
+</table>
+</div>
+</div>
 
     <!-- Pagination -->
     <?php if ($total_pages > 1): ?>
@@ -534,15 +583,19 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
                     </select>
                 </div>
                 <div class="col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">Kartu Keluarga (Opsional)</label>
-                    <select name="kk_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="">Pilih KK</option>
+                    <label class="block text-sm font-medium text-gray-700 text-red-600 font-bold">Kartu Keluarga *</label>
+                    <select name="kk_id" id="edit_kk_id" required onchange="loadMembers(this.value, 'edit-members-preview')" class="mt-1 block w-full px-3 py-2 border border-red-300 bg-red-50 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        <option value="">Pilih KK (Wajib)</option>
                         <?php mysqli_data_seek($kk_result, 0); while ($kk = mysqli_fetch_assoc($kk_result)): ?>
                             <option value="<?php echo $kk['id']; ?>"><?php echo $kk['kepala_keluaraga']; ?> (<?php echo $kk['no_kk']; ?>)</option>
                         <?php endwhile; ?>
                     </select>
+                    <div id="edit-members-preview" class="mt-2 p-3 bg-gray-50 rounded-md max-h-32 overflow-y-auto hidden">
+                        <p class="text-sm text-gray-500">Pilih KK untuk melihat anggota keluarga...</p>
+                    </div>
                 </div>
             </div>
+
             <div class="flex justify-end space-x-3 pt-4">
                 <button type="button" onclick="closeAddModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</button>
                 <button type="submit" name="add_warga" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Simpan</button>
@@ -633,6 +686,7 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
                         <?php endwhile; ?>
                     </select>
                 </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">RW</label>
                     <select name="rw" id="edit_rw" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
@@ -641,7 +695,20 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
                         <?php endwhile; ?>
                     </select>
                 </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 text-red-600 font-bold">Kartu Keluarga *</label>
+                    <select name="kk_id" id="edit_kk_id" required onchange="loadMembers(this.value, 'edit-members-preview')" class="mt-1 block w-full px-3 py-2 border border-red-300 bg-red-50 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500">
+                        <option value="">Pilih KK (Wajib)</option>
+                        <?php mysqli_data_seek($kk_result, 0); while ($kk = mysqli_fetch_assoc($kk_result)): ?>
+                            <option value="<?php echo $kk['id']; ?>"><?php echo $kk['kepala_keluaraga']; ?> (<?php echo $kk['no_kk']; ?>)</option>
+                        <?php endwhile; ?>
+                    </select>
+                    <div id="edit-members-preview" class="mt-2 p-3 bg-gray-50 rounded-md max-h-32 overflow-y-auto hidden">
+                        <p class="text-sm text-gray-500">Pilih KK untuk melihat anggota keluarga...</p>
+                    </div>
+                </div>
             </div>
+
             <div class="flex justify-end space-x-3 pt-4">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</button>
                 <button type="submit" name="edit_warga" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Simpan Perubahan</button>
@@ -653,7 +720,7 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
 <script>
 function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
 function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
-function openEditModal(id, nik, nama, jk, alamat, tempat_lahir, goldar, agama, status_kawin, pekerjaan, tanggal_lahir, rt, rw) {
+function openEditModal(id, nik, nama, jk, alamat, tempat_lahir, goldar, agama, status_kawin, pekerjaan, tanggal_lahir, rt, rw, kk_id) {
     document.getElementById('edit_id').value = id;
     document.getElementById('edit_nik').value = nik || '';
     document.getElementById('edit_nama').value = nama || '';
@@ -667,8 +734,32 @@ function openEditModal(id, nik, nama, jk, alamat, tempat_lahir, goldar, agama, s
     document.getElementById('edit_tanggal_lahir').value = tanggal_lahir || '';
     if (rt) document.getElementById('edit_rt').value = rt;
     if (rw) document.getElementById('edit_rw').value = rw;
+    if (kk_id) document.getElementById('edit_kk_id').value = kk_id;
+    loadMembers(kk_id, 'edit-members-preview');
     document.getElementById('editModal').classList.remove('hidden');
 }
+
+function loadMembers(kkId, containerId) {
+    const container = document.getElementById(containerId);
+    if (!kkId) {
+        container.innerHTML = '<p class="text-sm text-gray-500">Pilih KK untuk melihat anggota keluarga...</p>';
+        container.classList.add('hidden');
+        return;
+    }
+    
+    container.classList.remove('hidden');
+    container.innerHTML = '<p class="text-sm text-gray-500">Memuat...</p>';
+    
+    fetch(`./get_kk_members.php?kk_id=${kkId}`)
+        .then(response => response.text())
+        .then(html => {
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            container.innerHTML = '<p class="text-sm text-red-500">Error loading members.</p>';
+        });
+}
+
 function closeEditModal() { document.getElementById('editModal').classList.add('hidden'); }
 </script>
 

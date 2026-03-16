@@ -216,7 +216,8 @@ if (!empty($profile_photo_db)) {
         </ul>
         <div class="absolute bottom-4 left-4 right-4">
             <div class="text-center text-xs text-gray-400">
-                <div>&copy; 2025 Lurahgo.id</div>
+                <div>Version 1.2</div>
+                <div>&copy; 2026 Lurahgo.id</div>
             </div>
         </div>
     </div>

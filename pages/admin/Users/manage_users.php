@@ -33,6 +33,8 @@ if (isset($_POST['delete_user'])) {
 include '../../../layouts/admin/header.php';
 include '../../../layouts/admin/sidebar.php';
 
+include_once 'c:/laragon/www/PROJECT/account/helpers.php';
+
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: home");
     exit();
@@ -80,13 +82,13 @@ if ($_SESSION['role'] == 'admin') {
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $user['id']; ?></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <div class="flex items-center">
-                            <?php if ($user['profile_photo']): ?>
-                                <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover mr-3 shadow-lg">
-                            <?php else: ?>
-                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm mr-3 shadow-lg">
-                                    <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
-                                </div>
-                            <?php endif; ?>
+                            <?php 
+                            $photo_path = get_profile_photo_path($user['profile_photo']);
+                            $profile_img = $photo_path ? 
+                                '<img src="' . htmlspecialchars($photo_path) . '" alt="Profile" class="w-10 h-10 rounded-full object-cover mr-3 shadow-lg">' : 
+                                '<div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm mr-3 shadow-lg">' . strtoupper(substr($user['username'], 0, 1)) . '</div>';
+                            echo $profile_img;
+                            ?>
                             <?php echo $user['username']; ?>
                         </div>
                     </td>

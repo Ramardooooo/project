@@ -167,4 +167,3 @@ document.getElementById('mutasiForm').addEventListener('submit', function(e) {
     this.appendChild(hiddenInput);
 });
 </script>
-ja

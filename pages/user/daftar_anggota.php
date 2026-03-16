@@ -28,8 +28,8 @@ if ($user_kk) {
     $anggota_result = mysqli_query($conn, "
         SELECT w.id, w.nama, w.nik, w.jk, w.tanggal_lahir, w.pekerjaan, w.alamat, w.status, w.tempat_lahir, w.goldar, w.agama, w.status_kawin,
             CASE 
-                WHEN w.nama = '$username' THEN 'Kamu'
                 WHEN w.nama = kk.kepala_keluaraga THEN 'Kepala Keluarga'
+                WHEN w.nama = '$username' THEN 'Kamu'
                 ELSE 'Anggota'
             END as peran
         FROM warga w
@@ -149,16 +149,13 @@ if (isset($_POST['export_pdf']) && $user_kk) {
         <!-- Tanda Tangan -->
         <table style="margin-top: 20px; padding: 0 20px;">
             <tr>
-                <td style="width: 33%; text-align: center; padding: 10px;">
-                    <p style="font-size: 10px; margin-bottom: 40px;">Diketahui oleh,</p>
-                    <p style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">KEPALA DESA/KELURAHAN</p>
-                    <p style="font-size: 9px;">( _______________________ )</p>
-                </td>
+
                 <td style="width: 33%; text-align: center; padding: 10px;">
                     <p style="font-size: 10px; margin-bottom: 40px;">Disetujui oleh,</p>
                     <p style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">KETUA RT</p>
                     <p style="font-size: 9px;">( _______________________ )</p>
                 </td>
+                <td></td>
                 <td style="width: 34%; text-align: center; padding: 10px;">
                     <p style="font-size: 10px; margin-bottom: 40px;">Saya yang bertanda tangan,</p>
                     <p style="font-size: 11px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">KEPALA KELUARGA</p>
@@ -205,7 +202,17 @@ include '../../layouts/user/sidebar.php';
                     <h1 class="text-3xl font-bold text-gray-800 mb-2">Daftar Anggota Keluarga</h1>
                     <p class="text-gray-600">Lihat anggota kartu keluarga Anda</p>
                 </div>
-                <!-- Export button removed -->
+                <?php if ($user_kk): ?>
+                <form method="POST">
+                    <button type="submit" name="export_pdf" class="px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition shadow-lg flex items-center">
+                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
+                    </button>
+                </form>
+                <?php endif; ?>
+</xai:function_call >
+
+<xai:function_call name="edit_file">
+<parameter name="path">c:/laragon/www/PROJECT/pages/ketua/laporan.php
             </div>
 
             <?php if ($user_kk): ?>
@@ -257,12 +264,15 @@ include '../../layouts/user/sidebar.php';
                                         <tr class="hover:bg-gray-50 transition">
                                             <td class="px-4 py-3 text-sm text-gray-600"><?php echo $no++; ?></td>
                                             <td class="px-4 py-3">
-                                                <div class="flex items-center">
-                                                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold mr-2 text-sm">
-                                                        <?php echo strtoupper(substr($member['nama'], 0, 1)); ?>
-                                                    </div>
-                                                    <p class="font-semibold text-gray-800 text-sm"><?php echo htmlspecialchars($member['nama']); ?></p>
-                                                </div>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold mr-2 text-sm">
+                                <?php echo strtoupper(substr($member['nama'], 0, 1)); ?>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm"><?php echo htmlspecialchars($member['nama']); ?></p>
+                                <p class="text-xs text-gray-500">NIK: <?php echo htmlspecialchars($member['nik'] ?? '-'); ?></p>
+                            </div>
+                        </div>
                                             </td>
                                             <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($member['nik']); ?></td>
                                             <td class="px-4 py-3 text-sm text-gray-600"><?php echo $member['jk'] === 'L' ? 'L' : 'P'; ?></td>

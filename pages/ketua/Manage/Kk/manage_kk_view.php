@@ -249,7 +249,7 @@ function closeAddModal() {
 
 function openEditModal(id, kepala_keluaraga, no_kk) {
     document.getElementById('edit_id').value = id;
-    document.getElementById('edit_kepala_keluaraga').value = kepala_keluaraga || '';
+document.getElementById('edit_kepala_keluarga').value = kepala_keluaraga || '';
     document.getElementById('edit_no_kk').value = no_kk || '';
     document.getElementById('editModal').classList.remove('hidden');
 }
