@@ -1,11 +1,24 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: auth/login.php");
+    header("Location: login");
     exit();
 }
 
 include '../config/database.php';
+
+if(isset($_POST['delete_account'])){
+
+    $user_id = $_SESSION['user_id'];
+
+    mysqli_query($conn,"DELETE FROM users WHERE id='$user_id'");
+
+    session_destroy();
+
+    header("Location: login.php");
+    exit();
+}
+
 
 $user_id = $_SESSION['user_id'];
 $role = $_SESSION['role'] ?? 'user';
@@ -407,22 +420,28 @@ if (!empty($profile_photo_db)) {
             </div>
 
             <!-- Section 4: Zona Bahaya -->
-            <div class="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
-                <div class="flex items-center mb-4">
-                    <div class="p-3 rounded-full bg-red-100 text-red-600">
-                        <i class="fas fa-exclamation-triangle text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="font-semibold text-red-600">Zona Bahaya</h3>
-                        <p class="text-sm text-gray-500">Tindakan yang tidak dapat dibatalkan</p>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Apakah Anda ingin menghapus akun? Tindakan ini akan menghapus semua data secara permanen.</p>
-                <button onclick="confirm('Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan!')" 
-                        class="px-5 py-2.5 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors">
-                    <i class="fas fa-trash mr-2"></i>Hapus Akun
-                </button>
-            </div>
+<div class="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
+    <div class="flex items-center mb-4">
+        <div class="p-3 rounded-full bg-red-100 text-red-600">
+            <i class="fas fa-exclamation-triangle text-xl"></i>
+        </div>
+        <div class="ml-4">
+            <h3 class="font-semibold text-red-600">Zona Bahaya</h3>
+            <p class="text-sm text-gray-500">Tindakan yang tidak dapat dibatalkan</p>
+        </div>
+    </div>
+
+    <p class="text-gray-600 text-sm mb-4">
+        Apakah Anda ingin menghapus akun? Tindakan ini akan menghapus semua data secara permanen.
+    </p>
+
+    <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan!')">
+        <button type="submit" name="delete_account"
+            class="px-5 py-2.5 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors">
+            <i class="fas fa-trash mr-2"></i>Hapus Akun
+        </button>
+    </form>
+</div>
 
             <!-- Footer -->
             <div class="mt-8 text-center text-sm text-gray-400">
