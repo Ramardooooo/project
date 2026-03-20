@@ -1,6 +1,6 @@
-🏘️ RT/RW Management System
+Lurahgo adalah Management System RT/RW
 
-Website ini adalah sistem manajemen RT/RW berbasis web untuk mengelola data warga, administrasi, dan aktivitas lingkungan secara digital.
+Lurahgo atau Website ini adalah sistem manajemen RT/RW berbasis web untuk mengelola data warga, administrasi, dan aktivitas lingkungan secara digital.
 
 
 📌 Fitur Utama:
