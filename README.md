@@ -38,7 +38,7 @@ project/
 ⚙️ Cara Install
 
 1. Clone repository
-   git clone https://github.com/username/nama-project.git
+   git clone https://github.com/Ramardooooo/project.git
 
 2. Pindahkan ke folder server
    - XAMPP → htdocs
