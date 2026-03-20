@@ -158,6 +158,6 @@ style="width:256px;">
     <div id="sidebarFooter"
     class="absolute bottom-4 left-4 right-4 text-center text-xs text-gray-400">
         <div>Version 1.2</div>
-        <div>&copy; 2025 Lurahgo.id</div>
+        <div>&copy; 2026 Lurahgo.id</div>
     </div>
 </div>

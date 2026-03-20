@@ -175,8 +175,5 @@ $wilayah_data = mysqli_fetch_assoc($laporan_wilayah);
         </div>
     </div>
 </div>
-
-<?php include '../../layouts/admin/footer.php'; ?>
-
 </body>
 </html>
