@@ -20,21 +20,6 @@ Website ini adalah sistem manajemen RT/RW berbasis web untuk mengelola data warg
 - Database: MySQL
 - Server: Apache (XAMPP / Laragon)
 
-
-📂 Struktur Folder:
-project/
- ┣ account/     → halaman akun user
- ┣ api/         → endpoint API untuk like dan notif
- ┣ auth/        → sistem login & register
- ┣ beranda/     → dashboard / homepage
- ┣ config/      → konfigurasi database
- ┣ layouts/     → template UI (header, footer, dll)
- ┣ pages/       → halaman utama sistem
- ┣ static/      → CSS, JS, assets
- ┣ uploads/     → file upload user
- ┣ vendor/      → library tambahan (composer, dll)
-
-
 ⚙️ Cara Install
 
 1. Clone repository
