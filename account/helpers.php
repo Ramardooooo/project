@@ -1,32 +1,33 @@
 <?php
-function get_profile_photo_path($photo_path = '') {
-    $default = 'account/profiles/default-avatar.png';
+function get_profile_photo_url($photo_path = '') {
     if (empty($photo_path)) {
-        return $default;
+        return '';
     }
     
-    // Extract filename from DB path like 'uploads/profiles/file.png' → 'file.png'
     $filename = basename($photo_path);
     
-    // Actual files are deep nested - construct direct web path
-    $actual_path = 'account/account/account/uploads/profiles/' . $filename;
-    
-    // Verify if exists (server path)
-    $server_paths = [
-        __DIR__ . '/account/account/account/uploads/profiles/' . $filename,
-        __DIR__ . '/../account/account/account/uploads/profiles/' . $filename,
-        __DIR__ . '/../../account/account/account/uploads/profiles/' . $filename,
-        'account/account/account/uploads/profiles/' . $filename,
+    // Common locations relative to web root
+    $possible_web_paths = [
+        'uploads/profiles/' . $filename,
+        'account/account/uploads/profiles/' . $filename,
+        'account/uploads/profiles/' . $filename,
+        $photo_path  // fallback to raw DB
     ];
     
-    $exists = false;
-    foreach ($server_paths as $sp) {
-        if (file_exists($sp)) {
-            $exists = true;
-            break;
+    $base_dir = dirname(__DIR__);  // project root from account/
+    
+    foreach ($possible_web_paths as $web_path) {
+        $server_path = $base_dir . '/' . $web_path;
+        if (file_exists($server_path)) {
+            return $web_path;
         }
     }
     
-    return $exists ? $actual_path : $default;
+    return '';  // No image found, let HTML use placeholder
+}
+
+function get_profile_photo_path($photo_path = '') {
+    $url = get_profile_photo_url($photo_path);
+    return $url ?: 'https://via.placeholder.com/120/3B82F6/FFFFFF?text=PP';
 }
 ?>

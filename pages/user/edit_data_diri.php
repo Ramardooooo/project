@@ -71,7 +71,7 @@ if ($check_result && mysqli_num_rows($check_result) > 0) {
     $existing_data = mysqli_fetch_assoc($check_result);
 } else {
     // Redirect if no data to edit
-    header("Location: input_data_diri.php");
+    header("Location: data_diri");
     exit();
 }
 

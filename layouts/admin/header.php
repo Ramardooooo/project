@@ -1,4 +1,5 @@
 <?php if (!session_id()) session_start(); ?>
+<?php include __DIR__ . '/../../account/helpers.php'; ?>
 <?php
 $user_id = $_SESSION['user_id'] ?? null;
 $user = null;
@@ -63,7 +64,7 @@ if ($user_id) {
             <!-- Profile -->
             <div class="flex items-center space-x-3 bg-gray-50 rounded-full px-4 py-2 border border-gray-200">
                 <?php if ($user && $user['profile_photo']): ?>
-                    <img src="../../<?php echo $user['profile_photo']; ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                    <img src="<?php echo get_profile_photo_url($user['profile_photo']); ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
                 <?php else: ?>
                     <div class="w-10 h-10 rounded-full border-2 border-gray-300 bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-lg">
                         <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 1)); ?>

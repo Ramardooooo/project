@@ -1,3 +1,4 @@
+
 <div id="mainContent" class="ml-64 p-8 bg-white min-h-screen transition-all duration-300">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Manajemen Kartu Keluarga</h1>
@@ -33,7 +34,8 @@
     </div>
 
     <!-- KK Table -->
-    <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 overflow-hidden">
+<div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-gray-50 to-gray-100/50">
@@ -124,20 +126,15 @@
                 </tbody>
             </table>
         </div>
+        
+        <?php 
+    $items_per_page = 10;
+    $total_pages = ceil($total / $items_per_page);
+    $total = $total;
+    $extra_params = !empty($search) ? '&search=' . urlencode($search) : '';
+    include 'partials/pagination.php';
+        ?>
     </div>
-
-    <!-- Pagination -->
-    <?php if ($total_pages > 1): ?>
-    <div class="mt-6 flex justify-center">
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium <?php echo $i == $page ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:bg-gray-50'; ?>">
-                    <?php echo $i; ?>
-                </a>
-            <?php endfor; ?>
-        </nav>
-    </div>
-    <?php endif; ?>
 </div>
 
 <!-- Add Modal -->

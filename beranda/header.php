@@ -55,7 +55,7 @@ if ($user_id) {
                 <div class="relative">
                     <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors duration-300">
                         <?php if ($user && $user['profile_photo']): ?>
-                            <img src="../<?php echo $user['profile_photo']; ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
+                            <img src="<?php echo $user['profile_photo']; ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
                         <?php else: ?>
                             <img src="https://via.placeholder.com/32x32/3B82F6/FFFFFF?text=<?php echo strtoupper(substr($_SESSION['username'], 0, 1)); ?>" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-blue-200">
                         <?php endif; ?>

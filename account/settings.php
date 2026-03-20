@@ -8,17 +8,12 @@ if (!isset($_SESSION['user_id'])) {
 include '../config/database.php';
 
 if(isset($_POST['delete_account'])){
-
     $user_id = $_SESSION['user_id'];
-
     mysqli_query($conn,"DELETE FROM users WHERE id='$user_id'");
-
     session_destroy();
-
     header("Location: login.php");
     exit();
 }
-
 
 $user_id = $_SESSION['user_id'];
 $role = $_SESSION['role'] ?? 'user';
@@ -47,22 +42,17 @@ if (isset($_POST['update_profile'])) {
         if (in_array($ext, $allowed)) {
             // Delete old photo first
             if (!empty($old_photo)) {
-                $old_photo_path = $old_photo;
-                if (strpos($old_photo_path, 'account/') === 0) {
-                    $old_photo_path = $old_photo_path;
-                } else {
-                    $old_photo_path = 'account/' . $old_photo;
-                }
-                if (file_exists($old_photo_path) && is_file($old_photo_path)) {
+                $old_photo_path = '../' . $old_photo;
+                if (file_exists($old_photo_path)) {
                     unlink($old_photo_path);
                 }
             }
             
             $new_filename = 'profile_' . $user_id . '_' . time() . '.' . $ext;
-            $upload_path = 'account/uploads/profiles/' . $new_filename;
+            $upload_path = '../uploads/profiles/' . $new_filename;
 
-            if (!is_dir('account/uploads/profiles')) {
-                mkdir('account/uploads/profiles', 0777, true);
+            if (!is_dir('../uploads/profiles')) {
+                mkdir('../uploads/profiles', 0777, true);
             }
 
             if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $upload_path)) {
@@ -158,29 +148,9 @@ if ($role === 'admin') {
     $dashboard_name = 'Edit Profile Kamu!';
 }
 
-// Simple profile photo path - just use it directly
-$profile_photo_db = $user['profile_photo'] ?? '';
+include_once 'helpers.php';
 
-// Try multiple possible paths
-$profile_photo_url = '';
-if (!empty($profile_photo_db)) {
-    // Try direct path first
-    if (file_exists($profile_photo_db)) {
-        $profile_photo_url = $profile_photo_db;
-    } 
-    // Try with account/ prefix
-    elseif (file_exists('../../account/' . $profile_photo_db)) {
-        $profile_photo_url = 'account/' . $profile_photo_db;
-    }
-    // Try with account// prefix (double)
-    elseif (file_exists('../../account/account/' . $profile_photo_db)) {
-        $profile_photo_url = '../../account/account/' . $profile_photo_db;
-    }
-    // If file doesn't exist but db has value, just use it as-is
-    else {
-        $profile_photo_url = $profile_photo_db;
-    }
-}
+$profile_photo_url = get_profile_photo_url($user['profile_photo'] ?? '');
 ?>
 
 <!DOCTYPE html>
@@ -191,9 +161,38 @@ if (!empty($profile_photo_db)) {
     <title>Pengaturan Akun - Lurahgo.id</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .cropper-modal .cropper-container {
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+        .cropper-crop-box {
+            border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+        }
+        #cropper-modal {
+            z-index: 10000;
+        }
+        .crop-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .crop-btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .crop-btn:hover { background: #f3f4f6; }
+        .crop-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex">
@@ -284,25 +283,62 @@ if (!empty($profile_photo_db)) {
 
                 <form method="POST" enctype="multipart/form-data" class="space-y-5">
                     <div class="flex items-start gap-6">
-                        <div class="flex-shrink-0">
-                            <div class="relative">
-                                <?php if (!empty($profile_photo_url)): ?>
-                                    <img id="profile-preview" 
-                                         src="<?php echo htmlspecialchars($profile_photo_url); ?>"
-                                         alt="Profile Photo"
-                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-sm">
-                                <?php else: ?>
-                                    <img id="profile-preview" 
-                                         src="https://via.placeholder.com/120/3B82F6/FFFFFF?text=<?php echo strtoupper(substr($user['username'], 0, 1)); ?>"
-                                         alt="Profile Photo"
-                                         class="w-24 h-24 rounded-full object-cover border-4 border-gray-100 shadow-sm">
-                                <?php endif; ?>
-                                <label for="profile_photo" class="absolute bottom-0 right-0 bg-gray-800 p-2 rounded-full cursor-pointer hover:bg-gray-700 transition-colors shadow-lg">
-                                    <i class="fas fa-camera text-white text-sm"></i>
+<div class="flex-shrink-0">
+                            <div class="cropper-container relative">
+                                <img id="cropper-image" 
+                                     src="<?php echo htmlspecialchars($profile_photo_url ?: 'https://via.placeholder.com/200x200/6B7280/E5E7EB?text=?'); ?>"
+                                     alt="Image to crop"
+                                     style="display: none;">
+                                <div id="profile-preview-cropped" class="mx-auto mb-3 w-24 h-24 border-4 border-gray-100 shadow-sm rounded-full overflow-hidden">
+                                    <?php if (!empty($profile_photo_url)): ?>
+                                        <img src="<?php echo htmlspecialchars($profile_photo_url); ?>" alt="Current profile" class="w-full h-full object-cover">
+                                    <?php else: ?>
+                                        <div class="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 font-bold text-lg">
+                                            <?php echo strtoupper(substr($user['username'] ?? 'U', 0, 1)); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <label for="profile_photo" class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow-lg cursor-pointer border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all z-10">
+                                    <i class="fas fa-camera text-gray-700 text-sm"></i>
                                 </label>
                                 <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="hidden">
                             </div>
-                            <p class="text-xs text-gray-500 text-center mt-2">Klik icon kamera untuk ganti foto</p>
+                            <p class="text-xs text-gray-500 text-center mt-2">Klik kamera untuk crop foto profil</p>
+<div id="cropper-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[10000] hidden overflow-y-auto" style="padding: 1rem;">
+                                <div class="bg-white rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-auto">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h3 class="text-lg font-bold">Crop Foto Profil</h3>
+                                        <button onclick="closeCropModal()" class="text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-times text-xl"></i>
+                                        </button>
+                                    </div>
+                                    <div class="cropper-container mx-auto mb-4" style="width: 100%; max-width: 400px; max-height: 400px;">
+                                        <img id="cropper-modal-image" alt="Crop image" style="max-width: 100%; height: auto;">
+                                    </div>
+                                    <div class="crop-controls flex flex-wrap gap-2 justify-center mb-4">
+                                        <button type="button" class="crop-btn active" data-aspect="1">1:1</button>
+                                        <button type="button" class="crop-btn" data-aspect="1.333">4:3</button>
+                                        <button type="button" class="crop-btn" onclick="cropperModal.zoom(0.1)"><i class="fas fa-plus"></i></button>
+                                        <button type="button" class="crop-btn" onclick="cropperModal.zoom(-0.1)"><i class="fas fa-minus"></i></button>
+                                        <button type="button" class="crop-btn" onclick="cropperModal.rotate(90)"><i class="fas fa-redo"></i></button>
+                                        <button type="button" class="crop-btn" onclick="resetCropModal()">Reset</button>
+                                    </div>
+                                    <div class="flex gap-3 justify-center">
+                                        <button onclick="closeCropModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Batal</button>
+                                        <button onclick="applyCrop()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Terapkan Crop</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="crop-controls flex flex-wrap gap-1 mt-3 justify-center" id="crop-controls" style="display: none;">
+                                <button type="button" class="crop-btn active text-xs px-2 py-1" data-aspect="1">1:1</button>
+                                <button type="button" class="crop-btn text-xs px-2 py-1" data-aspect="1.333">4:3</button>
+                                <button type="button" class="crop-btn text-xs px-2 py-1" data-aspect="1.777">16:9</button>
+                                <button type="button" class="crop-btn text-xs p-1" onclick="if(window.cropper) window.cropper.zoom(0.1)"><i class="fas fa-plus text-xs"></i></button>
+                                <button type="button" class="crop-btn text-xs p-1" onclick="if(window.cropper) window.cropper.zoom(-0.1)"><i class="fas fa-minus text-xs"></i></button>
+                                <button type="button" class="crop-btn text-xs p-1" onclick="if(window.cropper) window.cropper.rotate(90)"><i class="fas fa-redo text-xs"></i></button>
+                                <button type="button" class="crop-btn text-xs px-2 py-1" onclick="resetCrop()">Reset</button>
+                            </div>
+                            <p class="text-xs text-gray-500 text-center mt-2">Klik kamera → crop manual dengan drag & tombol → simpan</p>
                         </div>
                         <div class="flex-1 space-y-4">
                             <div class="grid md:grid-cols-2 gap-4">
@@ -356,7 +392,6 @@ if (!empty($profile_photo_db)) {
                                    class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                    placeholder="Masukkan kata sandi lama">
                         </div>
-                        <div></div>
                     </div>
                     <div class="grid md:grid-cols-2 gap-4">
                         <div>
@@ -420,28 +455,28 @@ if (!empty($profile_photo_db)) {
             </div>
 
             <!-- Section 4: Zona Bahaya -->
-<div class="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
-    <div class="flex items-center mb-4">
-        <div class="p-3 rounded-full bg-red-100 text-red-600">
-            <i class="fas fa-exclamation-triangle text-xl"></i>
-        </div>
-        <div class="ml-4">
-            <h3 class="font-semibold text-red-600">Zona Bahaya</h3>
-            <p class="text-sm text-gray-500">Tindakan yang tidak dapat dibatalkan</p>
-        </div>
-    </div>
+            <div class="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
+                <div class="flex items-center mb-4">
+                    <div class="p-3 rounded-full bg-red-100 text-red-600">
+                        <i class="fas fa-exclamation-triangle text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="font-semibold text-red-600">Zona Bahaya</h3>
+                        <p class="text-sm text-gray-500">Tindakan yang tidak dapat dibatalkan</p>
+                    </div>
+                </div>
 
-    <p class="text-gray-600 text-sm mb-4">
-        Apakah Anda ingin menghapus akun? Tindakan ini akan menghapus semua data secara permanen.
-    </p>
+                <p class="text-gray-600 text-sm mb-4">
+                    Apakah Anda ingin menghapus akun? Tindakan ini akan menghapus semua data secara permanen.
+                </p>
 
-    <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan!')">
-        <button type="submit" name="delete_account"
-            class="px-5 py-2.5 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors">
-            <i class="fas fa-trash mr-2"></i>Hapus Akun
-        </button>
-    </form>
-</div>
+                <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan!')">
+                    <button type="submit" name="delete_account"
+                            class="px-5 py-2.5 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-trash mr-2"></i>Hapus Akun
+                    </button>
+                </form>
+            </div>
 
             <!-- Footer -->
             <div class="mt-8 text-center text-sm text-gray-400">

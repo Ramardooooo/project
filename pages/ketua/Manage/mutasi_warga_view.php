@@ -24,8 +24,20 @@
 
     <!-- Mutasi History -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Riwayat Mutasi</h3>
+<div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <h3 class="text-lg font-medium text-gray-900">Riwayat Mutasi (<?php echo number_format($total_mutasi ?? 0); ?> total)</h3>
+            <!-- Search Form -->
+            <form method="GET" class="flex gap-3 flex-1 max-w-md">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($search ?? ''); ?>" placeholder="Cari nama, NIK, jenis mutasi, keterangan..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center whitespace-nowrap">
+                    <i class="fas fa-search mr-2"></i>Cari
+                </button>
+                <?php if (!empty($search ?? '')): ?>
+                <a href="?page=1" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center whitespace-nowrap text-sm">
+                    <i class="fas fa-times mr-1"></i>Clear
+                </a>
+                <?php endif; ?>
+            </form>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -72,12 +84,46 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination -->
+        <?php if (($total_pages ?? 1) > 1): ?>
+        <div class="px-6 py-6 bg-gray-50 border-t border-gray-200 flex items-center justify-center space-x-2 flex-wrap gap-1">
+            <?php if (($page ?? 1) > 1): ?>
+                <a href="?page=1<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center text-sm shadow-sm whitespace-nowrap">
+                    <i class="fas fa-angle-double-left mr-1"></i>1
+                </a>
+                <a href="?page=<?php echo ($page - 1); ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center text-sm shadow-sm">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            <?php endif; ?>
+
+            <?php 
+            $start = max(1, ($page ?? 1) - 2);
+            $end = min(($total_pages ?? 1), ($page ?? 1) + 2);
+            for ($i = $start; $i <= $end; $i++): ?>
+                <a href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="px-4 py-2 <?php echo $i == ($page ?? 1) ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'; ?> rounded-lg text-sm font-medium shadow-sm">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if (($page ?? 1) < ($total_pages ?? 1)): ?>
+                <a href="?page=<?php echo ($page + 1); ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center text-sm shadow-sm">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="?page=<?php echo $total_pages ?? 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center text-sm shadow-sm whitespace-nowrap">
+                    <?php echo $total_pages ?? 1; ?> <i class="fas fa-angle-double-right ml-1"></i>
+                </a>
+            <?php endif; ?>
+            
+            <span class="text-sm text-gray-500 px-3 py-2">Hal. <?php echo $page ?? 1; ?> dari <?php echo $total_pages ?? 1; ?></span>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 
 <!-- Mutasi Modal -->
 <div id="mutasiModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+<div class="flex items-center justify-center min-h-screen px-4 py-8"><div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto border border-gray-200">
         <div class="mt-3">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-medium text-gray-900" id="modalTitle">Mutasi Warga</h3>

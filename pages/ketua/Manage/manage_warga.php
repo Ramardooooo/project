@@ -479,18 +479,12 @@ class="text-blue-600 hover:text-blue-800 mr-3">
 </div>
 </div>
 
-    <!-- Pagination -->
-    <?php if ($total_pages > 1): ?>
-    <div class="mt-6 flex justify-center">
-        <nav class="flex gap-2">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" class="px-4 py-2 border <?php echo $i == $page ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'; ?> rounded">
-                    <?php echo $i; ?>
-                </a>
-            <?php endfor; ?>
-        </nav>
-    </div>
-    <?php endif; ?>
+<?php 
+    $items_per_page = 10;
+    $extra_params = !empty($search) ? '&search=' . urlencode($search) : '';
+    include 'partials/pagination.php';
+    ?>
+
 </div>
 
 <!-- Add Modal -->

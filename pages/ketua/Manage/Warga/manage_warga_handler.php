@@ -4,6 +4,7 @@ if (ob_get_level() === 0) {
     ob_start();
 }
 
+$total = $total_row['total'];
 $search = $_GET['search'] ?? '';
 $page = (int)($_GET['page'] ?? 1);
 $limit = 10;
@@ -304,7 +305,7 @@ mysqli_stmt_execute($count_stmt);
 $count_result = mysqli_stmt_get_result($count_stmt);
 $total_row = mysqli_fetch_assoc($count_result);
 $total = $total_row['total'];
-$total_pages = ceil($total / $limit);
+
 
 $rt_result = mysqli_query($conn, "SELECT id, nama_rt FROM rt");
 $rw_result = mysqli_query($conn, "SELECT id, name FROM rw");

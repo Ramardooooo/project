@@ -54,8 +54,8 @@ $warga_tidak_aktif = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as 
 $warga_meninggal = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM warga WHERE status = 'meninggal'"))['total'];
 $warga_pindah = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM warga WHERE status = 'pindah'"))['total'];
 
-// Get latest mutasi
-$latest_mutasi = mysqli_query($conn, "SELECT mw.*, w.nama FROM mutasi_warga mw LEFT JOIN warga w ON mw.warga_id = w.id ORDER BY mw.tanggal_mutasi DESC LIMIT 5");
+// Get latest mutasi (preview)
+$latest_mutasi = mysqli_query($conn, "SELECT mw.*, COALESCE(mw.nama_warga, w.nama) as nama_warga, w.nik FROM mutasi_warga mw LEFT JOIN warga w ON mw.warga_id = w.id ORDER BY mw.tanggal_mutasi DESC LIMIT 5");
 
 // Get gallery count
 $total_gallery = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM gallery"))['total'];
@@ -472,16 +472,13 @@ $warga_baru_bulan_ini = 0;
                 Riwayat Mutasi Terbaru
             </h3>
             
+
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th class="px-6 py-3">Nama Warga</th>
                             <th class="px-6 py-3">Jenis Mutasi</th>
-                            <th class="px-6 py-3">Tanggal</th>
-                            <th class="px-6 py-3">Keterangan</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <?php if (mysqli_num_rows($latest_mutasi) > 0): ?>
                             <?php while ($mutasi = mysqli_fetch_assoc($latest_mutasi)): ?>
@@ -521,7 +518,10 @@ $warga_baru_bulan_ini = 0;
                     </tbody>
                 </table>
             </div>
+
         </div>
+</body>
+</html>
 
 </body>
 </html>

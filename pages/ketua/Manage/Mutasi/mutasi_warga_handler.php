@@ -109,11 +109,52 @@ $warga_query = "SELECT w.*, rt.nama_rt, rw.name as nama_rw FROM warga w
                 ORDER BY w.nama";
 $warga_result = mysqli_query($conn, $warga_query);
 
-$mutasi_query = "SELECT m.*, COALESCE(m.nama_warga, w.nama) as nama, w.nik, w.alamat, w.tanggal_lahir, w.jenis_kelamin, rt.nama_rt, rw.name as nama_rw
+$search = $_GET['search'] ?? '';
+$page = (int)($_GET['page'] ?? 1);
+$limit = 10;
+$offset = ($page - 1) * $limit;
+
+// Fixed SQL syntax and use prepared statements
+$count_query = "SELECT COUNT(*) as total FROM mutasi_warga m 
+                LEFT JOIN warga w ON m.warga_id = w.id 
+                LEFT JOIN rt ON w.rt = rt.id 
+                LEFT JOIN rw ON w.rw = rw.id 
+                WHERE 1=1";
+$mutasi_base_query = "SELECT m.*, COALESCE(m.nama_warga, w.nama) as nama, w.nik, w.alamat, w.tanggal_lahir, w.jenis_kelamin, rt.nama_rt, rw.name as nama_rw
                  FROM mutasi_warga m
                  LEFT JOIN warga w ON m.warga_id = w.id
                  LEFT JOIN rt ON w.rt = rt.id
-                 LEFT JOIN rw ON w.rw = rw.id
-                 ORDER BY m.tanggal_mutasi DESC LIMIT 50";
-$mutasi_result = mysqli_query($conn, $mutasi_query);
+                 LEFT JOIN rw ON w.rw = rw.id 
+                 WHERE 1=1";
+
+$params = [];
+$types = '';
+
+if (!empty($search)) {
+    $search_param = "%$search%";
+    $count_query .= " AND (m.nama_warga LIKE ? OR w.nik LIKE ? OR m.keterangan LIKE ? OR m.jenis_mutasi LIKE ?)";
+    $mutasi_base_query .= " AND (m.nama_warga LIKE ? OR w.nik LIKE ? OR m.keterangan LIKE ? OR m.jenis_mutasi LIKE ?)";
+    $params = [$search_param, $search_param, $search_param, $search_param];
+    $types = "ssss";
+}
+
+$count_stmt = mysqli_prepare($conn, $count_query);
+if (!empty($params)) {
+    mysqli_stmt_bind_param($count_stmt, $types, ...$params);
+}
+mysqli_stmt_execute($count_stmt);
+$count_result = mysqli_stmt_get_result($count_stmt);
+$total_row = mysqli_fetch_assoc($count_result);
+$total_mutasi = $total_row['total'];
+$total_pages = ceil($total_mutasi / $limit);
+
+// Main query
+$mutasi_query = $mutasi_base_query . " ORDER BY m.tanggal_mutasi DESC LIMIT ? OFFSET ?";
+$params = array_merge($params, [$limit, $offset]);
+$types .= "ii";
+
+$mutasi_stmt = mysqli_prepare($conn, $mutasi_query);
+mysqli_stmt_bind_param($mutasi_stmt, $types, ...$params);
+mysqli_stmt_execute($mutasi_stmt);
+$mutasi_result = mysqli_stmt_get_result($mutasi_stmt);
 ?>

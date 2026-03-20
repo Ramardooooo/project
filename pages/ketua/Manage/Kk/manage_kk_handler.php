@@ -88,7 +88,7 @@ mysqli_stmt_execute($count_stmt);
 $count_result = mysqli_stmt_get_result($count_stmt);
 $total_row = mysqli_fetch_assoc($count_result);
 $total = $total_row['total'];
-$total_pages = ceil($total / $limit);
+
 
 if (isset($_POST['add_kk'])) {
     $no_kk = mysqli_real_escape_string($conn, $_POST['no_kk']);

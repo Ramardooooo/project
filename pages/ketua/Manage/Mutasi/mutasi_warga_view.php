@@ -24,8 +24,18 @@
 
     <!-- Mutasi History -->
     <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Riwayat Mutasi</h3>
+<div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">Riwayat Mutasi (<?php echo $total_mutasi; ?> total)</h3>
+            <!-- Search Form -->
+            <form method="GET" class="flex gap-3 flex-1 max-w-md">
+                <input type="text" name="search" value="<?php echo htmlspecialchars($search ?? ''); ?>" placeholder="Cari nama, NIK, jenis mutasi, keterangan..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center whitespace-nowrap">
+                    <i class="fas fa-search mr-2"></i>Cari
+                </button>
+                <?php if (!empty($search)): ?>
+                <a href="mutasi_warga.php" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center whitespace-nowrap">Clear</a>
+                <?php endif; ?>
+            </form>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -59,12 +69,19 @@
                 </tbody>
             </table>
         </div>
+
+        <?php 
+        $items_per_page = 10;
+        $total = $total_mutasi;
+        $extra_params = !empty($search) ? '&search=' . urlencode($search) : '';
+        include 'partials/pagination.php';
+        ?>
     </div>
 </div>
 
 <!-- Mutasi Modal -->
 <div id="mutasiModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+<div class="flex items-center justify-center min-h-screen px-4 py-8"><div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto border border-gray-200">
         <div class="mt-3">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-medium text-gray-900" id="modalTitle">Mutasi Warga</h3>
