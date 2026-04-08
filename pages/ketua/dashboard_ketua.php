@@ -119,7 +119,7 @@ $warga_baru_bulan_ini = 0;
 <p class="text-gray-500 text-sm font-medium">Total Warga</p>
                         <p class="text-4xl font-bold text-gray-800 mt-2"><?php echo number_format($total_warga); ?></p>
                         <p class="text-green-500 text-sm mt-2 font-semibold">
-                            <i class="fas fa-arrow-up mr-1"></i>+<?php echo $warga_baru_bulan_ini; ?> bulan ini
++<?php echo $warga_baru_bulan_ini; ?> bulan ini
                         </p>
                     </div>
                     <div class="w-16 h-16 gradient-blue rounded-2xl flex items-center justify-center shadow-lg">
@@ -134,7 +134,7 @@ $warga_baru_bulan_ini = 0;
                         <p class="text-gray-500 text-sm font-medium">Total Kepala Keluarga</p>
                         <p class="text-4xl font-bold text-gray-800 mt-2"><?php echo number_format($total_kk); ?></p>
                         <p class="text-blue-500 text-sm mt-2 font-semibold">
-                            <i class="fas fa-home mr-1"></i>KK Terdaftar
+KK Terdaftar
                         </p>
                     </div>
                     <div class="w-16 h-16 gradient-green rounded-2xl flex items-center justify-center shadow-lg">
@@ -177,7 +177,7 @@ $warga_baru_bulan_ini = 0;
         <!-- Charts and Stats Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Gender Statistics -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div class="card-hover stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100 animate-slide-left" style="animation-delay: 0.1s">
                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                     <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-3">
                         <i class="fas fa-venus-mars text-blue-600"></i>
@@ -189,8 +189,8 @@ $warga_baru_bulan_ini = 0;
                     <div class="relative pt-1">
                         <div class="flex mb-2 items-center justify-between">
                             <div class="text-left">
-                                <span class="text-xs font-semibold inline-block text-blue-600">
-                                    <i class="fas fa-mars mr-1"></i>Laki-laki
+<span class="text-xs font-semibold inline-block text-blue-600">
+                                    Laki-laki
                                 </span>
                             </div>
                             <div class="text-right">
@@ -205,8 +205,8 @@ $warga_baru_bulan_ini = 0;
                     <div class="relative pt-1">
                         <div class="flex mb-2 items-center justify-between">
                             <div class="text-left">
-                                <span class="text-xs font-semibold inline-block text-pink-600">
-                                    <i class="fas fa-venus mr-1"></i>Perempuan
+<span class="text-xs font-semibold inline-block text-pink-600">
+                                    Perempuan
                                 </span>
                             </div>
                             <div class="text-right">
@@ -239,7 +239,7 @@ $warga_baru_bulan_ini = 0;
             </div>
 
             <!-- Mutasi Statistics -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div class="card-hover stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100 animate-slide-left" style="animation-delay: 0.2s">
                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                     <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mr-3">
                         <i class="fas fa-exchange-alt text-green-600"></i>
@@ -299,108 +299,12 @@ $warga_baru_bulan_ini = 0;
             </div>
         </div>
 
-        <!-- Status Distribution and Quick Actions -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Warga Status -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                    <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mr-3">
-                        <i class="fas fa-chart-pie text-indigo-600"></i>
-                    </div>
-                    Status Warga
-                </h3>
-                
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-green-50">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                            <span class="text-gray-700">Aktif</span>
-                        </div>
-                        <span class="font-bold text-green-600"><?php echo $warga_aktif; ?></span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-yellow-50">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                            <span class="text-gray-700">Tidak Aktif</span>
-                        </div>
-                        <span class="font-bold text-yellow-600"><?php echo $warga_tidak_aktif; ?></span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-gray-500 rounded-full mr-3"></div>
-                            <span class="text-gray-700">Meninggal</span>
-                        </div>
-                        <span class="font-bold text-gray-600"><?php echo $warga_meninggal; ?></span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-red-50">
-                        <div class="flex items-center">
-                            <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-                            <span class="text-gray-700">Pindah</span>
-                        </div>
-                        <span class="font-bold text-red-600"><?php echo $warga_pindah; ?></span>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Quick Actions -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 lg:col-span-2">
-                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                    <div class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center mr-3">
-                        <i class="fas fa-bolt text-yellow-600"></i>
-                    </div>
-                    Akses Cepat
-                </h3>
-                
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <a href="manage_warga" class="group flex flex-col items-center p-4 bg-gradient-to-b from-blue-50 to-blue-100 rounded-xl border border-blue-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fas fa-users text-white text-xl"></i>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-700 text-center">Kelola Warga</span>
-                    </a>
-                    
-                    <a href="manage_kk" class="group flex flex-col items-center p-4 bg-gradient-to-b from-green-50 to-green-100 rounded-xl border border-green-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fas fa-home text-white text-xl"></i>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-700 text-center">Kelola KK</span>
-                    </a>
-                    
-                    <a href="manage_wilayah" class="group flex flex-col items-center p-4 bg-gradient-to-b from-purple-50 to-purple-100 rounded-xl border border-purple-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fas fa-map text-white text-xl"></i>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-700 text-center">Kelola Wilayah</span>
-                    </a>
-                    
-                    <a href="mutasi_warga" class="group flex flex-col items-center p-4 bg-gradient-to-b from-orange-50 to-orange-100 rounded-xl border border-orange-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fas fa-exchange-alt text-white text-xl"></i>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-700 text-center">Mutasi Warga</span>
-                    </a>
-                    
-                    <a href="laporan" class="group flex flex-col items-center p-4 bg-gradient-to-b from-red-50 to-red-100 rounded-xl border border-red-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fas fa-chart-bar text-white text-xl"></i>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-700 text-center">Laporan</span>
-                    </a>
-                    
-                    <a href="pengumuman" class="group flex flex-col items-center p-4 bg-gradient-to-b from-indigo-50 to-indigo-100 rounded-xl border border-indigo-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fas fa-bullhorn text-white text-xl"></i>
-                        </div>
-                        <span class="text-sm font-semibold text-gray-700 text-center">Pengumuman</span>
-                    </a>
-                </div>
-            </div>
-        </div>
 
         <!-- Recent Data Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Recent Activities -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div class="card-hover stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100 animate-slide-left" style="animation-delay: 0.3s">
                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                     <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-3">
                         <i class="fas fa-history text-blue-600"></i>
@@ -434,7 +338,7 @@ $warga_baru_bulan_ini = 0;
             </div>
 
             <!-- Recent Announcements -->
-            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div class="card-hover stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100 animate-slide-left" style="animation-delay: 0.4s">
                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                     <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center mr-3">
                         <i class="fas fa-bullhorn text-red-600"></i>
@@ -464,21 +368,25 @@ $warga_baru_bulan_ini = 0;
         </div>
 
         <!-- Latest Mutasi -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mb-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mb-8 animate-fade-in">
             <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                 <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mr-3">
                     <i class="fas fa-list text-green-600"></i>
                 </div>
                 Riwayat Mutasi Terbaru
             </h3>
+
             
 
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3">Nama Warga</th>
+                        <th class="px-6 py-3">Nama Warga</th>
                             <th class="px-6 py-3">Jenis Mutasi</th>
+                            <th class="px-6 py-3">Tanggal</th>
+                            <th class="px-6 py-3">Keterangan</th>
+
                     <tbody>
                         <?php if (mysqli_num_rows($latest_mutasi) > 0): ?>
                             <?php while ($mutasi = mysqli_fetch_assoc($latest_mutasi)): ?>
@@ -518,10 +426,65 @@ $warga_baru_bulan_ini = 0;
                     </tbody>
                 </table>
             </div>
-
         </div>
-</body>
-</html>
+
+        <!-- Akses Cepat - Moved to Paling Bawah (Original Design) -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mt-20 animate-fade-in">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <div class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center mr-3">
+                    <i class="fas fa-bolt text-yellow-600"></i>
+                </div>
+                Akses Cepat
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <a href="Manage/manage_warga.php" class="group flex flex-col items-center p-4 bg-gradient-to-b from-blue-50 to-blue-100 rounded-xl border border-blue-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-users text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700 text-center">Kelola Warga</span>
+                </a>
+                
+                <a href="Manage/manage_kk.php" class="group flex flex-col items-center p-4 bg-gradient-to-b from-green-50 to-green-100 rounded-xl border border-green-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-home text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700 text-center">Kelola KK</span>
+                </a>
+                
+                <a href="Manage/manage_wilayah.php" class="group flex flex-col items-center p-4 bg-gradient-to-b from-purple-50 to-purple-100 rounded-xl border border-purple-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-map text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700 text-center">Kelola Wilayah</span>
+                </a>
+                
+                <a href="Manage/mutasi_warga.php" class="group flex flex-col items-center p-4 bg-gradient-to-b from-orange-50 to-orange-100 rounded-xl border border-orange-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-exchange-alt text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700 text-center">Mutasi Warga</span>
+                </a>
+                
+                <a href="laporan.php" class="group flex flex-col items-center p-4 bg-gradient-to-b from-red-50 to-red-100 rounded-xl border border-red-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-bar text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700 text-center">Laporan</span>
+                </a>
+                
+                <a href="../admin/announcements.php" class="group flex flex-col items-center p-4 bg-gradient-to-b from-indigo-50 to-indigo-100 rounded-xl border border-indigo-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-bullhorn text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700 text-center">Pengumuman</span>
+                </a>
+            </div>
+        </div>
+
+
+</div>
+</div>
 
 </body>
 </html>

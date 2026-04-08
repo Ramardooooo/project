@@ -40,9 +40,6 @@
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-gray-50 to-gray-100/50">
                     <tr>
-                        <?php if ($has_status_approval): ?>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                        <?php endif; ?>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">No. KK</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Kepala Keluarga</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Jumlah Anggota</th>
@@ -77,14 +74,6 @@
                         }
                     ?>
                     <tr class="hover:bg-gray-50/50 transition-colors duration-200">
-                        <?php if ($has_status_approval): ?>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $status_class; ?>">
-                                <i class="fas <?php echo $status_icon; ?> mr-1"></i>
-                                <?php echo $status_text; ?>
-                            </span>
-                        </td>
-                        <?php endif; ?>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($kk['no_kk'] ?? ''); ?></td>
                         <td class="px-6 py-4 text-sm text-gray-900">
                             <?php echo htmlspecialchars($kk['kepala_keluaraga'] ?? ''); ?>

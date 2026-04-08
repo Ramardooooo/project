@@ -169,225 +169,259 @@ if (isset($_POST['submit_data_diri'])) {
 
 <div id="mainContent" class="ml-64 min-h-screen bg-gray-50">
     <div class="p-8">
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-4xl mx-auto">
             
-            <!-- Header -->
-            <div class="flex items-center mb-6">
-                <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center mr-4 text-white">
-                    <i class="fas fa-user-plus text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Data Diri</h1>
-                    <p class="text-gray-600 text-base font-medium mt-1">Lengkapi data diri Anda untuk pendaftaran warga</p>
-                </div>
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Data Diri</h1>
+                <p class="text-gray-600 mt-2">Lihat dan kelola data pribadi Anda</p>
             </div>
 
 <?php if ($message): ?>
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    <?php echo $message; ?>
-                </div>
-            <?php endif; ?>
+            <div class="bg-green-50 border-l-4 border-green-400 text-green-800 px-6 py-4 rounded mb-6">
+                <?php echo $message; ?>
+            </div>
+<?php endif; ?>
 
-            <?php if ($error): ?>
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    <?php echo $error; ?>
-                </div>
-            <?php endif; ?>
+<?php if ($error): ?>
+            <div class="bg-red-50 border-l-4 border-red-400 text-red-800 px-6 py-4 rounded mb-6">
+                <?php echo $error; ?>
+            </div>
+<?php endif; ?>
 
-            <?php if ($existing_data && $has_status_approval && isset($existing_data['status_approval']) && $existing_data['status_approval'] !== 'diterima'): 
-                $status = $existing_data['status_approval'];
-                $status_class = '';
-                $status_icon = '';
-                $status_text = '';
-                $status_color = '';
-                
-                if ($status === 'diterima') {
-                    $status_class = 'bg-green-50 border-green-400 text-green-800';
-                    $status_icon = 'fa-check-circle';
-                    $status_text = 'Data Anda telah DITERIMA';
-                    $status_color = 'green';
-                } elseif ($status === 'ditolak') {
-                    $status_class = 'bg-red-50 border-red-400 text-red-800';
-                    $status_icon = 'fa-times-circle';
-                    $status_text = 'Data Anda DITOLAK - Silakan perbaiki data Anda';
-                    $status_color = 'red';
-                } else {
-                    $status_class = 'bg-yellow-50 border-yellow-400 text-yellow-800';
-                    $status_icon = 'fa-clock';
-                    $status_text = 'Data Anda MENUNGGU persetujuan Ketua RT';
-                    $status_color = 'yellow';
-                }
-            ?>
-                <div id="status-banner" class="border-l-4 <?php echo $status_class; ?> px-6 py-4 rounded-xl mb-6 shadow-sm border-8">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-<?php echo $status_color; ?>-100 rounded-xl flex items-center justify-center mr-4 p-3">
-                                <i class="fas <?php echo $status_icon; ?> text-<?php echo $status_color; ?>-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="font-bold text-lg"><?php echo $status_text; ?></p>
-                                <p class="text-sm opacity-75">Status persetujuan data warga Anda</p>
-                            </div>
-                        </div>
-                        <button onclick="document.getElementById('status-banner').style.display='none'" 
-                                class="p-2 hover:bg-opacity-75 rounded-lg transition-all hover:scale-105">
-                            <i class="fas fa-times text-<?php echo $status_color; ?>-500 text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-            <?php endif; ?>
+<?php if ($existing_data && $has_status_approval && isset($existing_data['status_approval']) && $existing_data['status_approval'] !== 'diterima'): 
+    $status = $existing_data['status_approval'];
+    $status_class = '';
+    $status_text = '';
+    
+    if ($status === 'diterima') {
+        $status_class = 'border-green-400 bg-green-50 text-green-800';
+        $status_text = 'Data Diterima';
+    } elseif ($status === 'ditolak') {
+        $status_class = 'border-red-400 bg-red-50 text-red-800';
+        $status_text = 'Data Ditolak';
+    } else {
+        $status_class = 'border-yellow-400 bg-yellow-50 text-yellow-800';
+        $status_text = 'Menunggu Persetujuan';
+    }
+?>
+    <div class="border-l-4 <?php echo $status_class; ?> px-6 py-4 rounded-lg mb-8 shadow-sm">
+        <div class="flex items-center justify-between">
+            <span class="font-bold text-lg"><?php echo $status_text; ?></span>
+            <button onclick="this.parentElement.parentElement.style.display='none'" class="text-gray-500 hover:text-gray-700">
+                &times;
+            </button>
+        </div>
+    </div>
+<?php endif; ?>
 
-            <!-- Form Card - 3 Kolom -->
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-                <form method="POST" class="space-y-4">
+            <div class="bg-white rounded-2xl shadow-xl border p-8">
+                <?php if (!$existing_data): ?>
+                <!-- New Data Form -->
+                <form method="POST" class="space-y-6">
+                    <h2 class="text-2xl font-bold text-gray-800 border-b pb-4">Input Data Diri</h2>
                     
-                    <!-- Baris 1: NIK -->
                     <div>
-                        <label for="nik" class="block text-sm font-semibold text-gray-700 mb-1">NIK</label>
-                        <input type="text" id="nik" name="nik" required 
-                               value="<?php echo $existing_data ? htmlspecialchars($existing_data['nik']) : ''; ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               placeholder="Masukkan 16 digit NIK">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">NIK <span class="text-red-500">*</span></label>
+                        <input type="text" name="nik" required maxlength="16" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Masukkan NIK 16 digit">
                     </div>
 
-                    <!-- Baris 2: 3 Kolom -->
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label for="tempat_lahir" class="block text-sm font-semibold text-gray-700 mb-1">Tempat Lahir</label>
-                            <input type="text" id="tempat_lahir" name="tempat_lahir" 
-                                   value="<?php echo $existing_data && isset($existing_data['tempat_lahir']) ? htmlspecialchars($existing_data['tempat_lahir']) : ''; ?>"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                   placeholder="Jakarta">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal_lahir" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                         </div>
+                        <?php if ($has_tempat_lahir): ?>
                         <div>
-                            <label for="tanggal_lahir" class="block text-sm font-semibold text-gray-700 mb-1">Tgl Lahir</label>
-                            <input type="date" id="tanggal_lahir" name="tanggal_lahir" required 
-                                   value="<?php echo $existing_data && $existing_data['tanggal_lahir'] ? htmlspecialchars($existing_data['tanggal_lahir']) : ''; ?>"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                         </div>
+                        <?php endif; ?>
                         <div>
-                            <label for="jk" class="block text-sm font-semibold text-gray-700 mb-1">JK</label>
-                            <select id="jk" name="jk" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
+                            <select name="jk" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih</option>
-                                <option value="L" <?php echo $existing_data && $existing_data['jk'] === 'L' ? 'selected' : ''; ?>>Laki-laki</option>
-                                <option value="P" <?php echo $existing_data && $existing_data['jk'] === 'P' ? 'selected' : ''; ?>>Perempuan</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- Baris 3: 3 Kolom -->
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <?php if ($has_goldar): ?>
                         <div>
-                            <label for="goldar" class="block text-sm font-semibold text-gray-700 mb-1">Gol. Darah</label>
-                            <select id="goldar" name="goldar" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Golongan Darah</label>
+                            <select name="goldar" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih</option>
-                                <option value="A" <?php echo $existing_data && isset($existing_data['goldar']) && $existing_data['goldar'] === 'A' ? 'selected' : ''; ?>>A</option>
-                                <option value="B" <?php echo $existing_data && isset($existing_data['goldar']) && $existing_data['goldar'] === 'B' ? 'selected' : ''; ?>>B</option>
-                                <option value="AB" <?php echo $existing_data && isset($existing_data['goldar']) && $existing_data['goldar'] === 'AB' ? 'selected' : ''; ?>>AB</option>
-                                <option value="O" <?php echo $existing_data && isset($existing_data['goldar']) && $existing_data['goldar'] === 'O' ? 'selected' : ''; ?>>O</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="AB">AB</option>
+                                <option value="O">O</option>
                             </select>
                         </div>
+                        <?php endif; ?>
+                        <?php if ($has_agama): ?>
                         <div>
-                            <label for="agama" class="block text-sm font-semibold text-gray-700 mb-1">Agama</label>
-                            <select id="agama" name="agama" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Agama</label>
+                            <select name="agama" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih</option>
-                                <option value="Islam" <?php echo $existing_data && isset($existing_data['agama']) && $existing_data['agama'] === 'Islam' ? 'selected' : ''; ?>>Islam</option>
-                                <option value="Kristen" <?php echo $existing_data && isset($existing_data['agama']) && $existing_data['agama'] === 'Kristen' ? 'selected' : ''; ?>>Kristen</option>
-                                <option value="Katolik" <?php echo $existing_data && isset($existing_data['agama']) && $existing_data['agama'] === 'Katolik' ? 'selected' : ''; ?>>Katolik</option>
-                                <option value="Hindu" <?php echo $existing_data && isset($existing_data['agama']) && $existing_data['agama'] === 'Hindu' ? 'selected' : ''; ?>>Hindu</option>
-                                <option value="Budha" <?php echo $existing_data && isset($existing_data['agama']) && $existing_data['agama'] === 'Budha' ? 'selected' : ''; ?>>Budha</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Kristen">Kristen</option>
+                                <option value="Katolik">Katolik</option>
+                                <option value="Hindu">Hindu</option>
+                                <option value="Budha">Budha</option>
                             </select>
                         </div>
+                        <?php endif; ?>
+                        <?php if ($has_status_kawin): ?>
                         <div>
-                            <label for="status_kawin" class="block text-sm font-semibold text-gray-700 mb-1">Status Kawin</label>
-                            <select id="status_kawin" name="status_kawin" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Status Kawin</label>
+                            <select name="status_kawin" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih</option>
-                                <option value="Belum Kawin" <?php echo $existing_data && isset($existing_data['status_kawin']) && $existing_data['status_kawin'] === 'Belum Kawin' ? 'selected' : ''; ?>>Belum Kawin</option>
-                                <option value="Kawin" <?php echo $existing_data && isset($existing_data['status_kawin']) && $existing_data['status_kawin'] === 'Kawin' ? 'selected' : ''; ?>>Kawin</option>
-                                <option value="Cerai Hidup" <?php echo $existing_data && isset($existing_data['status_kawin']) && $existing_data['status_kawin'] === 'Cerai Hidup' ? 'selected' : ''; ?>>Cerai Hidup</option>
-                                <option value="Cerai Mati" <?php echo $existing_data && isset($existing_data['status_kawin']) && $existing_data['status_kawin'] === 'Cerai Mati' ? 'selected' : ''; ?>>Cerai Mati</option>
+                                <option value="Belum Kawin">Belum Kawin</option>
+                                <option value="Kawin">Kawin</option>
+                                <option value="Cerai Hidup">Cerai Hidup</option>
+                                <option value="Cerai Mati">Cerai Mati</option>
                             </select>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Pekerjaan</label>
+                            <input type="text" name="pekerjaan" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Karyawan Swasta">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat <span class="text-red-500">*</span></label>
+                            <textarea name="alamat" required rows="3" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Jl. Contoh No. 123"></textarea>
                         </div>
                     </div>
 
-                    <!-- Baris 4: Pekerjaan -->
-                    <div>
-                        <label for="pekerjaan" class="block text-sm font-semibold text-gray-700 mb-1">Pekerjaan</label>
-                        <input type="text" id="pekerjaan" name="pekerjaan" 
-                               value="<?php echo $existing_data && isset($existing_data['pekerjaan']) ? htmlspecialchars($existing_data['pekerjaan']) : ''; ?>"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               placeholder="Contoh: Karyawan, Wiraswasta, Pelajar">
-                    </div>
-
-                    <!-- Baris 5: Alamat -->
-                    <div>
-                        <label for="alamat" class="block text-sm font-semibold text-gray-700 mb-1">Alamat</label>
-                        <textarea id="alamat" name="alamat" required rows="2"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                  placeholder="Jl. Raya RT 05 RW 02 No. 15"><?php echo $existing_data ? htmlspecialchars($existing_data['alamat']) : ''; ?></textarea>
-                    </div>
-
-                    <!-- Baris 6: RT RW KK -->
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label for="rt_id" class="block text-sm font-semibold text-gray-700 mb-1">RT</label>
-                            <select id="rt_id" name="rt_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">RT <span class="text-red-500">*</span></label>
+                            <select name="rt_id" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih RT</option>
                                 <?php foreach ($rt_list as $rt): ?>
-                                    <option value="<?php echo $rt['id']; ?>" <?php echo $existing_data && $existing_data['rt'] == $rt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($rt['nama_rt']); ?></option>
+                                    <option value="<?php echo $rt['id']; ?>"><?php echo htmlspecialchars($rt['nama_rt']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div>
-                            <label for="rw_id" class="block text-sm font-semibold text-gray-700 mb-1">RW</label>
-                            <select id="rw_id" name="rw_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">RW <span class="text-red-500">*</span></label>
+                            <select name="rw_id" required class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pilih RW</option>
                                 <?php foreach ($rw_list as $rw): ?>
-                                    <option value="<?php echo $rw['id']; ?>" <?php echo $existing_data && $existing_data['rw'] == $rw['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($rw['name']); ?></option>
+                                    <option value="<?php echo $rw['id']; ?>"><?php echo htmlspecialchars($rw['name']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div>
-                            <label for="kk_id" class="block text-sm font-semibold text-gray-700 mb-1">KK (Opsional)</label>
-                            <select id="kk_id" name="kk_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">Pilih KK</option>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kartu Keluarga</label>
+                            <select name="kk_id" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">Tidak ada</option>
                                 <?php foreach ($kk_list as $kk): ?>
-                                    <option value="<?php echo $kk['id']; ?>" <?php echo $existing_data && isset($existing_data['kk_id']) && $existing_data['kk_id'] == $kk['id'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($kk['kepala_keluaraga'] . ' - ' . $kk['no_kk']); ?>
-                                    </option>
+                                    <option value="<?php echo $kk['id']; ?>"><?php echo htmlspecialchars($kk['kepala_keluaraga']); ?> - <?php echo $kk['no_kk']; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
 
-                    <!-- Info -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <p class="text-sm text-yellow-800 font-medium">Data akan diperiksa oleh Ketua RT sebelum aktif.</p>
+                    </div>
 
-                            <?php if (!$existing_data): ?>
-                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                                <p class="text-sm text-yellow-800"><i class="fas fa-info-circle mr-2"></i>Data akan ditinjau oleh Ketua RT untuk persetujuan.</p>
-                            </div>
-                            <?php endif; ?>
-
-                            <!-- Submit -->
-                            <?php if (!$existing_data): ?>
-                            <div>
-                                <button type="submit" name="submit_data_diri" 
-                                        class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-                                    Simpan Data Diri
-                                </button>
-                            </div>
-                            <?php else: ?>
-                            <div class="text-center py-8">
-                                <i class="fas fa-check-circle text-green-500 text-4xl mb-4"></i>
-                                <p class="text-gray-600 text-lg font-semibold">Data Diri Sudah Terdaftar</p>
-                                <p class="text-sm text-gray-500 mt-2">Gunakan tombol Edit Data Diri untuk mengubah data.</p>
-                            </div>
-                            <?php endif; ?>
-                            <a href="edit_data_diri" class="block w-full py-3 mt-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition text-center">
-                                <i class="fas fa-edit mr-2"></i>Edit Data Diri
-                            </a>
-
+                    <button type="submit" name="submit_data_diri" class="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg">
+                        Simpan Data Diri
+                    </button>
                 </form>
+                <?php else: ?>
+                <!-- READ ONLY - Enhanced Detail -->
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">Informasi Pribadi</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="group bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-blue-800 mb-2 text-sm uppercase tracking-wide">NIK</div>
+                            <div class="text-2xl font-bold text-gray-900"><?php echo htmlspecialchars($existing_data['nik']); ?></div>
+                        </div>
+
+                        <div class="group bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-indigo-800 mb-2 text-sm uppercase tracking-wide">Tanggal Lahir</div>
+                            <div class="text-xl font-bold text-gray-900"><?php echo date('d F Y', strtotime($existing_data['tanggal_lahir'])); ?></div>
+                        </div>
+
+                        <div class="group bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-purple-800 mb-2 text-sm uppercase tracking-wide">Jenis Kelamin</div>
+                            <div class="text-xl font-bold text-gray-900"><?php echo $existing_data['jk'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></div>
+                        </div>
+
+                        <?php if ($has_tempat_lahir && $existing_data['tempat_lahir']): ?>
+                        <div class="group bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-emerald-800 mb-2 text-sm uppercase tracking-wide">Tempat Lahir</div>
+                            <div class="text-xl font-bold text-gray-900"><?php echo htmlspecialchars($existing_data['tempat_lahir']); ?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($has_goldar && $existing_data['goldar']): ?>
+                        <div class="group bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-red-800 mb-2 text-sm uppercase tracking-wide">Golongan Darah</div>
+                            <div class="text-3xl font-bold text-red-600"><?php echo $existing_data['goldar']; ?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($has_agama && $existing_data['agama']): ?>
+                        <div class="group bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-amber-800 mb-2 text-sm uppercase tracking-wide">Agama</div>
+                            <div class="text-xl font-bold text-gray-900"><?php echo $existing_data['agama']; ?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($has_status_kawin && $existing_data['status_kawin']): ?>
+                        <div class="group bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-teal-800 mb-2 text-sm uppercase tracking-wide">Status Kawin</div>
+                            <div class="text-xl font-bold text-gray-900"><?php echo $existing_data['status_kawin']; ?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($existing_data['pekerjaan']): ?>
+                        <div class="group bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border shadow-sm hover:shadow-md transition-all">
+                            <div class="font-semibold text-orange-800 mb-2 text-sm uppercase tracking-wide">Pekerjaan</div>
+                            <div class="text-xl font-bold text-gray-900"><?php echo htmlspecialchars($existing_data['pekerjaan']); ?></div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Alamat Section -->
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-2xl border shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Alamat Lengkap</h3>
+                        <div class="bg-white p-6 rounded-xl border-2 shadow-inner">
+                            <p class="text-lg leading-relaxed mb-3"><?php echo nl2br(htmlspecialchars($existing_data['alamat'])); ?></p>
+                            <div class="text-sm text-gray-600 font-medium">
+                                RT <?php 
+                                $rt_name = '';
+                                foreach ($rt_list as $rt) {
+                                    if (isset($existing_data['rt']) && $rt['id'] == $existing_data['rt']) $rt_name = $rt['nama_rt'];
+                                }
+                                echo $rt_name; ?> RW <?php 
+                                $rw_name = '';
+                                foreach ($rw_list as $rw) {
+                                    if (isset($existing_data['rw']) && $rw['id'] == $existing_data['rw']) $rw_name = $rw['name'];
+                                }
+                                echo $rw_name; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="text-center pt-12">
+                        <a href="edit_data_diri" class="inline-block px-12 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                            Edit Data Diri
+                        </a>
+                        <p class="mt-3 text-sm text-gray-500">Ubah informasi pribadi jika diperlukan</p>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

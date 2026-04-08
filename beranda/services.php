@@ -1,4 +1,4 @@
-<section id="services" class="py-20 bg-white">
+<section id="services" class="animate-on-scroll animate-fade-up py-20 bg-white">
     <div class="max-w-6xl mx-auto px-6">
         <div class="text-center mb-16">
             <h2 class="text-4xl font-bold text-gray-800 mb-4">Layanan Kami</h2>

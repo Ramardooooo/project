@@ -27,13 +27,14 @@ if ($user_kk) {
     $kk_id = $user_kk['id'];
     $anggota_result = mysqli_query($conn, "
         SELECT w.id, w.nama, w.nik, w.jk, w.tanggal_lahir, w.pekerjaan, w.alamat, w.status, w.tempat_lahir, w.goldar, w.agama, w.status_kawin,
+            u.profile_photo, u.id as user_id,
             CASE 
                 WHEN w.nama = kk.kepala_keluaraga THEN 'Kepala Keluarga'
-                WHEN w.nama = '$username' THEN 'Kamu'
                 ELSE 'Anggota'
             END as peran
         FROM warga w
         LEFT JOIN kk ON w.kk_id = kk.id
+        LEFT JOIN users u ON LOWER(TRIM(w.nama)) = LOWER(TRIM(u.username))
         WHERE w.kk_id = $kk_id AND w.status = 'aktif'
         ORDER BY CASE WHEN w.nama = kk.kepala_keluaraga THEN 0 ELSE 1 END, w.nama ASC
     ");
@@ -199,20 +200,16 @@ include '../../layouts/user/sidebar.php';
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Daftar Anggota Keluarga</h1>
-                    <p class="text-gray-600">Lihat anggota kartu keluarga Anda</p>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-1">Daftar Anggota Keluarga</h1>
+                    <p class="text-gray-600">Kartu Keluarga Anda</p>
                 </div>
                 <?php if ($user_kk): ?>
-                <form method="POST">
-                    <button type="submit" name="export_pdf" class="px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition shadow-lg flex items-center">
-                        <i class="fas fa-file-pdf mr-2"></i>Export PDF
+                <form method="POST" style="display: inline-block;">
+                    <button type="submit" name="export_pdf" class="px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl shadow-lg transition">
+                        Download PDF
                     </button>
                 </form>
                 <?php endif; ?>
-</xai:function_call >
-
-<xai:function_call name="edit_file">
-<parameter name="path">c:/laragon/www/PROJECT/pages/ketua/laporan.php
             </div>
 
             <?php if ($user_kk): ?>
@@ -265,9 +262,11 @@ include '../../layouts/user/sidebar.php';
                                             <td class="px-4 py-3 text-sm text-gray-600"><?php echo $no++; ?></td>
                                             <td class="px-4 py-3">
                         <div class="flex items-center">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold mr-2 text-sm">
-                                <?php echo strtoupper(substr($member['nama'], 0, 1)); ?>
-                            </div>
+                            <?php 
+                            require_once '../../account/helpers.php';
+                            $photo_url = get_profile_photo_url($member['profile_photo']);
+                            ?>
+                            <img src="<?php echo $photo_url ?: '../../account/uploads/profiles/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars(substr($member['nama'], 0, 1)); ?>" class="w-10 h-10 rounded-full object-cover mr-2 border-2 border-white shadow-md">
                             <div>
                                 <p class="font-semibold text-gray-800 text-sm"><?php echo htmlspecialchars($member['nama']); ?></p>
                                 <p class="text-xs text-gray-500">NIK: <?php echo htmlspecialchars($member['nik'] ?? '-'); ?></p>
@@ -285,9 +284,7 @@ include '../../layouts/user/sidebar.php';
                                             <td class="px-4 py-3">
                                                 <?php 
                                                 $peran_class = '';
-                                                if ($member['peran'] === 'Kamu') {
-                                                    $peran_class = 'bg-green-100 text-green-700';
-                                                } elseif ($member['peran'] === 'Kepala Keluarga') {
+                                                if ($member['peran'] === 'Kepala Keluarga') {
                                                     $peran_class = 'bg-purple-100 text-purple-700';
                                                 } else {
                                                     $peran_class = 'bg-blue-100 text-blue-700';
@@ -325,4 +322,5 @@ include '../../layouts/user/sidebar.php';
         </div>
     </div>
 </div>
+
 

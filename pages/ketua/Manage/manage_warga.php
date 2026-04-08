@@ -306,7 +306,7 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
         <h1 class="text-3xl font-bold text-gray-800">Manajemen Data Warga</h1>
         <div class="flex gap-3">
             <div class="flex gap-2">
-                <a href="\PROJECT\pages\ketua/export_warga.php?format.pdf<?php echo $_SERVER['QUERY_STRING']; ?>" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg flex items-center text-sm">
+                <a href="pages/ketua/EXPORT_WARGA.php?format=pdf<?php echo !empty($_SERVER['QUERY_STRING']) ? '&' . $_SERVER['QUERY_STRING'] : ''; ?>" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg flex items-center text-sm">
                     <i class="fas fa-file-pdf mr-1"></i>PDF Export
                 </a>
             </div>
@@ -332,21 +332,21 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
 <table class="w-full">
 <thead class="bg-gray-50">
 <tr>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">NIK</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nama</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">JK</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tgl Lahir</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tempat Lahir</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Gol. Darah</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Agama</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status Kawin</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Pekerjaan</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Alamat</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">RT/RW</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">KK</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Approval</th>
-<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Aksi</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">NIK</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">JK</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tgl Lahir</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tempat Lahir</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gol. Darah</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Agama</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status Kawin</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pekerjaan</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Alamat</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">RT/RW</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">KK</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+<th class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Approval</th>
+<th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50">Aksi</th>
 </tr>
 </thead>
 
@@ -369,11 +369,9 @@ $kk_result = mysqli_query($conn, "SELECT id, no_kk, kepala_keluaraga FROM kk");
 <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['status_kawin'] ?? '-'); ?></td>
 <td class="px-4 py-3 text-sm text-gray-600"><?php echo htmlspecialchars($warga['pekerjaan'] ?? '-'); ?></td>
 
-<td class="px-4 py-3 text-sm text-gray-600">
-<?php
-$alamat = $warga['alamat'] ?? '-';
-echo htmlspecialchars(substr($alamat,0,30) . (strlen($alamat) > 30 ? '...' : ''));
-?>
+                <td class="px-2 py-3 text-sm text-gray-600 relative group max-w-[200px] truncate" title="<?php echo htmlspecialchars($warga['alamat'] ?? '-'); ?>">
+<?php echo htmlspecialchars(($warga['alamat'] ?? '-') ?: '-'); ?>
+<span class="absolute left-0 bottom-full mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap z-20 hidden lg:block"><?php echo htmlspecialchars($warga['alamat'] ?? '-'); ?></span>
 </td>
 
 <td class="px-4 py-3 text-sm text-gray-600">

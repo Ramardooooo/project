@@ -1,95 +1,199 @@
-<footer id="contact" class="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-16">
-    <div class="max-w-7xl mx-auto px-6">
+<footer id="contact" class="bg-gradient-to-b from-gray-900 to-slate-900/95 text-white py-20 relative">
+    <div class="absolute inset-0">
+        <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-slate-800/30 rounded-full blur-xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-slate-700/20 rounded-full blur-2xl"></div>
+    </div>
 
-        <div class="grid md:grid-cols-4 gap-8 mb-12">
+    <div class="relative max-w-7xl mx-auto px-6">
+        
+        <!-- Main Footer Content -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
 
-            <!-- Company Info -->
-            <div class="md:col-span-2">
-                <div class="mb-6">
-                    <h4 class="text-2xl font-bold">Lurahgo.id</h4>
-                    <p class="text-blue-100">Platform Digital RT/RW</p>
+            <!-- Brand & Description -->
+            <div class="lg:col-span-2">
+                <div class="flex items-center mb-8">
+                    <div>
+                        <h3 class="text-3xl font-black text-slate-200">
+                            Lurahgo.id
+                        </h3>
+                        <p class="text-slate-400 text-sm mt-1">Platform Digital RT/RW</p>
+                    </div>
                 </div>
-                <p class="text-blue-100 mb-6 leading-relaxed">
-                    Sistem manajemen RT/RW terdepan di Indonesia. Membantu ribuan RT/RW
-                    dalam mengelola data warga, komunikasi, dan administrasi dengan teknologi modern.
+                <p class="text-gray-400 leading-relaxed mb-8">
+                    Sistem manajemen RT/RW modern untuk administrasi warga, KK, dan laporan.
                 </p>
+                
+                <!-- Social Links -->
                 <div class="flex space-x-4">
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-blue-500 transition-all duration-300 hover:scale-110">
-                        <i class="fab fa-facebook-f"></i>
+                    <a href="#" class="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center hover:bg-slate-700 hover:scale-105 transition-all duration-300 border border-slate-600/50">
+                        <i class="fab fa-facebook-f text-slate-400 hover:text-slate-200 text-sm"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-blue-400 transition-all duration-300 hover:scale-110">
-                        <i class="fab fa-twitter"></i>
+                    <a href="#" class="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center hover:bg-slate-700 hover:scale-105 transition-all duration-300 border border-slate-600/50">
+                        <i class="fab fa-twitter text-slate-400 hover:text-blue-400 text-sm"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-pink-500 transition-all duration-300 hover:scale-110">
-                        <i class="fab fa-instagram"></i>
+                    <a href="#" class="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center hover:bg-slate-700 hover:scale-105 transition-all duration-300 border border-slate-600/50">
+                        <i class="fab fa-instagram text-slate-400 hover:text-slate-200 text-sm"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-red-500 transition-all duration-300 hover:scale-110">
-                        <i class="fab fa-youtube"></i>
+                    <a href="https://wa.me/6288245012642" class="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center hover:bg-emerald-600/70 hover:scale-105 transition-all duration-300 border border-slate-600/50" target="_blank">
+                        <i class="fab fa-whatsapp text-slate-400 hover:text-emerald-300 text-sm"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-green-500 transition-all duration-300 hover:scale-110">
-                        <i class="fab fa-whatsapp"></i>
+                    <a href="#" class="w-12 h-12 bg-slate-800/50 rounded-xl flex items-center justify-center hover:bg-slate-700 hover:scale-105 transition-all duration-300 border border-slate-600/50">
+                        <i class="fab fa-youtube text-slate-400 hover:text-slate-200 text-sm"></i>
                     </a>
                 </div>
             </div>
 
+            <!-- Quick Stats -->
             <div>
-                <h5 class="text-xl font-semibold mb-6">Link</h5>
+                <h5 class="text-xl font-bold mb-6 text-slate-300">Statistik</h5>
+                <div class="space-y-4">
+                    <div class="flex items-center p-3 bg-slate-800/40 rounded-xl border border-slate-700/60">
+                        <div class="w-10 h-10 bg-slate-600/50 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-users text-slate-400 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-xl font-bold text-white">2,156</p>
+                            <p class="text-gray-500 text-xs">Warga</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-3 bg-slate-800/40 rounded-xl border border-slate-700/60">
+                        <div class="w-10 h-10 bg-blue-600/50 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-home text-blue-300 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-xl font-bold text-white">12</p>
+                            <p class="text-gray-500 text-xs">RT</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-3 bg-slate-800/40 rounded-xl border border-slate-700/60">
+                        <div class="w-10 h-10 bg-slate-600/50 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-file text-slate-400 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-xl font-bold text-white">156</p>
+                            <p class="text-gray-500 text-xs">KK</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h5 class="text-xl font-bold mb-6 text-slate-300">Quick Links</h5>
                 <ul class="space-y-3">
-                    <li><a href="#" class="text-blue-100 hover:text-white transition-colors duration-300 flex items-center"><i class="fas fa-chevron-right mr-2 text-xs"></i>Beranda</a></li>
-                    <li><a href="#services" class="text-blue-100 hover:text-white transition-colors duration-300 flex items-center"><i class="fas fa-chevron-right mr-2 text-xs"></i>Layanan</a></li>
-                    <li><a href="#about" class="text-blue-100 hover:text-white transition-colors duration-300 flex items-center"><i class="fas fa-chevron-right mr-2 text-xs"></i>Tentang Kami</a></li>
-                    <li><a href="#contact" class="text-blue-100 hover:text-white transition-colors duration-300 flex items-center"><i class="fas fa-chevron-right mr-2 text-xs"></i>Kontak</a></li>
+                    <li><a href="home" class="flex items-center text-gray-400 hover:text-slate-200 transition-all duration-300 group">
+                        <i class="fas fa-chevron-right mr-3 text-slate-600 group-hover:text-slate-400 w-4"></i>
+                        Beranda
+                    </a></li>
+                    <li><a href="dashboard_user" class="flex items-center text-gray-400 hover:text-slate-200 transition-all duration-300 group">
+                        <i class="fas fa-chevron-right mr-3 text-slate-600 group-hover:text-slate-400 w-4"></i>
+                        Dashboard
+                    </a></li>
+                    <li><a href="dashboard_ketua" class="flex items-center text-gray-400 hover:text-slate-200 transition-all duration-300 group">
+                        <i class="fas fa-chevron-right mr-3 text-slate-600 group-hover:text-slate-400 w-4"></i>
+                        Ketua RT
+                    </a></li>
+                    <li><a href="dashboard_admin" class="flex items-center text-gray-400 hover:text-slate-200 transition-all duration-300 group">
+                        <i class="fas fa-chevron-right mr-3 text-slate-600 group-hover:text-slate-400 w-4"></i>
+                        Admin
+                    </a></li>
                 </ul>
             </div>
 
+            <!-- Newsletter -->
             <div>
-                <h5 class="text-xl font-semibold mb-6">Kontak Kami</h5>
-                <div class="space-y-4">
-                    <div class="flex items-start">
-                        <i class="fas fa-map-marker-alt text-blue-400 mt-1 mr-3"></i>
-                        <div>
-                            <p class="text-blue-100">Jl. Besok Senin No. 123</p>
-                            <p class="text-blue-100">Kalimantan Selatan, Indonesia</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-phone text-blue-400 mr-3"></i>
-                        <p class="text-blue-100">+62 882 4501 2642</p>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-envelope text-blue-400 mr-3"></i>
-                        <p class="text-blue-100">info@lurahgo.id</p>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-clock text-blue-400 mr-3"></i>
-                        <p class="text-blue-100">12/5 Support</p>
-                    </div>
-                </div>
+                <h5 class="text-xl font-bold mb-6 text-slate-300">Newsletter</h5>
+                <p class="text-gray-500 text-sm mb-4">Update pengumuman langsung ke email</p>
+                <form id="newsletterForm" class="space-y-3">
+                    <input type="email" id="email" placeholder="Email Anda" required 
+                           class="w-full px-4 py-3 bg-slate-800/60 border border-slate-600/50 rounded-xl text-slate-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-slate-400 text-sm">
+                    <button type="submit" class="w-full py-3 px-4 bg-slate-700 border border-slate-600 text-slate-200 font-medium rounded-xl hover:bg-slate-600 hover:border-slate-500 transition-all duration-300 text-sm flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Subscribe
+                    </button>
+                </form>
             </div>
 
         </div>
 
-
-        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p class="text-blue-100 text-sm mb-4 md:mb-0">
-                &copy; 2026 Lurahgo.id. All rights reserved.
-                <span class="text-blue-300">Made with Ramardo</span>
+        <!-- Bottom Bar -->
+        <div class="border-t border-slate-800/60 pt-10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+            <p class="text-gray-500 text-center sm:text-left">
+                &copy; 2026 Lurahgo.id Dibuat Oleh Ramardo, Semua hak cipta dilindungi.
             </p>
-            <div class="flex space-x-6 text-sm">
-                <a href="#" class="text-blue-100 hover:text-white transition-colors duration-300">Privacy Policy</a>
-                <a href="#" class="text-blue-100 hover:text-white transition-colors duration-300">Terms of Service</a>
-                <a href="#" class="text-blue-100 hover:text-white transition-colors duration-300">Support</a>
+            <div class="flex gap-4">
+                <a href="#" class="text-gray-500 hover:text-slate-300 transition-colors p-2 rounded-lg hover:bg-slate-800/50">Privasi</a>
+                <a href="#" class="text-gray-500 hover:text-slate-300 transition-colors p-2 rounded-lg hover:bg-slate-800/50">Syarat</a>
+                <a href="#" class="text-gray-500 hover:text-slate-300 transition-colors p-2 rounded-lg hover:bg-slate-800/50">Bantuan</a>
             </div>
         </div>
-        <button id="back-to-top" class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 opacity-0 invisible">
-            <i class="fas fa-arrow-up"></i>
-        </button>
 
     </div>
+
+    <button id="back-to-top" class="scroll-up-btn fixed bottom-20 right-6 z-[10001] bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 text-white w-14 h-14 rounded-2xl shadow-2xl hover:shadow-3xl border border-slate-600/50 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 opacity-0 invisible translate-y-5 group" title="Scroll ke atas">
+        <i class="fas fa-arrow-up text-lg group-hover:rotate-180"></i>
+    </button>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/6288245012642?text=Halo%20Lurahgo.id%2C%20saya ingin berkonsultasi" class="whatsapp-float" target="_blank" title="WhatsApp Admin">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-badge">99+</span>
+    </a>
+
+    <style>
+    @keyframes pulse-slow {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 0.3; }
+    }
+    .animate-pulse-slow { animation: pulse-slow 10s infinite; }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#year').textContent = new Date().getFullYear();
+        
+        document.querySelector('#newsletterForm').onsubmit = e => {
+            e.preventDefault();
+            const email = document.querySelector('#email').value;
+            fetch('api/newsletter.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'email=' + encodeURIComponent(email)
+            }).then(res => res.json()).then(data => {
+                alert(data.success ? 'Subscribed!' : data.error);
+            });
+        };
+
+        const btn = document.querySelector('#back-to-top');
+        if (btn) {
+          // Show immediately after DOM ready
+          setTimeout(() => {
+            btn.classList.remove('opacity-0', 'invisible', 'translate-y-5');
+            btn.classList.add('opacity-100', 'visible', 'translate-y-0');
+          }, 200);
+          
+          // Optimized scroll handler - show on scroll >100px, stay visible
+          let ticking = false;
+          const updateButton = () => {
+            if (window.scrollY > 100) {
+              btn.classList.add('opacity-100', 'visible', 'translate-y-0');
+              btn.classList.remove('opacity-0', 'invisible', 'translate-y-5');
+            }
+            ticking = false;
+          };
+          window.addEventListener('scroll', () => {
+            if (!ticking) {
+              requestAnimationFrame(updateButton);
+              ticking = true;
+            }
+          }, { passive: true });
+          
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+    });
+    </script>
 </footer>
-
-<script src="beranda/footer.js"></script>
-
-</body>
-</html>
 

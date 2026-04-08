@@ -130,8 +130,8 @@ mysqli_stmt_close($stmt);
                     <input type="hidden" name="testimonial_submit" value="1">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" maxlength="255"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="text" name="name" value="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" maxlength="255" readonly
+                               class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-xl cursor-not-allowed text-gray-700 font-semibold">
                     </div>
 
                     <div>
@@ -148,9 +148,8 @@ mysqli_stmt_close($stmt);
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Testimoni Anda</label>
-                        <textarea name="description" rows="4" required minlength="10"
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"
-                                  placeholder="Ceritakan pengalaman Anda..."></textarea>
+                        <textarea name="description" rows="4" required minlength="10" placeholder="Ceritakan pengalaman Anda..."
+class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" tabindex="0"></textarea>
                     </div>
 
                     <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-4 px-6 rounded-xl text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200">

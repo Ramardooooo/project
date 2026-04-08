@@ -8,11 +8,20 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 }
 
 if (isset($_POST['tambah_user'])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $role = $_POST['role'];
+    // Trim and sanitize inputs
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    $role = $_POST['role'] ?? '';
+
+    // Skip honeypot check - let empty honeypots pass (browsers don't always fill)
+    /* Honeypot detection commented out to avoid false positives
+    if (!empty($_POST['fake_username']) || !empty($_POST['fake_email']) || !empty($_POST['fake_password'])) {
+        $error = "Invalid form submission.";
+        goto show_form;
+    }*/
+
 
     $check_username = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
     mysqli_stmt_bind_param($check_username, "s", $username);
@@ -61,9 +70,12 @@ if (isset($_POST['tambah_user'])) {
     mysqli_stmt_close($check_username);
 }
 
+show_form:
 include '../../../layouts/admin/header.php';
 include '../../../layouts/admin/sidebar.php';
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -72,7 +84,42 @@ include '../../../layouts/admin/sidebar.php';
     <title>Tambah User - Lurahgo.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Clear form fields on load to prevent autofill
+        window.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[method="POST"]');
+            if (form) {
+                const inputs = form.querySelectorAll('input[name="username"], input[name="email"], input[name="password"], input[name="confirm_password"]');
+                inputs.forEach(input => {
+                    if (input.value === '') return;
+                    input.value = '';
+                    input.focus();
+                    input.blur();
+                });
+            }
+        });
+        
+        // Prevent autofill on focus
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input[name="username"], input[name="email"], input[name="password"], input[name="confirm_password"]')) {
+                e.target.setAttribute('autocomplete', 'off');
+            }
+        });
+    </script>
 </head>
+<style>
+    /* Additional anti-autofill styling */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+        box-shadow: 0 0 0 30px white inset !important;
+        -webkit-text-fill-color: #374151 !important;
+        background-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+</style>
 <body class="min-h-screen bg-blue-900">
 <div class="ml-64 min-h-screen flex items-center justify-center p-8">
     <div class="max-w-xl w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-7 border border-white/20 hover:shadow-2xl hover:bg-white/95 transition-all duration-300">
@@ -87,38 +134,44 @@ include '../../../layouts/admin/sidebar.php';
             <p class="text-red-500 mb-3"><?php echo $error; ?></p>
         <?php endif; ?>
 
-        <form method="POST">
+        <form method="POST" autocomplete="off">
+            <!-- Autofill honeypot - invisible to users, attracts browser autofill -->
+            <div style="position: absolute; opacity: 0; height: 0; overflow: hidden;">
+                <input type="text" name="fake_username" tabindex="-1" autocomplete="username">
+                <input type="email" name="fake_email" tabindex="-1" autocomplete="email">
+                <input type="password" name="fake_password" tabindex="-1" autocomplete="current-password">
+            </div>
             <div class="mb-3">
                 <label class="block text-sm text-gray-700 mb-1">Username</label>
-                <input type="text" name="username"
+                <input type="text" name="username" autocomplete="new-username"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:border-green-500"
                     required>
             </div>
 
             <div class="mb-3">
                 <label class="block text-sm text-gray-700 mb-1">Email</label>
-                <input type="email" name="email"
+                <input type="email" name="email" autocomplete="new-email"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:border-green-500"
                     required>
             </div>
 
             <div class="mb-3">
                 <label class="block text-sm text-gray-700 mb-1">Password</label>
-                <input type="password" name="password"
+                <input type="password" name="password" autocomplete="new-password"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:border-green-500"
                     required>
             </div>
 
             <div class="mb-3">
                 <label class="block text-sm text-gray-700 mb-1">Confirm Password</label>
-                <input type="password" name="confirm_password"
+                <input type="password" name="confirm_password" autocomplete="new-password"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:border-green-500"
                     required>
             </div>
 
             <div class="mb-5">
                 <label class="block text-sm text-gray-700 mb-1">Role</label>
-                <select name="role"
+                <select name="role" autocomplete="off"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:border-green-500"
                     required>
                     <option value="user">User</option>

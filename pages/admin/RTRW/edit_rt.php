@@ -12,7 +12,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 if (isset($_GET['id'])) {
     $rt_id = (int)$_GET['id'];
-    $rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM rt WHERE id = $rt_id"));
+$rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT rt.*, rw.name as rw_name FROM rt LEFT JOIN rw ON rt.id_rw = rw.id WHERE rt.id = $rt_id"));
     if (!$rt) {
     header("Location: /PROJECT/manage_rt_rw");
     exit();
@@ -21,13 +21,14 @@ if (isset($_GET['id'])) {
 
 if (isset($_POST['update_rt'])) {
     $nama_rt = $_POST['nama_rt'];
+$id_rw = isset($_POST['rw_id']) ? (int)$_POST['rw_id'] : null;
     $ketua_rt = $_POST['ketua_rt'];
     $status = $_POST['status'];
 
     $old_rt = mysqli_fetch_assoc(mysqli_query($conn, "SELECT nama_rt, ketua_rt, status FROM rt WHERE id = $rt_id"));
 
-    $stmt = mysqli_prepare($conn, "UPDATE rt SET nama_rt=?, ketua_rt=?, status=? WHERE id=?");
-    mysqli_stmt_bind_param($stmt, "sssi", $nama_rt, $ketua_rt, $status, $rt_id);
+$stmt = mysqli_prepare($conn, "UPDATE rt SET nama_rt=?, id_rw=?, ketua_rt=?, status=? WHERE id=?");
+mysqli_stmt_bind_param($stmt, "sissi", $nama_rt, $id_rw, $ketua_rt, $status, $rt_id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
@@ -82,6 +83,22 @@ if (isset($_POST['update_rt'])) {
                     class="w-full border rounded px-3 py-2
                            focus:outline-none focus:border-green-500"
                 >
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-700 mb-1">
+                    RW <span class="text-red-500">*</span>
+                </label>
+                <select name="rw_id" required class="w-full border rounded px-3 py-2 focus:outline-none focus:border-purple-500">
+                    <option value="">Pilih RW</option>
+                    <?php 
+                    $rw_list_query = mysqli_query($conn, "SELECT id, name FROM rw WHERE status = 'aktif' ORDER BY name ASC");
+                    while ($rw_option = mysqli_fetch_assoc($rw_list_query)): 
+$selected = ($rt['id_rw'] == $rw_option['id']) ? 'selected' : '';
+                    ?>
+                        <option value="<?php echo $rw_option['id']; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($rw_option['name']); ?></option>
+                    <?php endwhile; ?>
+                </select>
             </div>
 
             <div>

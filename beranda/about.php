@@ -1,4 +1,4 @@
-<section id="about" class="py-20 bg-gray-50">
+<section id="about" class="animate-on-scroll animate-fade-up py-20 bg-gray-50">
     <div class="max-w-6xl mx-auto px-6">
         <div class="text-center mb-16">
             <h2 class="text-4xl font-bold text-gray-800 mb-4">Tentang Lurahgo.Id</h2>

@@ -1,0 +1,38 @@
+/* Minimal Modern Buttons for User Pages - Clean, Flat Design */
+
+/* Base minimal button */
+.btn-minimal {
+  @apply bg-gray-50 border border-gray-200 hover:bg-white hover:border-gray-300 hover:shadow-sm text-gray-800 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center space-x-2 no-underline;
+}
+
+/* Primary submit button */
+.btn-primary-minimal {
+  @apply bg-blue-500 hover:bg-blue-600 text-white border-transparent shadow-sm hover:shadow-md px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center space-x-2;
+}
+
+/* Action buttons */
+.action-btn {
+  @apply btn-minimal;
+}
+
+.action-btn:hover {
+  @apply bg-gray-100 border-gray-400 shadow-md -translate-y-0.5;
+}
+
+/* Icon sizing */
+.action-btn i {
+  @apply text-lg;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .btn-minimal, .btn-primary-minimal {
+    @apply px-4 py-2 text-xs w-full;
+  }
+}
+
+/* Focus states */
+.btn-minimal:focus, .btn-primary-minimal:focus {
+  @apply ring-2 ring-blue-500 ring-opacity-50 outline-none;
+}
+

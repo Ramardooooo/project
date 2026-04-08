@@ -7,37 +7,63 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-include '../config/database.php';
+include __DIR__ . '/../config/database.php';
 
-$gallery_id = (int)$_POST['gallery_id'];
-$user_id = $_SESSION['user_id'];
+$input = null;
+$gallery_id = null;
+
+// Handle both JSON and form-data
+$raw_input = file_get_contents('php://input');
+if (!empty($raw_input)) {
+    $decoded = json_decode($raw_input, true);
+    if ($decoded && isset($decoded['gallery_id'])) {
+        $gallery_id = (int)$decoded['gallery_id'];
+    }
+}
+if (!$gallery_id && isset($_POST['gallery_id'])) {
+    $gallery_id = (int)$_POST['gallery_id'];
+}
+
+$user_id = (int)$_SESSION['user_id'];
 
 if (!$gallery_id) {
     echo json_encode(['success' => false, 'message' => 'Invalid gallery ID']);
     exit;
 }
 
-$check_query = "SELECT id FROM gallery_likes WHERE gallery_id = $gallery_id AND user_id = $user_id";
-$check_result = mysqli_query($conn, $check_query);
+// Prepared statements - SECURITY FIX
+$check_stmt = mysqli_prepare($conn, "SELECT id FROM gallery_likes WHERE gallery_id = ? AND user_id = ?");
+mysqli_stmt_bind_param($check_stmt, "ii", $gallery_id, $user_id);
+mysqli_stmt_execute($check_stmt);
+$check_result = mysqli_stmt_get_result($check_stmt);
 
 if (mysqli_num_rows($check_result) > 0) {
-    $delete_query = "DELETE FROM gallery_likes WHERE gallery_id = $gallery_id AND user_id = $user_id";
-    mysqli_query($conn, $delete_query);
+    // Unlike
+    $delete_stmt = mysqli_prepare($conn, "DELETE FROM gallery_likes WHERE gallery_id = ? AND user_id = ?");
+    mysqli_stmt_bind_param($delete_stmt, "ii", $gallery_id, $user_id);
+    mysqli_stmt_execute($delete_stmt);
     $liked = false;
 } else {
-    $insert_query = "INSERT INTO gallery_likes (gallery_id, user_id) VALUES ($gallery_id, $user_id)";
-    mysqli_query($conn, $insert_query);
+    // Like
+    $insert_stmt = mysqli_prepare($conn, "INSERT INTO gallery_likes (gallery_id, user_id) VALUES (?, ?)");
+    mysqli_stmt_bind_param($insert_stmt, "ii", $gallery_id, $user_id);
+    mysqli_stmt_execute($insert_stmt);
     $liked = true;
 }
-$count_query = "SELECT COUNT(*) as count FROM gallery_likes WHERE gallery_id = $gallery_id";
-$count_result = mysqli_query($conn, $count_query);
-$count = mysqli_fetch_assoc($count_result)['count'];
+
+$count_stmt = mysqli_prepare($conn, "SELECT COUNT(*) as count FROM gallery_likes WHERE gallery_id = ?");
+mysqli_stmt_bind_param($count_stmt, "i", $gallery_id);
+mysqli_stmt_execute($count_stmt);
+$count_result = mysqli_stmt_get_result($count_stmt);
+$count_row = mysqli_fetch_assoc($count_result);
+$like_count = (int)$count_row['count'];
 
 echo json_encode([
     'success' => true,
     'liked' => $liked,
-    'like_count' => $count
+    'like_count' => $like_count
 ]);
 
 mysqli_close($conn);
 ?>
+

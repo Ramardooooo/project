@@ -1,5 +1,7 @@
+
 <?php if (!session_id()) session_start(); ?>
-<?php include __DIR__ . '/../../account/helpers.php'; ?>
+<?php include __DIR__ . '/../../config/database.php'; 
+include __DIR__ . '/../../account/helpers.php'; ?>
 <?php
 $user_id = $_SESSION['user_id'] ?? null;
 $user = null;
@@ -16,7 +18,7 @@ if ($user_id) {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Lurahgo.id - Dashboard RT/RW</title>
+<title>Lurahgo.id - Dashboard Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,42 +30,42 @@ if ($user_id) {
     #mainContent, header.ml-64 { transition: margin-left 0.3s ease; }
 </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-<header class="bg-white shadow-sm border-b border-gray-200 ml-64 transition-all duration-300" id="mainHeader">
-    <div class="flex justify-between items-center px-8 py-5">
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex flex-col">
+<header class="bg-white/90 backdrop-blur-xl shadow-2xl border-b border-white/60 ring-1 ring-white/50 ml-64 transition-all duration-300 hover:shadow-3xl" id="mainHeader">
+    <div class="flex justify-between items-center px-8 py-6">
 
         <div class="flex items-center">
-            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-gray-900 mr-4 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100" id="hamburgerBtn">
-                <i class="fas fa-bars text-xl"></i>
+            <button onclick="toggleSidebar()" class="group text-gray-700 hover:text-blue-600 mr-6 transition-all duration-300 p-3 rounded-2xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:shadow-xl hover:scale-110 hover:rotate-180 shadow-md ring-1 ring-transparent hover:ring-blue-200" id="hamburgerBtn">
+                <i class="fas fa-bars text-2xl group-hover:scale-110 transition-transform duration-300"></i>
             </button>
-            <h1 class="text-2xl font-bold text-gray-800 tracking-wide"></h1>
+            <h1 class="text-3xl font-black tracking-tight bg-gradient-to-r from-gray-800 to-blue-800 bg-clip-text text-transparent drop-shadow-lg"></h1>
         </div>
 
+        <div class="flex items-center space-x-4">
 
-        <div class="flex items-center space-x-3">
             <!-- Notifications Admin -->
-            <div class="relative">
-                <button id="notifBtnAdmin" class="relative p-2.5 text-gray-500 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-all duration-200" onclick="toggleNotificationsAdmin()">
-                    <i class="fas fa-bell text-xl relative z-10"></i>
-                    <span id="notifBadgeAdmin" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow-lg min-w-[20px]">0</span>
+            <div class="relative group">
+                <button id="notifBtnAdmin" class="relative p-3 text-gray-600 hover:text-blue-600 rounded-3xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 hover:shadow-2xl hover:scale-110 transition-all duration-300 shadow-lg ring-1 ring-gray-200/50 hover:ring-blue-200 z-10" onclick="toggleNotificationsAdmin()">
+                    <i class="fas fa-bell text-2xl relative"></i>
+                    <span id="notifBadgeAdmin" class="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs rounded-2xl w-7 h-7 flex items-center justify-center text-[11px] shadow-2xl ring-2 ring-white/50 animate-pulse min-w-[28px] font-bold">0</span>
                 </button>
-                <div id="notifDropdownAdmin" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border ring-1 ring-black/5 z-[9999] overflow-hidden">
-                    <div class="p-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div id="notifDropdownAdmin" class="hidden absolute right-0 mt-4 w-96 bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/50 ring-2 ring-white/40 z-[9999] overflow-hidden hover:shadow-3xl transition-all duration-300">
+                    <div class="p-6 border-b border-white/50 bg-gradient-to-r from-blue-500/10 to-indigo-500/10">
                         <div class="flex items-center justify-between">
-                            <h4 class="font-bold text-gray-800 text-lg">Pemberitahuan Admin</h4>
-                            <button onclick="markAllRead('admin')" class="text-xs text-blue-600 hover:text-blue-800 font-medium hover:underline">Tandai semua</button>
+                            <h4 class="font-black text-gray-900 text-xl tracking-tight bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent drop-shadow-sm">Pemberitahuan Admin</h4>
+                            <button onclick="markAllRead('admin')" class="text-sm bg-white/70 px-4 py-2 rounded-2xl font-bold text-blue-600 hover:text-blue-700 hover:bg-white/90 hover:shadow-lg transition-all duration-200 backdrop-blur-sm ring-1 ring-blue-200/50">Tandai semua</button>
                         </div>
                     </div>
-                    <div id="notifListAdmin" class="max-h-96 overflow-y-auto"></div>
-                    <div class="p-3 border-t text-center bg-gray-50">
-                        <a href="/pages/admin/notifications.php" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Lihat semua →</a>
+                    <div id="notifListAdmin" class="max-h-96 overflow-y-auto p-2"></div>
+                    <div class="p-4 border-t border-white/50 bg-gradient-to-r from-slate-50/50 to-blue-50/50 text-center">
+                        <a href="/pages/admin/notifications.php" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-black text-base gap-2 hover:bg-white/70 px-6 py-3 rounded-2xl hover:shadow-md transition-all duration-200 backdrop-blur-sm ring-1 ring-blue-200/30">Lihat semua <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
 
-            <!-- Profile -->
+            <!-- Profile Simple -->
             <div class="flex items-center space-x-3 bg-gray-50 rounded-full px-4 py-2 border border-gray-200">
-                <?php if ($user && $user['profile_photo']): ?>
+                <?php if ($user['profile_photo']): ?>
                     <img src="<?php echo get_profile_photo_url($user['profile_photo']); ?>" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
                 <?php else: ?>
                     <div class="w-10 h-10 rounded-full border-2 border-gray-300 bg-gray-200 flex items-center justify-center text-gray-600 font-bold text-lg">
@@ -83,3 +85,42 @@ if ($user_id) {
         </div>
     </div>
 </header>
+
+<script src="/static/notifications.js"></script>
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const header = document.getElementById('mainHeader');
+    const mainContent = document.getElementById('mainContent');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebarItems = document.querySelectorAll('.sidebar-text');
+    const sidebarTitle = document.getElementById('sidebarTitle');
+    const sidebarSubtitle = document.getElementById('sidebarSubtitle');
+    const sidebarFooter = document.getElementById('sidebarFooter');
+    
+    if (!sidebar) return;
+    
+    const isMini = sidebar.classList.toggle('mini');
+    
+    sidebar.style.width = isMini ? '64px' : '256px';
+    
+    if (header) {
+        header.classList.toggle('ml-16', isMini);
+        header.classList.toggle('ml-64', !isMini);
+    }
+    
+    if (mainContent) {
+        mainContent.classList.toggle('ml-16', isMini);
+        mainContent.classList.toggle('ml-64', !isMini);
+    }
+    
+    sidebarItems.forEach(item => {
+        item.style.display = isMini ? 'none' : 'inline';
+    });
+    
+    if (sidebarTitle) sidebarTitle.style.display = isMini ? 'none' : 'inline';
+    if (sidebarSubtitle) sidebarSubtitle.style.display = isMini ? 'none' : 'block';
+    if (sidebarFooter) sidebarFooter.style.display = isMini ? 'none' : 'block';
+}
+</script>
+

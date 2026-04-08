@@ -1,0 +1,199 @@
+/* 🔥 FIXED Modern Swipe Gallery - Smooth Momentum & Responsive */
+/* Core Scroll Container - ENHANCED */
+#gallery-scroller {
+  -webkit-overflow-scrolling: touch !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  overscroll-behavior-x: contain !important;
+  scroll-snap-type: x proximity !important; /* Changed to proximity for smoother */
+  scroll-padding-left: 1rem !important;
+  scroll-padding-right: 1rem !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  touch-action: pan-x pinch-zoom !important;
+  cursor: grab !important;
+  padding: 1rem 0 !important; /* Add padding for arrows */
+}
+
+#gallery-scroller::-webkit-scrollbar {
+  display: none !important;
+}
+
+#gallery-scroller:active {
+  cursor: grabbing !important;
+}
+
+/* Wrapper - Flex with consistent gap */
+#gallery-wrapper {
+  display: flex !important;
+  gap: 1.5rem !important;
+  padding: 0 4rem 2rem 1rem !important; /* Space for arrows */
+  min-width: max-content;
+}
+
+/* Cards - Responsive & Snap aligned */
+.gallery-card {
+  flex: 0 0 auto !important;
+  scroll-snap-align: start !important;
+  scroll-snap-stop: normal !important;
+  width: 72vw !important; /* Mobile first */
+  max-width: 320px !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+@media (min-width: 640px) {
+  .gallery-card { 
+    width: 320px !important;
+    max-width: 360px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-card { 
+    width: 360px !important;
+    max-width: 380px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gallery-card { width: 380px !important; }
+}
+
+/* Arrows - Always accessible & enhanced visibility */
+.nav-btn-3d, .prev-btn, .next-btn {
+  opacity: 1 !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  z-index: 30 !important;
+}
+
+.nav-btn-3d:hover:not(:disabled), .prev-btn:hover:not(:disabled), .next-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.1) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.2) !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.nav-btn-3d:disabled, .prev-btn:disabled, .next-btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Dots - Enhanced feedback */
+#gallery-dots {
+  padding-top: 2.5rem !important;
+  gap: 0.75rem !important;
+}
+
+.indicator-dot {
+  width: 12px !important;
+  height: 12px !important;
+  border-radius: 50% !important;
+  background: rgba(156, 163, 175, 0.5) !important;
+  cursor: pointer !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.indicator-dot:hover {
+  transform: scale(1.3) !important;
+  background: rgba(59, 130, 246, 0.7) !important;
+}
+
+.indicator-dot.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  transform: scale(1.4) !important;
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* Mobile Swipe Hints */
+@media (max-width: 768px) {
+  #gallery-scroller::after {
+    content: '👈 Swipe untuk geser →' !important;
+    position: absolute !important;
+    bottom: -2.5rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+    white-space: nowrap !important;
+    animation: pulse 2s infinite !important;
+    font-weight: 500 !important;
+  }
+}
+
+/* Image hover & transitions */
+.gallery-image {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  will-change: transform !important;
+  loading: lazy !important;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Card hover effects */
+.gallery-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.25) !important;
+  z-index: 10 !important;
+}
+
+/* Glassmorphism base */
+.gallery-card, .nav-btn-3d {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.gallery-card:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  #gallery-scroller {
+    scroll-behavior: auto !important;
+  }
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* High DPI & performance */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .gallery-card {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Print friendly */
+@media print {
+  #gallery-scroller {
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+}
+
+/* Override Tailwind conflicts */
+.gallery-scroller * {
+  scroll-margin: 1rem !important;
+}
+
+/* Pulse animation for hint */
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
